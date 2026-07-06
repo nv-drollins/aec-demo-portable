@@ -16,6 +16,10 @@ The recorded delivered demo uses
 populated; do not materialize a copy or run the design interview for the
 standard demo. Its defaults approve design choices only, never execution.
 
+Canonical Phase 2 uses the `prepare-portable-freecad-site` skill and only the
+checked `scripts/run-portable-site-preparation.py` entrypoint. Raw FreeCAD
+`execute_code` experimentation is prohibited for that phase.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

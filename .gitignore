@@ -26,6 +26,7 @@ setup/blender_addons/
 *.blend1
 *.3dm
 *.FCStd
+*.FCBak
 *.stp
 *.step
 *.obj

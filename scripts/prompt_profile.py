@@ -32,6 +32,7 @@ REQUIRED_PROFILE_TEXT = (
     "## 8. Review and success gates",
     "Do not begin or execute the phase",
     "WAITING_FOR_HUMAN_APPROVAL",
+    "scripts/run-portable-site-preparation.py",
 )
 
 

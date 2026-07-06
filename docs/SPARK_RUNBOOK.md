@@ -73,7 +73,8 @@ run:
 
 This safely starts any missing demo services and then opens the Hermes chat.
 The terminal displaying the Hermes prompt is where you type or paste all demo
-instructions. Keep it open throughout the demonstration.
+instructions. Keep it open throughout the demonstration. The launcher defaults
+to the local `qwen3.6:latest` model and a 30-iteration safety limit.
 
 At the Hermes prompt, paste this exact opening instruction:
 
@@ -87,10 +88,11 @@ the WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
 ```
 
 Hermes must now stop without changing FreeCAD, Blender, ComfyUI, or project
-files. Confirm that its final line resembles:
+files. The read-only audit is canonical Phase 1, so confirm that its final line
+is:
 
 ```text
-WAITING_FOR_HUMAN_APPROVAL phase=1 name=configuration-and-source-audit
+WAITING_FOR_HUMAN_APPROVAL phase=2 name=site_preparation
 ```
 
 Only after it displays that marker and its proposed phase is correct, return
@@ -104,6 +106,23 @@ Do not paste several approvals at once. Each approval advances exactly one
 phase and is consumed immediately. Hermes must never print or supply this
 approval for you. After completing the phase, it must stop at the next review
 gate before another approval.
+
+For Phase 2, Hermes must run the checked portable adapter rather than writing
+FreeCAD code. Its terminal output must contain all four markers:
+
+```text
+PORTABLE_RHINO_EXTRACT_OK
+PORTABLE_FREECAD_REFERENCE_OK
+PORTABLE_SITE_BUILD_OK
+PORTABLE_SITE_PREPARATION_OK
+```
+
+The active FreeCAD document should show a source-derived green terrain, yellow
+lot boundary, and four site pads. Hermes must then stop with:
+
+```text
+PHASE_REVIEW_REQUIRED phase=2 name=site_preparation
+```
 
 ## Fast recorded integration proof
 

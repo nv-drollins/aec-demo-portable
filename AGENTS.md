@@ -31,9 +31,13 @@ For the recorded-demo opening instruction:
    `profiles/delivered_cliff_house_demo/prompt_profile.md`.
 2. Run only the checked read-only profile validation, preflight, status, and
    source inspection.
-3. Summarize the design intent and identify the next phase to be demonstrated.
-4. Explain what that phase will visibly do, then stop with the waiting marker.
-5. Do not begin the phase and do not manufacture an approval.
+3. Treat the completed read-only configuration/source audit as canonical Phase
+   1. The next phase is canonical Phase 2, `site_preparation`; never renumber
+   the executable phases starting from one.
+4. Summarize the design intent and identify the next phase to be demonstrated.
+5. Explain what that phase will visibly do, then stop with
+   `WAITING_FOR_HUMAN_APPROVAL phase=2 name=site_preparation`.
+6. Do not begin the phase and do not manufacture an approval.
 
 ## Application routing
 
@@ -46,3 +50,15 @@ For the recorded-demo opening instruction:
   must not be invoked unless the human explicitly asks for recording control.
 - Use Blender MCP for visualization and the checked local runner for ComfyUI.
   Do not treat an AI-generated image as proof of CAD correctness.
+
+## Canonical Phase 2 adapter
+
+- After a valid human approval for Phase 2, load
+  `prepare-portable-freecad-site` and run only
+  `python3 scripts/run-portable-site-preparation.py` from this repository.
+- Do not call FreeCAD `execute_code` directly and do not improvise FreeCAD
+  geometry during Phase 2.
+- Require all four `PORTABLE_*_OK` markers, show the active isometric result,
+  then stop with `PHASE_REVIEW_REQUIRED phase=2 name=site_preparation`.
+- A failure or missing marker ends the phase attempt. Report it without trying
+  alternative APIs or guessed code.
