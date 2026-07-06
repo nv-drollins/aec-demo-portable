@@ -1,0 +1,630 @@
+{
+ "objects": {
+  "catch_channel.001": [
+   "Concrete_Black"
+  ],
+  "catch_channel_end": [
+   "Concrete_Black"
+  ],
+  "catch_channel_end.001": [
+   "Concrete_Black"
+  ],
+  "H2__L2_balcony_floor": [
+   "White_Travertine"
+  ],
+  "H2_balcon_floor_L3": [
+   "White_Travertine"
+  ],
+  "H2_floor_L1_garage": [
+   "Concrete_Light_Patio"
+  ],
+  "H2_floor_L1_house": [
+   "White_Travertine"
+  ],
+  "H2_floor_L2_balccony_strip": [
+   "Concrete_Light_3"
+  ],
+  "H2_floor_L2_guest": [
+   "Timber_Engineered_Oak"
+  ],
+  "H2_floor_L2_guest.001": [
+   "Timber_Engineered_Oak"
+  ],
+  "H2_floor_L2_house": [
+   "Timber_Engineered_Oak"
+  ],
+  "H2_floor_L2_house.001": [
+   "Timber_Engineered_Oak"
+  ],
+  "H2_floor_L3": [
+   "Timber_Engineered_Oak"
+  ],
+  "H2_floor_L3.001": [
+   "Timber_Engineered_Oak"
+  ],
+  "H2_glass_balc_east": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_glass_balc_north": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_glass_balc_south": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_glass_balc_west": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_L3_S_col": [
+   "White_Travertine"
+  ],
+  "H2_L3_S_col.001": [
+   "White_Travertine"
+  ],
+  "H2_L3_S_col.002": [
+   "White_Travertine"
+  ],
+  "H2_L3_S_col.003": [
+   "White_Travertine"
+  ],
+  "H2_L3_S_col.004": [
+   "White_Travertine"
+  ],
+  "H2_L3_S_header": [
+   "White_Travertine"
+  ],
+  "H2_L3_S_sill": [
+   "White_Travertine"
+  ],
+  "H2_railing_gn": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_railing_gne": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_railing_gnw": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_railing_L3_e": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_railing_L3_s": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_railing_L3_w": [
+   "Glass_Pale_Blue"
+  ],
+  "H2_reveal_L_new": [
+   "White_Travertine"
+  ],
+  "H2_reveal_R_new": [
+   "White_Travertine"
+  ],
+  "H2_reveal_sill_new": [
+   "White_Travertine"
+  ],
+  "H2_reveal_top_new": [
+   "White_Travertine"
+  ],
+  "H2_roof_garage": [
+   "Grey_Slate"
+  ],
+  "H2_roof_garage_S": [
+   "Grey_Slate"
+  ],
+  "H2_roof_slab": [
+   "Grey_Slate"
+  ],
+  "H2_wall_garage_east": [
+   "White_Travertine"
+  ],
+  "H2_wall_garage_L1_west": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_east_N": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_east_S": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_gn": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_gs": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_north": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_south_mE": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_south_mW": [
+   "White_Travertine"
+  ],
+  "H2_wall_L1_west": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_east_new": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_ge": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_gn": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_gs": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_guest_west": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_north": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_south_mE": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_south_mW": [
+   "White_Travertine"
+  ],
+  "H2_wall_L2_west": [
+   "White_Travertine"
+  ],
+  "H2_wall_L3_east_new": [
+   "White_Travertine"
+  ],
+  "H2_wall_L3_north": [
+   "White_Travertine"
+  ],
+  "H2_wall_L3_west": [
+   "White_Travertine"
+  ],
+  "L1_door_centre": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.001": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.002": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.003": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.004": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.005": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.006": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.007": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.008": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.009": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.010": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_door_slat.011": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_E_N_horiz_glass": [
+   "Glass_Frosted"
+  ],
+  "L1_E_S_horiz_glass": [
+   "Glass_Frosted"
+  ],
+  "L1_front_door_wood_panel": [
+   "Timber_Oiled_Dark"
+  ],
+  "L1_gap_N_frost": [
+   "Glass_Frosted"
+  ],
+  "L1_gap_S_frost": [
+   "Glass_Frosted"
+  ],
+  "L1_Garage_barn_rail": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_barn_rail.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_barn_rail.002": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_barn_rail.003": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_barn_track": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_door_main": [
+   "Glass_Clear_Low_E"
+  ],
+  "L1_Garage_rail": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_rail.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_rail.002": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_rail.003": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_stile_1": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_stile_2": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_W_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "L1_Garage_W_rail": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_W_vert": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_W_vert.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_W_vert.002": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_W_vert.003": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_Garage_W_vert.004": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_patio_garage": [
+   "White_Travertine"
+  ],
+  "L1_S_glass_main": [
+   "Glass_Clear_Low_E"
+  ],
+  "L1_S_mullion": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_S_mullion.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_accordion_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "L1_W_mullion": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_mullion.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_mullion.002": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_mullion.003": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_mullion.004": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_mullion.005": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L1_W_mullion.006": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_E_horiz_glass": [
+   "Glass_Frosted"
+  ],
+  "L2_ge_horiz_glass": [
+   "Glass_Frosted"
+  ],
+  "L2_GN_bed1_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "L2_GN_bed2_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "L2_guest_balcony_floor": [
+   "Concrete_Light_3"
+  ],
+  "L2_GW_div": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_GW_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "L2_S_glass_main": [
+   "Glass_Clear_Low_E"
+  ],
+  "L2_S_mullion": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_S_mullion.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_S_mullion.002": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_accordion_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "L2_W_mullion": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_mullion.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_mullion.002": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_mullion.003": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_mullion.004": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_mullion.005": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L2_W_mullion.006": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L3_E_horiz_glass": [
+   "Glass_Frosted"
+  ],
+  "L3_N_horiz_glass": [
+   "Glass_Frosted"
+  ],
+  "L3_S_fixed_window": [
+   "Glass_Clear_Low_E"
+  ],
+  "L3_S_fixed_window.001": [
+   "Glass_Clear_Low_E"
+  ],
+  "L3_S_hinged_door": [
+   "Glass_Clear_Low_E"
+  ],
+  "L3_S_hinged_door.001": [
+   "Glass_Clear_Low_E"
+  ],
+  "L3_W_div": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L3_W_div.001": [
+   "Aluminum_Anodized_Dark"
+  ],
+  "L3_W_glass": [
+   "Glass_Clear_Low_E"
+  ],
+  "Object": [
+   null
+  ],
+  "Object.001": [
+   "White_Travertine"
+  ],
+  "Object.002": [
+   "White_Travertine"
+  ],
+  "Object.003": [
+   "Concrete_Black"
+  ],
+  "Object.004": [
+   "Concrete_Black"
+  ],
+  "Object.005": [
+   "Concrete_Black"
+  ],
+  "Object.006": [
+   null
+  ],
+  "patio_cladding.001": [
+   "water_pool"
+  ],
+  "patio_floor_slab": [
+   "polished_concrete"
+  ],
+  "patio_pool_rim": [
+   "Concrete_Black"
+  ],
+  "pool_floor": [
+   "Concrete_Black"
+  ],
+  "pool_infinity_weir": [
+   "Concrete_Black"
+  ],
+  "pool_sides.001": [
+   "Concrete_Black"
+  ],
+  "site_west Retaining_wall": [
+   "White_Travertine"
+  ],
+  "terrain_surface_untrimmed": [
+   "grass_earth"
+  ],
+  "water_surface_new": [
+   "Water_Pool"
+  ],
+  "waterfall_new": [
+   "Water_Fall"
+  ]
+ },
+ "materials": [
+  "Aluminum_Anodized_Dark",
+  "Concrete_Black",
+  "Concrete_Light_3",
+  "Concrete_Light_Patio",
+  "Glass_Clear_Low_E",
+  "Glass_Frosted",
+  "Glass_Pale_Blue",
+  "Grey_Slate",
+  "Timber_Engineered_Oak",
+  "Timber_Oiled_Dark",
+  "Water_Fall",
+  "Water_Pool",
+  "White_Travertine",
+  "grass_earth",
+  "polished_concrete",
+  "water_pool"
+ ],
+ "material_info": {
+  "Aluminum_Anodized_Dark": {
+   "has_tex": false,
+   "base_color": [
+    0.19607843458652496,
+    0.20392157137393951,
+    0.21568627655506134,
+    1.0
+   ]
+  },
+  "Concrete_Black": {
+   "has_tex": false,
+   "base_color": [
+    0.006398795638233423,
+    0.006398795638233423,
+    0.006398795638233423,
+    1.0
+   ]
+  },
+  "Concrete_Light_3": {
+   "has_tex": false,
+   "base_color": [
+    0.21176470816135406,
+    0.2078431397676468,
+    0.19607843458652496,
+    1.0
+   ]
+  },
+  "Concrete_Light_Patio": {
+   "has_tex": false,
+   "base_color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "Glass_Clear_Low_E": {
+   "has_tex": false,
+   "base_color": [
+    0.6000000238418579,
+    0.699999988079071,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "Glass_Frosted": {
+   "has_tex": false,
+   "base_color": [
+    0.6000000238418579,
+    0.699999988079071,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "Glass_Pale_Blue": {
+   "has_tex": false,
+   "base_color": [
+    0.6000000238418579,
+    0.699999988079071,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "grass_earth": {
+   "has_tex": true,
+   "base_color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "Grey_Slate": {
+   "has_tex": false,
+   "base_color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "polished_concrete": {
+   "has_tex": true,
+   "base_color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929,
+    1.0
+   ]
+  },
+  "Timber_Engineered_Oak": {
+   "has_tex": false,
+   "base_color": [
+    0.7058823704719543,
+    0.5098039507865906,
+    0.29411765933036804,
+    1.0
+   ]
+  },
+  "Timber_Oiled_Dark": {
+   "has_tex": false,
+   "base_color": [
+    0.09350115060806274,
+    0.05406668782234192,
+    0.028775107115507126,
+    1.0
+   ]
+  },
+  "Water_Fall": {
+   "has_tex": false,
+   "base_color": [
+    0.7200000286102295,
+    0.8799999952316284,
+    0.949999988079071,
+    1.0
+   ]
+  },
+  "water_pool": {
+   "has_tex": false,
+   "base_color": [
+    0.07000000029802322,
+    0.2800000011920929,
+    0.3199999928474426,
+    1.0
+   ]
+  },
+  "Water_Pool": {
+   "has_tex": false,
+   "base_color": [
+    0.012988319620490074,
+    0.059633657336235046,
+    0.10523055493831635,
+    1.0
+   ]
+  },
+  "White_Travertine": {
+   "has_tex": false,
+   "base_color": [
+    0.800000011920929,
+    0.800000011920929,
+    0.800000011920929,
+    1.0
+   ]
+  }
+ }
+}

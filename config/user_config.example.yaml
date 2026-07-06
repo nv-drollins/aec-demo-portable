@@ -1,0 +1,96 @@
+# AEC Demo Portable — User Configuration
+# ============================================================
+# Edit this file to match YOUR system before running anything.
+# All other scripts read settings from here.
+# DO NOT share this file — it contains your API keys.
+# ============================================================
+
+# ── Project ───────────────────────────────────────────────────
+project:
+  name: "AEC Demo Portable"
+  version: "1.0"
+  # Absolute path to this AEC_Demo_Portable folder
+  root: "C:/Users/NVIDIA/Downloads/AEC_Demo_Portable/AEC_Demo_Portable"
+
+# ── Anthropic API (informational only — no script uses this) ──
+# Claude Desktop authenticates via your Claude login, not via this key.
+# This block is kept for documentation only.
+anthropic:
+  api_key: "sk-ant-REPLACE_WITH_YOUR_KEY"
+  # Model for Claude Desktop MCP interactions
+  model: "claude-sonnet-4-20250514"
+
+# ── NVIDIA Inference API (NIM) ────────────────────────────────
+# OpenAI-compatible endpoint. Reachable but not used by the
+# demo's default workflow. The workflow's prompt-enhancement step
+# uses local Ollama (qwen3-vl:32b). Paste your key below if you
+# want to swap the Ollama node out for an OpenAI-compatible call
+# to NIM later (ask me when you're ready and I'll edit the
+# workflow).
+nvidia_inference:
+  base_url: "https://inference-api.nvidia.com/v1"
+  api_key: "REPLACE_WITH_YOUR_NIM_KEY"
+  # Recommended vision-capable model on NIM, e.g.:
+  #   "meta/llama-3.2-90b-vision-instruct"
+  #   "nvidia/llama-3.2-nv-rerankqa-1b-v2"
+  model: "meta/llama-3.2-90b-vision-instruct"
+
+# ── ComfyUI ───────────────────────────────────────────────────
+comfyui:
+  # Path to your ComfyUI installation root
+  install_path: "C:/Users/NVIDIA/ComfyUI/ComfyUI_windows_portable"
+  # URL ComfyUI listens on (change port if you run multiple instances)
+  url: "http://127.0.0.1:8188"
+  # Subfolder inside install_path/ComfyUI/
+  python_exe: "python_embeded/python.exe"
+  # Port ComfyUI listens on
+  port: 8188
+  # Startup encoding flags (required on Windows)
+  startup_flags: "-X utf8 -s ComfyUI/main.py --windows-standalone-build"
+
+# ── Blender ───────────────────────────────────────────────────
+blender:
+  # Full path to blender executable
+  exe: "C:/Program Files/Blender Foundation/Blender 5.1/blender.exe"
+  # Port BlenderMCP addon listens on
+  mcp_port: 9876
+  # Blender version (for startup script path)
+  version: "5.1"
+
+# ── Rhino ─────────────────────────────────────────────────────
+rhino:
+  # Full path to Rhino 8 executable
+  exe: "C:/Program Files/Rhino 8/System/Rhino.exe"
+  # Port RhinoMCP plugin listens on
+  mcp_port: 3001
+
+# ── OBS Studio ────────────────────────────────────────────────
+obs:
+  # WebSocket password (set in OBS → Tools → WebSocket Server Settings)
+  websocket_password: "REPLACE_WITH_YOUR_OBS_PASSWORD"
+  # OBS WebSocket port
+  websocket_port: 4455
+
+# ── DaVinci Resolve (optional) ────────────────────────────────
+davinci_resolve:
+  enabled: false
+  # Only needed if using DaVinci Resolve MCP
+  script_api: "C:/ProgramData/Blackmagic Design/DaVinci Resolve/Support/Developer/Scripting"
+  script_lib: "C:/Program Files/Blackmagic Design/DaVinci Resolve/fusionscript.dll"
+  python_home: ""  # Path to Python used by Resolve
+
+# ── Render Settings ────────────────────────────────────────────
+render:
+  resolution_x: 1024
+  resolution_y: 1024
+  beauty_samples: 128
+  depth_samples: 4
+  seg_engine: "BLENDER_EEVEE"
+
+# ── Firewall / Network ─────────────────────────────────────────
+# These ports must be open on localhost (loopback — no external exposure needed)
+network:
+  comfyui_port: 8188
+  blender_mcp_port: 9876
+  rhino_mcp_port: 3001
+  obs_websocket_port: 4455

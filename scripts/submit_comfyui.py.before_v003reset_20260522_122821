@@ -1,0 +1,311 @@
+"""
+AEC Demo Portable — ComfyUI Submit
+Renders all passes and submits to ComfyUI using the bundled workflow.
+
+Run from Blender Python console:
+  exec(open(r"C:/AEC_Demo_Portable/scripts/submit_comfyui.py").read())
+  submit()              # render + submit
+  submit(render=False)  # submit only (reuse last renders)
+
+FIRST-TIME SETUP:
+  Before using submit(), you must run the workflow once in the
+  ComfyUI browser (http://127.0.0.1:8188) to create a history entry.
+  See QUICK_START_GUIDE.md Step 2.
+"""
+import bpy, os, sys, json, requests, uuid, random, time
+from pathlib import Path
+
+# ── Locate AEC_Demo_Portable root ─────────────────────────────
+# Checks env var first, then relative to blend file, then common location
+_ENV_ROOT = os.environ.get("AEC_DEMO_ROOT", "")
+if _ENV_ROOT:
+    AEC_ROOT = Path(_ENV_ROOT)
+elif bpy.data.filepath:
+    # blend file lives in sample_project/blender_assets/
+    AEC_ROOT = Path(bpy.data.filepath).parent.parent.parent
+else:
+    AEC_ROOT = Path("C:/AEC_Demo_Portable")
+
+# Load config via yaml or fall back to defaults
+try:
+    import yaml
+    _cfg_path = AEC_ROOT / "config" / "user_config.yaml"
+    with open(_cfg_path) as f:
+        _cfg = yaml.safe_load(f)
+    COMFY_URL   = _cfg["comfyui"]["url"]
+    COMFY_INPUT = Path(_cfg["comfyui"]["install_path"]) / "ComfyUI" / "input"
+    BEAUTY_SAMPLES = _cfg["render"]["beauty_samples"]
+except Exception as e:
+    print(f"[AEC] Config load warning: {e} — using defaults")
+    COMFY_URL   = "http://127.0.0.1:8188"
+    COMFY_INPUT = Path("D:/tools/comfy_for_blender/ComfyUI_ForDemo/ComfyUI/input")
+    BEAUTY_SAMPLES = 128
+
+RGB_FILE = "beauty_input.png"
+SEG_FILE = "seg_input.png"
+
+# Maps a mesh's `material` custom-prop to a seg-pass color.
+# Colors correspond to the workflow's four MaskFromColor+ nodes:
+#   (200,109,103) red  -> Walls chain    (wood/stone inpaint)
+#   (197,168,114) tan  -> Foundations chain
+#   (136,188,194) cyan -> Windows chain  (glass inpaint)
+#   ( 95,114,199) blue -> Roof chain     (roof material inpaint)
+#
+# Important: ALL glass-like surfaces go to the Windows chain so balcony
+# railings/pool water/etc. render as proper transparent glass instead of
+# being darkened by the Roof chain prompt.
+SEG_COLORS = {
+    # walls + opaque architectural surfaces -> Walls chain (red)
+    "wall":             (0.784, 0.427, 0.404, 1.0),  # v002-style coarse tag
+    "travertine_white": (0.784, 0.427, 0.404, 1.0),
+    "travertine_light": (0.784, 0.427, 0.404, 1.0),
+    "concrete_board":   (0.784, 0.427, 0.404, 1.0),
+    "concrete_light":   (0.784, 0.427, 0.404, 1.0),
+    "concrete_dark":    (0.784, 0.427, 0.404, 1.0),
+    # wood/foundation -> Foundations chain (tan)
+    "wood_walnut":      (0.773, 0.659, 0.447, 1.0),
+    # ALL glass + metal framing + water -> Windows chain (cyan)
+    "window":           (0.533, 0.737, 0.761, 1.0),  # v002-style coarse tag
+    "aluminum_dark":    (0.533, 0.737, 0.761, 1.0),
+    "glass_clear":      (0.533, 0.737, 0.761, 1.0),
+    "glass_tinted":     (0.533, 0.737, 0.761, 1.0),
+    "glass_railing":    (0.533, 0.737, 0.761, 1.0),
+    "water_blue":       (0.533, 0.737, 0.761, 1.0),
+    # roof -> Roof chain (blue)
+    "roof":             (0.373, 0.447, 0.780, 1.0),
+    # terrain is intentionally absent — let the model infer ground from
+    # context rather than route it through one of the building inpaint
+    # chains. Tag terrain meshes with material='terrain' for organization.
+}
+
+PROMPTS = {
+    "1124": "Transform the image into photoreal, detailed, architectural photography",
+    "1126": (  # Windows + glass chain — produce clear glass, not dark tint
+        "Clear transparent glass windows and balcony railings, "
+        "very lightly tinted, subtle reflections and refractions, "
+        "interior visible through the glass, no darkening, "
+        "architectural photoreal glass, bright and airy"
+    ),
+    "1128": (  # Environment — composition-locked, ocean-cliff scene
+        "Same exact camera angle and identical framing as input, "
+        "building stays in the same position with the same shape, "
+        "replace ONLY the background and ground around the building "
+        "with a dramatic ocean cliff view, vast Pacific ocean below the cliff, "
+        "rugged coastal cliff face, distant ocean horizon, dramatic sky, "
+        "do not change the building's pose, scale, or location in the frame, "
+        "architectural photography, photoreal, golden hour lighting"
+    ),
+    "1129": "Change to early dusk - night time , warm light spills from the windows , architectural lighting.",
+}
+
+
+def _make_seg_mat(name, color):
+    n = f"__seg_{name}"
+    if n in bpy.data.materials: return bpy.data.materials[n]
+    m = bpy.data.materials.new(n); m.use_nodes = True
+    nt = m.node_tree; nt.nodes.clear()
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = color
+    em.inputs["Strength"].default_value = 1.0
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return m
+
+
+def render_seg():
+    scene = bpy.context.scene
+    originals = {}
+    for obj in bpy.data.objects:
+        if obj.type != 'MESH': continue
+        tag = obj.get("material", "")
+        if tag not in SEG_COLORS: continue
+        if not obj.data.materials: obj.data.materials.append(None)
+        originals[obj.name] = obj.data.materials[0]
+        obj.data.materials[0] = _make_seg_mat(tag, SEG_COLORS[tag])
+
+    orig_engine = scene.render.engine
+    orig_vt     = scene.view_settings.view_transform
+    orig_look   = scene.view_settings.look
+    scene.render.engine = "BLENDER_EEVEE"
+    scene.view_settings.view_transform = "Raw"
+    scene.view_settings.look = "None"
+    scene.use_nodes = False
+    scene.render.filepath = str(COMFY_INPUT / SEG_FILE)
+    scene.render.image_settings.file_format = "PNG"
+    scene.render.image_settings.color_mode  = "RGBA"
+    scene.render.film_transparent = True
+    bpy.ops.render.render(write_still=True)
+
+    for obj in bpy.data.objects:
+        if obj.name in originals: obj.data.materials[0] = originals[obj.name]
+    scene.render.engine = orig_engine
+    scene.view_settings.view_transform = orig_vt
+    scene.view_settings.look = orig_look
+    scene.render.film_transparent = False
+    kb = os.path.getsize(COMFY_INPUT / SEG_FILE) // 1024
+    print(f"[AEC] Seg saved ({kb} KB)")
+
+
+def render_beauty():
+    scene = bpy.context.scene
+    orig = scene.cycles.samples
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "GPU"
+    scene.cycles.samples = BEAUTY_SAMPLES
+    scene.cycles.use_denoising = True
+    scene.use_nodes = False
+    scene.render.filepath = str(COMFY_INPUT / RGB_FILE)
+    scene.render.image_settings.file_format = "PNG"
+    scene.render.image_settings.color_mode  = "RGB"
+    scene.render.film_transparent = False
+    bpy.ops.render.render(write_still=True)
+    scene.cycles.samples = orig
+    kb = os.path.getsize(COMFY_INPUT / RGB_FILE) // 1024
+    print(f"[AEC] Beauty saved ({kb} KB)")
+
+
+def get_best_prompt():
+    """
+    Picks the LATEST successful ComfyUI prompt as the submission template.
+
+    Strategy:
+      1. Of all successful entries in history, pick the one with the highest
+         prompt-index (ComfyUI's monotonic counter — `data["prompt"][0]`).
+         That's the most recently submitted successful run.
+      2. If for some reason the latest successful entry has zero outputs,
+         fall back to the most-recent successful entry that DOES have outputs.
+      3. If nothing exists at all, instruct the user to seed the history.
+
+    Why not "most output images"? Because that picks the largest old workflow
+    forever, even after you've cleaned up the graph to fewer outputs.
+    """
+    try:
+        r = requests.get(f"{COMFY_URL}/history?max_items=200", timeout=5)
+    except Exception as e:
+        print(f"[AEC] Cannot reach ComfyUI at {COMFY_URL}: {e}")
+        return None
+
+    # Build candidate list, keeping only entries that LOOK like the AEC
+    # workflow — they must contain at least 5 SaveImage nodes. This
+    # rejects smoke tests, single-image utilities, and other unrelated
+    # workflows that ComfyUI's history might have accumulated.
+    candidates = []  # [(idx, n_saveimg, n_total, pid, prompt_dict)]
+    for pid, data in r.json().items():
+        if data.get("status", {}).get("status_str") != "success":
+            continue
+        p = data.get("prompt", [])
+        if len(p) < 3:
+            continue
+        prompt_dict = p[2]
+        idx = p[0] if isinstance(p[0], (int, float)) else 0
+        n_saveimg = sum(1 for n in prompt_dict.values()
+                        if n.get("class_type") == "SaveImage")
+        if n_saveimg < 5:
+            continue  # not the AEC workflow
+        candidates.append((idx, n_saveimg, len(prompt_dict), pid, prompt_dict))
+
+    if not candidates:
+        print("[AEC] No AEC-shaped successful prompt found in ComfyUI history.")
+        print(f"      Open {COMFY_URL}, load AEC_Transform_Pipeline.json, click Queue once.")
+        return None
+
+    candidates.sort(key=lambda c: c[0], reverse=True)
+    idx, n_save, n_total, pid, prompt_dict = candidates[0]
+    print(f"[AEC] Using latest AEC-shape prompt (history index {idx}, "
+          f"{n_save} SaveImage nodes, {n_total} total nodes)")
+    return prompt_dict
+
+
+def submit(render=True):
+    if render:
+        print("[AEC] Rendering seg pass...")
+        render_seg()
+        print("[AEC] Rendering beauty pass...")
+        render_beauty()
+
+    prompt = get_best_prompt()
+    if not prompt:
+        return False
+
+    # Swap image files
+    for nid, node in prompt.items():
+        if node.get("class_type") == "LoadImage":
+            img = node.get("inputs", {}).get("image", "")
+            if not isinstance(img, str): continue
+            node["inputs"]["image"] = SEG_FILE if "seg" in img.lower() else RGB_FILE
+
+    # Update text prompts by node ID
+    for nid, text in PROMPTS.items():
+        if nid in prompt:
+            inp = prompt[nid].get("inputs", {})
+            if "string" in inp: inp["string"] = text
+            elif "text"  in inp: inp["text"]   = text
+            print(f"[AEC] Updated prompt node {nid}")
+
+    # Randomize seeds (force fresh outputs even if inputs/prompts cached) and
+    # tag every SaveImage with a Comfy_<timestamp>_ batch prefix so all files
+    # from one submission cluster together when sorted in the output folder.
+    batch_id = time.strftime("%Y%m%d_%H%M%S")
+    seed_count = 0
+    si_count = 0
+    si_skipped_wired = 0
+    si_via_upstream = 0
+    for nid, node in prompt.items():
+        inputs = node.get("inputs", {})
+        if "noise_seed" in inputs:
+            inputs["noise_seed"] = random.randint(0, 2**31 - 1); seed_count += 1
+        elif "seed" in inputs:
+            inputs["seed"] = random.randint(0, 2**31 - 1); seed_count += 1
+        if node.get("class_type") == "SaveImage" and "filename_prefix" in inputs:
+            fp = inputs["filename_prefix"]
+            # Case 1: widget value — a plain string, just prefix it.
+            if isinstance(fp, str):
+                base = fp.split("/")[-1]
+                parts = base.split("_", 3)
+                if len(parts) == 4 and parts[0] == "Comfy":
+                    base = parts[3]
+                inputs["filename_prefix"] = f"Comfy_{batch_id}_{base}"
+                si_count += 1
+            # Case 2: wired connection — [src_node_id, slot]. Walk up to find
+            # the upstream String/StringConstant/Text node and modify ITS widget
+            # value instead, so all SaveImages that share that source still get
+            # the right name.
+            elif isinstance(fp, list) and len(fp) == 2:
+                src_id = str(fp[0])
+                src_node = prompt.get(src_id)
+                if not src_node:
+                    si_skipped_wired += 1
+                    continue
+                src_inputs = src_node.get("inputs", {})
+                # Common widget names that carry a literal string we can edit
+                widget_key = next((k for k in ("string", "text", "value", "Text", "String")
+                                   if k in src_inputs and isinstance(src_inputs[k], str)), None)
+                if widget_key:
+                    base = src_inputs[widget_key].split("/")[-1]
+                    parts = base.split("_", 3)
+                    if len(parts) == 4 and parts[0] == "Comfy":
+                        base = parts[3]
+                    src_inputs[widget_key] = f"Comfy_{batch_id}_{base}"
+                    si_via_upstream += 1
+                else:
+                    si_skipped_wired += 1
+    summary = f"[AEC] Randomized {seed_count} seeds; prefixed {si_count} SaveImage outputs with Comfy_{batch_id}_"
+    if si_via_upstream:
+        summary += f"; updated {si_via_upstream} upstream String nodes"
+    if si_skipped_wired:
+        summary += f"; SKIPPED {si_skipped_wired} wired SaveImages (couldn't find string source)"
+    print(summary)
+
+    payload = {"prompt": prompt, "client_id": str(uuid.uuid4())}
+    resp = requests.post(f"{COMFY_URL}/prompt", json=payload, timeout=10)
+    print(f"[AEC] POST -> {resp.status_code}")
+    if resp.status_code == 200:
+        pid = resp.json().get("prompt_id", "?")
+        print(f"[AEC] Queued: {pid}")
+        print(f"[AEC] Watch output at: {COMFY_URL}")
+        return True
+    print(f"[AEC] Error: {resp.text[:300]}")
+    return False
+
+print("[AEC] submit_comfyui.py loaded. Call submit() to render and queue.")
+print(f"[AEC] ComfyUI: {COMFY_URL}  |  Input: {COMFY_INPUT}")

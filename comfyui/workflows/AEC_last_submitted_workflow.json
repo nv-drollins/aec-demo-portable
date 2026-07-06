@@ -1,0 +1,1603 @@
+{
+  "934": {
+    "inputs": {
+      "noise": [
+        "939",
+        0
+      ],
+      "guider": [
+        "940",
+        0
+      ],
+      "sampler": [
+        "942",
+        0
+      ],
+      "sigmas": [
+        "943",
+        0
+      ],
+      "latent_image": [
+        "946",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced"
+  },
+  "942": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  },
+  "946": {
+    "inputs": {
+      "width": [
+        "26",
+        0
+      ],
+      "height": [
+        "26",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage"
+  },
+  "947": {
+    "inputs": {
+      "vae_name": "flux\\flux2-vae.safetensors"
+    },
+    "class_type": "VAELoader"
+  },
+  "961": {
+    "inputs": {
+      "conditioning": [
+        "956",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut"
+  },
+  "963": {
+    "inputs": {
+      "model": [
+        "999",
+        0
+      ],
+      "positive": [
+        "1198",
+        0
+      ],
+      "negative": [
+        "1196",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "class_type": "CFGGuider"
+  },
+  "965": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  },
+  "966": {
+    "inputs": {
+      "steps": 4,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler"
+  },
+  "968": {
+    "inputs": {
+      "width": [
+        "26",
+        0
+      ],
+      "height": [
+        "26",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage"
+  },
+  "978": {
+    "inputs": {
+      "color": "#C86D67"
+    },
+    "class_type": "ColorCode"
+  },
+  "944": {
+    "inputs": {
+      "samples": [
+        "934",
+        0
+      ],
+      "vae": [
+        "947",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "1000": {
+    "inputs": {
+      "noise": [
+        "1013",
+        0
+      ],
+      "guider": [
+        "1004",
+        0
+      ],
+      "sampler": [
+        "1006",
+        0
+      ],
+      "sigmas": [
+        "1007",
+        0
+      ],
+      "latent_image": [
+        "1009",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced"
+  },
+  "1004": {
+    "inputs": {
+      "model": [
+        "999",
+        0
+      ],
+      "positive": [
+        "1204",
+        0
+      ],
+      "negative": [
+        "1202",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "class_type": "CFGGuider"
+  },
+  "1006": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  },
+  "1007": {
+    "inputs": {
+      "steps": 4,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler"
+  },
+  "1013": {
+    "inputs": {
+      "noise_seed": 1015271095,
+      "control_after_generate": "randomize"
+    },
+    "class_type": "RandomNoise"
+  },
+  "975": {
+    "inputs": {
+      "image": [
+        "3",
+        0
+      ],
+      "red": 200,
+      "green": 109,
+      "blue": 103,
+      "threshold": 50
+    },
+    "class_type": "MaskFromColor+"
+  },
+  "1031": {
+    "inputs": {
+      "noise": [
+        "1039",
+        0
+      ],
+      "guider": [
+        "1033",
+        0
+      ],
+      "sampler": [
+        "1035",
+        0
+      ],
+      "sigmas": [
+        "1036",
+        0
+      ],
+      "latent_image": [
+        "1043",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced"
+  },
+  "1032": {
+    "inputs": {
+      "conditioning": [
+        "1044",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut"
+  },
+  "1033": {
+    "inputs": {
+      "model": [
+        "999",
+        0
+      ],
+      "positive": [
+        "1192",
+        0
+      ],
+      "negative": [
+        "1190",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "class_type": "CFGGuider"
+  },
+  "1035": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  },
+  "1036": {
+    "inputs": {
+      "steps": 4,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler"
+  },
+  "1039": {
+    "inputs": {
+      "noise_seed": 2064411270,
+      "control_after_generate": "randomize"
+    },
+    "class_type": "RandomNoise"
+  },
+  "1043": {
+    "inputs": {
+      "width": [
+        "1046",
+        0
+      ],
+      "height": [
+        "1046",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage"
+  },
+  "1054": {
+    "inputs": {
+      "clip_name": "klein\\qwen_3_4b.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "1056": {
+    "inputs": {
+      "noise": [
+        "1064",
+        0
+      ],
+      "guider": [
+        "1058",
+        0
+      ],
+      "sampler": [
+        "1060",
+        0
+      ],
+      "sigmas": [
+        "1061",
+        0
+      ],
+      "latent_image": [
+        "1068",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced"
+  },
+  "1057": {
+    "inputs": {
+      "conditioning": [
+        "1069",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut"
+  },
+  "1058": {
+    "inputs": {
+      "model": [
+        "999",
+        0
+      ],
+      "positive": [
+        "1195",
+        0
+      ],
+      "negative": [
+        "1193",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "class_type": "CFGGuider"
+  },
+  "1060": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  },
+  "1061": {
+    "inputs": {
+      "steps": 4,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler"
+  },
+  "1063": {
+    "inputs": {
+      "samples": [
+        "1056",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "1064": {
+    "inputs": {
+      "noise_seed": 1264610838,
+      "control_after_generate": "randomize"
+    },
+    "class_type": "RandomNoise"
+  },
+  "1068": {
+    "inputs": {
+      "width": [
+        "1071",
+        0
+      ],
+      "height": [
+        "1071",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage"
+  },
+  "1038": {
+    "inputs": {
+      "samples": [
+        "1031",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "1012": {
+    "inputs": {
+      "samples": [
+        "1000",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "990": {
+    "inputs": {
+      "image": [
+        "3",
+        0
+      ],
+      "red": 197,
+      "green": 168,
+      "blue": 114,
+      "threshold": 20
+    },
+    "class_type": "MaskFromColor+"
+  },
+  "1070": {
+    "inputs": {
+      "image": [
+        "1049",
+        0
+      ],
+      "mask": [
+        "984",
+        0
+      ],
+      "padding": 0,
+      "invert_mask": false
+    },
+    "class_type": "SimpleInpaintCrop"
+  },
+  "1083": {
+    "inputs": {
+      "image": [
+        "1070",
+        0
+      ],
+      "upscale_method": "nearest-exact",
+      "megapixels": 1.0,
+      "resolution_steps": 1
+    },
+    "class_type": "ImageScaleToTotalPixels"
+  },
+  "1071": {
+    "inputs": {
+      "image": [
+        "1083",
+        0
+      ]
+    },
+    "class_type": "GetImageSize"
+  },
+  "1046": {
+    "inputs": {
+      "image": [
+        "1077",
+        0
+      ]
+    },
+    "class_type": "GetImageSize"
+  },
+  "1077": {
+    "inputs": {
+      "image": [
+        "1045",
+        0
+      ],
+      "upscale_method": "nearest-exact",
+      "megapixels": 1.0,
+      "resolution_steps": 1
+    },
+    "class_type": "ImageScaleToTotalPixels"
+  },
+  "1023": {
+    "inputs": {
+      "image": [
+        "1076",
+        0
+      ]
+    },
+    "class_type": "GetImageSize"
+  },
+  "1069": {
+    "inputs": {
+      "text": [
+        "1126",
+        0
+      ],
+      "clip": [
+        "998",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "972": {
+    "inputs": {
+      "noise_seed": 585824710,
+      "control_after_generate": "randomize"
+    },
+    "class_type": "RandomNoise"
+  },
+  "959": {
+    "inputs": {
+      "noise": [
+        "972",
+        0
+      ],
+      "guider": [
+        "963",
+        0
+      ],
+      "sampler": [
+        "965",
+        0
+      ],
+      "sigmas": [
+        "966",
+        0
+      ],
+      "latent_image": [
+        "968",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced"
+  },
+  "971": {
+    "inputs": {
+      "samples": [
+        "959",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "1090": {
+    "inputs": {
+      "samples": [
+        "1103",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEDecode"
+  },
+  "1092": {
+    "inputs": {
+      "conditioning": [
+        "1100",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut"
+  },
+  "1094": {
+    "inputs": {
+      "model": [
+        "999",
+        0
+      ],
+      "positive": [
+        "1201",
+        0
+      ],
+      "negative": [
+        "1199",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "class_type": "CFGGuider"
+  },
+  "1096": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  },
+  "1097": {
+    "inputs": {
+      "steps": 4,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler"
+  },
+  "1098": {
+    "inputs": {
+      "width": [
+        "26",
+        0
+      ],
+      "height": [
+        "26",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage"
+  },
+  "1102": {
+    "inputs": {
+      "noise_seed": 1012520156,
+      "control_after_generate": "randomize"
+    },
+    "class_type": "RandomNoise"
+  },
+  "1103": {
+    "inputs": {
+      "noise": [
+        "1102",
+        0
+      ],
+      "guider": [
+        "1094",
+        0
+      ],
+      "sampler": [
+        "1096",
+        0
+      ],
+      "sigmas": [
+        "1097",
+        0
+      ],
+      "latent_image": [
+        "1098",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced"
+  },
+  "984": {
+    "inputs": {
+      "image": [
+        "3",
+        0
+      ],
+      "red": 95,
+      "green": 114,
+      "blue": 199,
+      "threshold": 20
+    },
+    "class_type": "MaskFromColor+"
+  },
+  "987": {
+    "inputs": {
+      "image": [
+        "3",
+        0
+      ],
+      "red": 136,
+      "green": 188,
+      "blue": 194,
+      "threshold": 20
+    },
+    "class_type": "MaskFromColor+"
+  },
+  "1049": {
+    "inputs": {
+      "original_image": [
+        "1022",
+        0
+      ],
+      "processed_crop": [
+        "1038",
+        0
+      ],
+      "bbox_data": [
+        "1045",
+        3
+      ],
+      "blend_mode": "blend",
+      "feather": 8,
+      "blend_mask": [
+        "1045",
+        1
+      ]
+    },
+    "class_type": "SimpleInpaintStitch"
+  },
+  "1115": {
+    "inputs": {
+      "images": [
+        "1116",
+        0
+      ],
+      "filename_prefix": "Comfy_20260530_182027_Change_Environment"
+    },
+    "class_type": "SaveImage"
+  },
+  "1118": {
+    "inputs": {
+      "images": [
+        "1117",
+        0
+      ],
+      "filename_prefix": "Comfy_20260530_182027_Time_Of_Day"
+    },
+    "class_type": "SaveImage"
+  },
+  "997": {
+    "inputs": {
+      "text": [
+        "1125",
+        0
+      ],
+      "clip": [
+        "998",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "1120": {
+    "inputs": {
+      "images": [
+        "1121",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1123": {
+    "inputs": {
+      "image": "beauty_input.png"
+    },
+    "class_type": "LoadImage"
+  },
+  "986": {
+    "inputs": {
+      "color": "#88BCC2"
+    },
+    "class_type": "ColorCode"
+  },
+  "988": {
+    "inputs": {
+      "color": "#C5A872"
+    },
+    "class_type": "ColorCode"
+  },
+  "1044": {
+    "inputs": {
+      "text": [
+        "1127",
+        0
+      ],
+      "clip": [
+        "998",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "956": {
+    "inputs": {
+      "text": [
+        "1128",
+        0
+      ],
+      "clip": [
+        "998",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "1100": {
+    "inputs": {
+      "text": [
+        "1129",
+        0
+      ],
+      "clip": [
+        "998",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "1010": {
+    "inputs": {
+      "vae_name": "flux\\flux2-vae.safetensors"
+    },
+    "class_type": "VAELoader"
+  },
+  "1132": {
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ],
+      "upscale_method": "nearest-exact",
+      "megapixels": 0.25,
+      "resolution_steps": 1
+    },
+    "class_type": "ImageScaleToTotalPixels"
+  },
+  "981": {
+    "inputs": {
+      "color": "#5F72C7"
+    },
+    "class_type": "ColorCode"
+  },
+  "26": {
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "GetImageSize"
+  },
+  "1117": {
+    "inputs": {
+      "input": [
+        "1090",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  },
+  "1153": {
+    "inputs": {
+      "images": [
+        "1109",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1125": {
+    "inputs": {
+      "text": "Vertical wood paneling. Warm modern wood cabin architecture."
+    },
+    "class_type": "Text Multiline"
+  },
+  "1154": {
+    "inputs": {
+      "images": [
+        "1111",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1155": {
+    "inputs": {
+      "images": [
+        "1113",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1128": {
+    "inputs": {
+      "text": "The building is the only structure in the scene. Remote uninhabited Southern California coastal cliff in the Santa Barbara area. No other buildings, no houses, no roads, no streets, no human construction anywhere. The building stays in the exact same position, scale, and framing as input. Keep any deck, terrace, pool, or patio that is visible in the input exactly as rendered; do NOT add or invent a pool, deck, terrace, or patio that is not already visible in the frame. Any deck, patio, or pool surround is smooth pale concrete or stone paving, never wood. Do not invent extra structures, railings, fences, or decorative details. The building's structure is FIXED and takes priority over everything else: keep every wall, floor slab, railing and the deck's exact edges as in the input - do not move, remove, open up, or add walls. Do not extend the building or deck with extra terrain, rock, or planting; the deck's outer edges stay exactly as in the input and the cliff drops away beyond them. The deck and pool surround stay pale concrete or stone even though the walls are wood - never extend wood cladding onto the deck or ground. The floor-to-ceiling windows are dark tinted glass - smoky charcoal, clearly darkened, NOT clear - with soft reflections of the sky and cliffs; only faint hints of simple furniture show through. Any interior furniture stays WITHIN the existing rooms - never alter a wall to make room for it. No people. Replace only the sky, the cliff face, the ocean, and the ground beyond the building's footprint. The pool is an infinity pool whose open overflow (infinity) edge faces the view, parallel to the pool's long side; the house sits on a cliff above a rugged coastline. Beyond the pool, show a dramatic Southern California cliff COASTLINE - sandstone cliffs, headlands and coves curving away into the distance with the sea between them. Show MORE rugged coast and cliffs than open flat ocean; the horizon sits high so the coastline fills the background. Native coastal shrubs on the cliffs. Blue sky, daytime, photoreal architectural photography."
+    },
+    "class_type": "Text Multiline"
+  },
+  "1156": {
+    "inputs": {
+      "images": [
+        "1116",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1157": {
+    "inputs": {
+      "images": [
+        "1117",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1126": {
+    "inputs": {
+      "text": "Flat dark slate roof, matte finish"
+    },
+    "class_type": "Text Multiline"
+  },
+  "3": {
+    "inputs": {
+      "image": "seg_input.png"
+    },
+    "class_type": "LoadImage"
+  },
+  "1020": {
+    "inputs": {
+      "image": [
+        "944",
+        0
+      ],
+      "mask": [
+        "975",
+        0
+      ],
+      "padding": 0,
+      "invert_mask": false
+    },
+    "class_type": "SimpleInpaintCrop"
+  },
+  "1076": {
+    "inputs": {
+      "image": [
+        "1020",
+        0
+      ],
+      "upscale_method": "nearest-exact",
+      "megapixels": 1.0,
+      "resolution_steps": 1
+    },
+    "class_type": "ImageScaleToTotalPixels"
+  },
+  "1002": {
+    "inputs": {
+      "conditioning": [
+        "997",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut"
+  },
+  "1009": {
+    "inputs": {
+      "width": [
+        "1023",
+        0
+      ],
+      "height": [
+        "1023",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyFlux2LatentImage"
+  },
+  "1022": {
+    "inputs": {
+      "original_image": [
+        "944",
+        0
+      ],
+      "processed_crop": [
+        "1012",
+        0
+      ],
+      "bbox_data": [
+        "1020",
+        3
+      ],
+      "blend_mode": "blend",
+      "feather": 8,
+      "blend_mask": [
+        "1020",
+        1
+      ]
+    },
+    "class_type": "SimpleInpaintStitch"
+  },
+  "1109": {
+    "inputs": {
+      "input": [
+        "1022",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  },
+  "1045": {
+    "inputs": {
+      "image": [
+        "1022",
+        0
+      ],
+      "mask": [
+        "987",
+        0
+      ],
+      "padding": 0,
+      "invert_mask": false
+    },
+    "class_type": "SimpleInpaintCrop"
+  },
+  "1111": {
+    "inputs": {
+      "input": [
+        "1049",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  },
+  "1124": {
+    "inputs": {
+      "text": "Transform the image into a photoreal architectural photograph of a modern house. Sharp detail, high resolution. Keep the materials exactly as shown in the input - do not change surface materials and do not invent extra structures, decks, fences, or decorations. Outdoor decks, patios, and the ground around the pool are smooth pale concrete or stone paving, never wood - do not extend the wood wall cladding onto the deck or ground. Preserve the structure exactly: keep every wall, floor slab, railing and deck edge as in the input; do not move, remove, open, or invent walls. Same camera angle and framing as input."
+    },
+    "class_type": "Text Multiline"
+  },
+  "998": {
+    "inputs": {
+      "clip_name": "klein\\qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "999": {
+    "inputs": {
+      "unet_name": "flux\\flux-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader"
+  },
+  "4": {
+    "inputs": {
+      "image": "beauty_input.png"
+    },
+    "class_type": "LoadImage"
+  },
+  "1177": {
+    "inputs": {
+      "pixels": [
+        "4",
+        0
+      ],
+      "vae": [
+        "947",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1179": {
+    "inputs": {
+      "conditioning": [
+        "936",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut"
+  },
+  "1129": {
+    "inputs": {
+      "text": "Identical scene to the previous environment image. Same building, same interior furniture seen through the windows, same cliffs, the same rugged coastline and sea beyond the pool, same camera angle, same framing, and whatever deck/terrace/pool was visible stays exactly the same. Keep every wall, deck edge and the whole structure exactly as the previous image. Do not move or remove anything; do not add new objects, and do not invent a pool or deck. The ONLY change is the time of day: shift to early dusk - a calm deep-blue evening sky with a few early stars and soft fading light on the coastline and sea. No bright sunset, no orange glow. Warm interior lights now visible through the glass walls, with gentle architectural exterior lighting only on the deck or terrace areas that are already visible in the frame. Photoreal architectural photography."
+    },
+    "class_type": "Text Multiline"
+  },
+  "1133": {
+    "inputs": {
+      "text": "You are an architectural visualization prompt generator designed for Flux Klien 4b in ComfyUI.\n\nYour role is to transform structured architectural guidance and a reference image into highly precise, photorealistic generation prompts.\n\n-----------------------------------\nCORE OBJECTIVE\n-----------------------------------\nConvert a flat or basic 3D design into a believable, high-end architectural photograph while STRICTLY preserving:\n\n- Overall structure and geometry\n- Proportions and layout\n- Camera framing implied by the input image\n\nEnhance ONLY materials, realism, lighting, and environmental storytelling.\n\n-----------------------------------\nINPUT FORMAT\n-----------------------------------\nYou will receive:\n1. An image (primary structural reference)\n2. A structured prompt in this exact format:\n\nDesign Guidance:\nWalls & Foundation:\nWindows:\nRoof:\nEnvironment:\nTime of Day:\n\n-----------------------------------\nINTERPRETATION RULES\n-----------------------------------\n\n1. If a field is EMPTY or missing:\n   \u2192 Do NOT invent major changes\n   \u2192 Instead, reinforce realism using neutral, high-end defaults\n\n2. If a field IS provided:\n   \u2192 Expand it into rich, descriptive, physically believable detail\n   \u2192 Stay consistent with the image perspective and structure\n\n3. Always prioritize:\n   \u2192 Photorealism over stylization\n   \u2192 Real-world materials, lighting, and physics\n   \u2192 Architectural plausibility\n\n-----------------------------------\nPHOTOREALISM ENHANCEMENT RULES\n-----------------------------------\n\nYou must implicitly enhance every section with:\n\n- Real-world materials (concrete, wood grain, glass reflections, metal, etc.)\n- Natural imperfections (weathering, roughness, subtle variation)\n- Accurate lighting behavior (bounce light, shadows, reflections)\n- Lens realism (depth of field, slight exposure realism, no stylization)\n- Scale cues (doors, frames, vegetation, objects)\n\n-----------------------------------\nSTRUCTURAL PRESERVATION RULE\n-----------------------------------\n\nDO NOT:\n- Change building shape\n- Add/remove floors\n- Alter window placement drastically\n- Change perspective\n\nYou MAY:\n- Refine materials\n- Improve environmental context\n- Enhance lighting and realism\n\n-----------------------------------\nOUTPUT FORMAT (STRICT)\n-----------------------------------\n\nReturn ONLY the following structure.\nDo NOT add explanations.\n\nEach field must contain a concise but information-dense Flux prompt.\n\nDesign Guidance:\nWalls & Foundation:\nWindows:\nRoof:\nEnvironment:\nTime of Day:\n\n-----------------------------------\nOUTPUT STYLE GUIDELINES\n-----------------------------------\n\n- Use descriptive, comma-separated phrases\n- Avoid full sentences\n- Avoid vague terms (e.g., \"nice\", \"better\", \"modern\")\n- Prefer specific visual language:\n\n  GOOD:\n  \"cast-in-place concrete with subtle formwork texture, soft weathering, realistic shadows\"\n\n  BAD:\n  \"modern concrete wall that looks good\"\n\n-----------------------------------\nGOAL\n-----------------------------------\n\nProduce prompts that allow Flux Klien 4b to generate imagery that is indistinguishable from real architectural photography."
+    },
+    "class_type": "Text Multiline"
+  },
+  "1178": {
+    "inputs": {
+      "conditioning": [
+        "1179",
+        0
+      ],
+      "latent": [
+        "1177",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1121": {
+    "inputs": {
+      "images": [
+        "1107",
+        0
+      ]
+    },
+    "class_type": "BatchImagesNode"
+  },
+  "1181": {
+    "inputs": {
+      "pixels": [
+        "1206",
+        0
+      ],
+      "vae": [
+        "947",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1165": {
+    "inputs": {
+      "ckpt_name": "depth_anything_vitl14.pth",
+      "resolution": 512,
+      "image": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "DepthAnythingPreprocessor"
+  },
+  "1164": {
+    "inputs": {
+      "images": [
+        "1206",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "1183": {
+    "inputs": {
+      "conditioning": [
+        "1178",
+        0
+      ],
+      "latent": [
+        "1181",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1182": {
+    "inputs": {
+      "conditioning": [
+        "1180",
+        0
+      ],
+      "latent": [
+        "1181",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "940": {
+    "inputs": {
+      "model": [
+        "933",
+        0
+      ],
+      "positive": [
+        "1188",
+        0
+      ],
+      "negative": [
+        "1183",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "class_type": "CFGGuider"
+  },
+  "1180": {
+    "inputs": {
+      "conditioning": [
+        "936",
+        0
+      ],
+      "latent": [
+        "1177",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "932": {
+    "inputs": {
+      "clip_name": "klein\\qwen_3_8b_fp8mixed.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "1188": {
+    "inputs": {
+      "conditioning_to": [
+        "1182",
+        0
+      ],
+      "conditioning_from": [
+        "936",
+        0
+      ],
+      "conditioning_to_strength": 0.75
+    },
+    "class_type": "ConditioningAverage"
+  },
+  "933": {
+    "inputs": {
+      "unet_name": "flux\\flux-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader"
+  },
+  "943": {
+    "inputs": {
+      "steps": 8,
+      "width": 1280,
+      "height": 720
+    },
+    "class_type": "Flux2Scheduler"
+  },
+  "1161": {
+    "inputs": {
+      "image_a": [
+        "1111",
+        0
+      ],
+      "image_b": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "Image Comparer (rgthree)"
+  },
+  "1152": {
+    "inputs": {
+      "images": [
+        "1107",
+        0
+      ]
+    },
+    "class_type": "PreviewImage"
+  },
+  "939": {
+    "inputs": {
+      "noise_seed": 606055101,
+      "control_after_generate": "randomize"
+    },
+    "class_type": "RandomNoise"
+  },
+  "1127": {
+    "inputs": {
+      "text": "Dark tinted glass windows - smoky charcoal-gray tint, clearly darkened glass, subtle reflections, NOT clear or transparent"
+    },
+    "class_type": "Text Multiline"
+  },
+  "1074": {
+    "inputs": {
+      "original_image": [
+        "1049",
+        0
+      ],
+      "processed_crop": [
+        "1063",
+        0
+      ],
+      "bbox_data": [
+        "1070",
+        3
+      ],
+      "blend_mode": "blend",
+      "feather": 8,
+      "blend_mask": [
+        "1070",
+        1
+      ]
+    },
+    "class_type": "SimpleInpaintStitch"
+  },
+  "1113": {
+    "inputs": {
+      "input": [
+        "1074",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  },
+  "1116": {
+    "inputs": {
+      "input": [
+        "971",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  },
+  "1190": {
+    "inputs": {
+      "conditioning": [
+        "1032",
+        0
+      ],
+      "latent": [
+        "1191",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1191": {
+    "inputs": {
+      "pixels": [
+        "1077",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1192": {
+    "inputs": {
+      "conditioning": [
+        "1044",
+        0
+      ],
+      "latent": [
+        "1191",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1193": {
+    "inputs": {
+      "conditioning": [
+        "1057",
+        0
+      ],
+      "latent": [
+        "1194",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1194": {
+    "inputs": {
+      "pixels": [
+        "1083",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1195": {
+    "inputs": {
+      "conditioning": [
+        "1069",
+        0
+      ],
+      "latent": [
+        "1194",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1196": {
+    "inputs": {
+      "conditioning": [
+        "961",
+        0
+      ],
+      "latent": [
+        "1197",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1197": {
+    "inputs": {
+      "pixels": [
+        "1074",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1198": {
+    "inputs": {
+      "conditioning": [
+        "956",
+        0
+      ],
+      "latent": [
+        "1197",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1199": {
+    "inputs": {
+      "conditioning": [
+        "1092",
+        0
+      ],
+      "latent": [
+        "1200",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1200": {
+    "inputs": {
+      "pixels": [
+        "971",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1201": {
+    "inputs": {
+      "conditioning": [
+        "1100",
+        0
+      ],
+      "latent": [
+        "1200",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1202": {
+    "inputs": {
+      "conditioning": [
+        "1002",
+        0
+      ],
+      "latent": [
+        "1203",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "1203": {
+    "inputs": {
+      "pixels": [
+        "1076",
+        0
+      ],
+      "vae": [
+        "1010",
+        0
+      ]
+    },
+    "class_type": "VAEEncode"
+  },
+  "1204": {
+    "inputs": {
+      "conditioning": [
+        "997",
+        0
+      ],
+      "latent": [
+        "1203",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent"
+  },
+  "936": {
+    "inputs": {
+      "text": [
+        "1124",
+        0
+      ],
+      "clip": [
+        "932",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "1107": {
+    "inputs": {
+      "input": [
+        "944",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  },
+  "1184": {
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ],
+      "merge_with_lineart": "lineart_standard",
+      "resolution": 1280,
+      "lineart_lower_bound": 0.0,
+      "lineart_upper_bound": 1.0,
+      "object_min_size": 36,
+      "object_connectivity": 1
+    },
+    "class_type": "AnyLineArtPreprocessor_aux"
+  },
+  "1206": {
+    "inputs": {
+      "input": [
+        "1165",
+        0
+      ],
+      "resize_type": "match size",
+      "scale_method": "area",
+      "resize_type.match": [
+        "4",
+        0
+      ],
+      "resize_type.crop": "center"
+    },
+    "class_type": "ResizeImageMaskNode"
+  }
+}

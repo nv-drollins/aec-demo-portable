@@ -1,0 +1,12 @@
+{
+  "host": "localhost",
+  "port": 4455,
+  "password": "REPLACE_WITH_YOUR_OBS_PASSWORD",
+  "scene": "Claude-rhino_capture",
+  "items": {
+    "claude":  1,
+    "rhino":   2,
+    "blender": 3,
+    "display": 0
+  }
+}

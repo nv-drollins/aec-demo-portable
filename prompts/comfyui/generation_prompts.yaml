@@ -1,0 +1,125 @@
+# ComfyUI Generation Prompts
+# ============================================================
+# These are the text prompts sent to Flux.2 Klein for each
+# of the three output variations.
+#
+# Edit these freely — they control the AI's interpretation
+# of your architectural render.
+#
+# HOW THEY WORK:
+# - Make Real:          photorealistic material/lighting treatment
+# - Change Environment: replace the background/landscape
+# - Time of Day:        change lighting time and atmosphere
+#
+# NEGATIVE PROMPTS:
+# Flux.2 Klein is unconditional — negatives are zeroed out.
+# Leave negative_prompt blank.
+#
+# NODE IDs (do not change these):
+# These map to specific Text Multiline nodes in the workflow.
+# If you reload the workflow from scratch, re-run find_text_nodes.py
+# to verify the IDs are still correct.
+# ============================================================
+
+make_real:
+  node_id: "1124"
+  label: "Make Real — photorealistic transformation"
+  prompt: >
+    Luxury modernist home, photorealistic architectural photography,
+    travertine stone and glass, flat roof, deep overhanging eaves,
+    ocean view hillside, warm natural light, high-end residential architecture
+  negative_prompt: ""
+
+  # ── Alternates (swap in as needed) ──
+  alternates:
+    - label: "Desert modern"
+      prompt: >
+        Minimalist desert residence, photorealistic architectural photography,
+        rammed earth walls and glass, flat roof, Joshua trees and dry wash,
+        harsh sunlight and sharp shadows, luxury desert compound
+    - label: "Pacific Northwest"
+      prompt: >
+        Contemporary Pacific Northwest home, photorealistic, western red cedar
+        siding and glass, forested hillside, overcast diffuse light,
+        moss and ferns, dark metal roof, high-end residential
+
+change_environment:
+  node_id: "1128"
+  label: "Change Environment — replace landscape and background"
+  prompt: >
+    Dramatic Pacific ocean view, coastal California hillside,
+    golden hour sunlight over the water, dry sage and succulents,
+    sweeping panoramic vista, low cliff above the ocean
+  negative_prompt: ""
+
+  alternates:
+    - label: "Italian hillside"
+      prompt: >
+        Tuscan hillside, warm afternoon light, rolling hills with cypress trees,
+        terracotta rooftops in the valley, golden Italian countryside,
+        Mediterranean landscape
+    - label: "Mountain forest"
+      prompt: >
+        Mountain forest setting, tall pines and aspens, granite boulders,
+        snow-capped peaks in the background, crisp alpine air,
+        afternoon light filtering through trees
+    - label: "Urban rooftop"
+      prompt: >
+        Downtown urban panorama, city skyline, late afternoon golden light,
+        rooftop garden terrace, glass towers in the background
+
+time_of_day:
+  node_id: "1129"
+  label: "Time of Day — lighting and atmosphere"
+  prompt: >
+    Early dusk, warm golden sunset on the horizon, deep blue twilight sky with
+    visible stars emerging in the darker upper sky, warm amber interior light
+    spilling through floor-to-ceiling windows, glowing underwater pool lights
+    illuminating the water from below, architectural exterior lighting,
+    fire pit on terrace, serene coastal California evening
+  negative_prompt: ""
+
+  alternates:
+    - label: "Golden hour"
+      prompt: >
+        Golden hour, 30 minutes before sunset, warm orange side light,
+        long dramatic shadows, sky fading from pale blue to warm amber at
+        the horizon, no interior lights yet
+    - label: "Overcast day"
+      prompt: >
+        Overcast midday, soft diffuse light with no harsh shadows,
+        flat grey sky, moody and cinematic, slight mist in the background,
+        no direct sun, cool blue-grey tones
+    - label: "Deep night"
+      prompt: >
+        Deep night, full darkness, architectural lighting at its most dramatic,
+        warm interior glow through all windows, landscape uplights,
+        pool glowing blue underwater, stars visible, crescent moon,
+        perfect stillness
+
+
+# ── Segmentation Colour Map ───────────────────────────────────────────────
+# These colours are applied to material groups in the segmentation pass.
+# They must match the ColorCode node values in the ComfyUI workflow.
+# Change only if you modify the workflow's ColorCode nodes.
+# Format: material_tag: [R, G, B, A]  (linear colour space, 0.0 - 1.0)
+
+segmentation_colours:
+  # ── Walls / Stone / Concrete → #C86D67 (muted warm red)
+  travertine_white: [0.784, 0.427, 0.404, 1.0]
+  travertine_light: [0.784, 0.427, 0.404, 1.0]
+  concrete_board:   [0.784, 0.427, 0.404, 1.0]
+  concrete_light:   [0.784, 0.427, 0.404, 1.0]
+  concrete_dark:    [0.784, 0.427, 0.404, 1.0]
+
+  # ── Glass / Water → #5F72C7 (blue-purple)
+  glass_clear:      [0.373, 0.447, 0.780, 1.0]
+  glass_tinted:     [0.373, 0.447, 0.780, 1.0]
+  glass_railing:    [0.373, 0.447, 0.780, 1.0]
+  water_blue:       [0.373, 0.447, 0.780, 1.0]
+
+  # ── Metal / Aluminium → #88BCC2 (teal)
+  aluminum_dark:    [0.533, 0.737, 0.761, 1.0]
+
+  # ── Wood / Warm Surfaces → #C5A872 (amber)
+  wood_walnut:      [0.773, 0.659, 0.447, 1.0]

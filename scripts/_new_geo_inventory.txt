@@ -1,0 +1,419 @@
+FILE: C:\Users\NVIDIA\Downloads\Updated Geo\cliff_house_26.blend
+OBJECTS: 282  MESHES: 246  MATERIALS: 56  IMAGES: 54
+
+== SCENES / CAMERAS ==
+  scene 'Scene'  res=1280x720  cam=None  frames=1-100
+  camera-data 'Camera' used_by=[]
+  camera-data 'Camera.001' used_by=[]
+  camera-data 'Camera.002' used_by=[]
+
+== MATERIALS (usage on meshes) ==
+    75x  M_Concrete_WarmBone   (textured=False)
+    48x  M_Concrete_DarkCharcoal   (textured=False)
+    27x  M_Aluminum_Bronze   (textured=False)
+    25x  M_Plaster_White   (textured=False)
+    22x  M_Glass_TintedBronze   (textured=False)
+    21x  M_Stone_AshlarWhite   (textured=False)
+    14x  M_Wood_DarkCedar   (textured=False)
+     6x  M_Railing_Cable   (textured=False)
+     2x  M_Steel_Dark   (textured=False)
+     2x  M_Water_Pool   (textured=False)
+     1x  M_Cladding_Light   (textured=False)
+     1x  M_Cladding_Dark   (textured=False)
+     1x  M_Bronze_Edge   (textured=False)
+     1x  M_Concrete_Pool   (textured=False)
+
+== AREA CLASSIFICATION (first-pass by mesh name) ==
+  [other]  62 meshes   e.g. ['L1_Garage_stile_1', 'L1_Garage_stile_2', 'L1_Garage_W_vert', 'L1_Garage_W_vert.001', 'L1_Garage_W_vert.002', 'L1_Garage_W_vert.003']
+  [frames]  52 meshes   e.g. ['H2_railing_gn', 'H2_railing_gne', 'H2_railing_gnw', 'H2_railing_L3_e', 'H2_railing_L3_s', 'H2_railing_L3_w']
+  [stairs]  42 meshes   e.g. ['L1_tread_0', 'L1_tread_1', 'L1_tread_10', 'L1_tread_11', 'L1_tread_12', 'L1_tread_13']
+  [walls]  36 meshes   e.g. ['cladding_edge', 'curtain_wall', 'garage_cladding_dark', 'H2_L3_S_col', 'H2_L3_S_col.001', 'H2_L3_S_col.002']
+  [windows]  26 meshes   e.g. ['H2_glass_balc_east', 'H2_glass_balc_north', 'H2_glass_balc_south', 'H2_glass_balc_west', 'L1_E_N_horiz_glass', 'L1_E_S_horiz_glass']
+  [floors]  17 meshes   e.g. ['H2__L2_balcony_floor', 'H2_balcon_floor_L3', 'H2_floor_L1_garage', 'H2_floor_L1_house', 'H2_floor_L1_house.001', 'H2_floor_L1_house.002']
+  [roof]  4 meshes   e.g. ['combined_pad_slab', 'H2_roof_garage', 'H2_roof_garage_S', 'H2_roof_slab']
+  [water]  4 meshes   e.g. ['pool_infinity_weir', 'pool_sides', 'water_surface_new', 'waterfall_new']
+  [foundations]  3 meshes   e.g. ['catch_channel', 'catch_channel_end', 'catch_channel_end.001']
+
+== EXISTING 'material' TAGS (segmentation) ==
+   246  '<untagged>'
+
+== COLLECTIONS ==
+  'building_site_fixed': 0 objects
+  'catch_basin_ends': 2 objects
+  'catch_basin_new': 1 objects
+  'cladding_other': 1 objects
+  'combined_pad': 1 objects
+  'curtain_wall': 1 objects
+  'deck_cladding': 0 objects
+  'deck_flush': 2 objects
+  'deck_flush_swap': 0 objects
+  'deck_pool': 0 objects
+  'deck_pool.001': 1 objects
+  'deck_pool.002': 1 objects
+  'deck_pool_swap': 0 objects
+  'deck_retaining_wall': 0 objects
+  'driveway': 1 objects
+  'entry': 4 objects
+  'entryway': 0 objects
+  'garage_north_window': 1 objects
+  'glazing': 5 objects
+  'glazing.001': 1 objects
+  'glazing.002': 1 objects
+  'glazing.003': 1 objects
+  'glazing.004': 1 objects
+  'glazing.005': 1 objects
+  'glazing.006': 1 objects
+  'glazing.007': 1 objects
+  'glazing.008': 1 objects
+  'glazing.009': 1 objects
+  'House_02_finish': 0 objects
+  'infinity_weir': 1 objects
+  'interior_walls_finish': 0 objects
+  'L1_cladding_dark': 4 objects
+  'L1_cladding_light': 2 objects
+  'L1_door': 0 objects
+  'L1_east_cladding': 2 objects
+  'L1_entry_windows': 0 objects
+  'L1_exterior': 0 objects
+  'L1_floors': 0 objects
+  'L1_floors.001': 1 objects
+  'L1_floors.002': 1 objects
+  'L1_frosted_glass': 2 objects
+  'L1_int_walls_finish': 6 objects
+  'L1_mullions': 0 objects
+  'L1_stairs_finish': 23 objects
+  'L1_veranda_cladding': 3 objects
+  'L1_walls': 0 objects
+  'L1_walls.001': 1 objects
+  'L1_walls.002': 1 objects
+  'L1_walls.003': 1 objects
+  'L1_walls.004': 1 objects
+  'L1_walls.005': 1 objects
+  'L1_walls.006': 1 objects
+  'L1_walls.007': 1 objects
+  'L1_walls.008': 1 objects
+  'L1_walls.009': 1 objects
+  'L1_walls.010': 1 objects
+  'L1_walls.011': 1 objects
+  'L1_walls.012': 1 objects
+  'L1_windows': 0 objects
+  'L2_balconies': 10 objects
+  'L2_exterior': 0 objects
+  'L2_floors': 3 objects
+  'L2_frosted_glass': 2 objects
+  'L2_int_walls_finish': 12 objects
+  'L2_roof': 2 objects
+  'L2_stairs_finish': 24 objects
+  'L2_walls': 0 objects
+  'L2_walls.001': 1 objects
+  'L2_walls.002': 1 objects
+  'L2_walls.003': 1 objects
+  'L2_walls.004': 1 objects
+  'L2_walls.005': 1 objects
+  'L2_walls.006': 1 objects
+  'L2_walls.007': 1 objects
+  'L2_walls.008': 1 objects
+  'L2_walls.009': 1 objects
+  'L2_windows': 0 objects
+  'L3_balconies': 4 objects
+  'L3_exterior': 0 objects
+  'L3_finish': 0 objects
+  'L3_floors': 1 objects
+  'L3_frosted_glass': 1 objects
+  'L3_int_walls_finish': 10 objects
+  'L3_interior_glazing': 3 objects
+  'L3_roof': 1 objects
+  'L3_walls': 10 objects
+  'mullions': 11 objects
+  'mullions.001': 1 objects
+  'mullions.002': 1 objects
+  'mullions.003': 1 objects
+  'mullions.004': 1 objects
+  'mullions.005': 1 objects
+  'mullions.006': 1 objects
+  'mullions.007': 1 objects
+  'mullions.008': 1 objects
+  'mullions.009': 1 objects
+  'mullions.010': 1 objects
+  'mullions.011': 1 objects
+  'mullions.012': 1 objects
+  'mullions.013': 1 objects
+  'mullions.014': 1 objects
+  'mullions.015': 1 objects
+  'mullions.016': 1 objects
+  'mullions.017': 1 objects
+  'mullions.018': 1 objects
+  'mullions.019': 1 objects
+  'mullions.020': 1 objects
+  'mullions.021': 1 objects
+  'mullions.022': 1 objects
+  'mullions.023': 1 objects
+  'mullions.024': 1 objects
+  'mullions.025': 1 objects
+  'mullions.026': 1 objects
+  'mullions.027': 1 objects
+  'mullions.028': 1 objects
+  'pool': 0 objects
+  'pool_bottom': 1 objects
+  'pool_sides': 1 objects
+  'pool_water_surface': 1 objects
+  'punch_window_north': 1 objects
+  'punch_window_south': 1 objects
+  'retaining_sides': 3 objects
+  'retaining_sides.001': 1 objects
+  'retaining_sides.002': 1 objects
+  'retaining_sides.003': 1 objects
+  'Site': 0 objects
+  'stairs_finish': 0 objects
+  'stone_rim': 1 objects
+  'terrain': 1 objects
+  'waterfall': 1 objects
+  'wood_door': 14 objects
+
+== ALL MESH OBJECTS (name | dims | slot mats | tag) ==
+  H2_L3_S_col  | dims=(0.5, 0.3, 3.05) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_L3_S_col.001  | dims=(0.5, 0.3, 3.05) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_L3_S_col.002  | dims=(0.5, 0.3, 3.05) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_L3_S_col.003  | dims=(0.2, 0.3, 3.5) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_L3_S_col.004  | dims=(0.5, 0.3, 3.5) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_L3_S_header  | dims=(11.0, 0.3, 0.3) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_L3_S_sill  | dims=(11.0, 0.3, 0.15) | mats=['M_Concrete_WarmBone'] | tag=
+  H2__L2_balcony_floor  | dims=(12.0, 20.0, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_balcon_floor_L3  | dims=(12.0, 20.0, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_garage  | dims=(12.0, 11.0, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_house  | dims=(0.5, 15.62, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_house.001  | dims=(0.5, 1.58, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_house.002  | dims=(8.2, 2.2, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_house.003  | dims=(3.8, 19.9, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_house.004  | dims=(3.8, 19.9, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L1_house.005  | dims=(7.9, 17.7, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L2_balccony_strip  | dims=(3.5, 11.0, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L2_guest  | dims=(11.4, 11.0, 0.0) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_floor_L2_guest.001  | dims=(11.4, 11.0, 0.0) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_glass_balc_east  | dims=(0.05, 2.0, 0.9) | mats=['M_Glass_TintedBronze'] | tag=
+  H2_glass_balc_north  | dims=(3.45, 0.05, 1.0) | mats=['M_Glass_TintedBronze'] | tag=
+  H2_glass_balc_south  | dims=(11.9, 0.05, 1.0) | mats=['M_Glass_TintedBronze'] | tag=
+  H2_glass_balc_west  | dims=(0.05, 31.0, 1.0) | mats=['M_Glass_TintedBronze'] | tag=
+  H2_railing_L3_e  | dims=(0.15, 7.0, 0.9) | mats=['M_Railing_Cable'] | tag=
+  H2_railing_L3_s  | dims=(11.7, 0.15, 0.9) | mats=['M_Railing_Cable'] | tag=
+  H2_railing_L3_w  | dims=(0.15, 7.0, 0.9) | mats=['M_Railing_Cable'] | tag=
+  H2_railing_gn  | dims=(11.7, 0.15, 0.9) | mats=['M_Railing_Cable'] | tag=
+  H2_railing_gne  | dims=(0.15, 2.25, 0.9) | mats=['M_Railing_Cable'] | tag=
+  H2_railing_gnw  | dims=(0.15, 2.25, 0.9) | mats=['M_Railing_Cable'] | tag=
+  H2_reveal_L_new  | dims=(0.65, 0.4, 3.65) | mats=['M_Aluminum_Bronze'] | tag=
+  H2_reveal_R_new  | dims=(0.65, 0.4, 3.65) | mats=['M_Aluminum_Bronze'] | tag=
+  H2_reveal_sill_new  | dims=(0.65, 2.4, 0.15) | mats=['M_Aluminum_Bronze'] | tag=
+  H2_reveal_top_new  | dims=(0.65, 3.2, 0.15) | mats=['M_Aluminum_Bronze'] | tag=
+  H2_roof_garage  | dims=(16.0, 13.6, 0.6) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_roof_garage_S  | dims=(5.0, 2.6, 0.6) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_roof_slab  | dims=(16.0, 18.0, 0.8) | mats=['M_Concrete_WarmBone'] | tag=
+  H2_wall_L1_east_N  | dims=(0.3, 5.85, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L1_east_S  | dims=(0.3, 5.85, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L1_gn  | dims=(11.4, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L1_gs  | dims=(11.4, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L1_south_mE  | dims=(1.0, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L1_south_mW  | dims=(1.0, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L1_west  | dims=(0.3, 18.0, 4.0) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_east_new  | dims=(0.3, 18.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_ge  | dims=(0.3, 11.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_gn  | dims=(11.4, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_gs  | dims=(11.4, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_guest_west  | dims=(0.3, 11.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_north  | dims=(9.4, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_south_mE  | dims=(1.0, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_south_mW  | dims=(1.0, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L2_west  | dims=(0.3, 18.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L3_east_new  | dims=(0.3, 12.4, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L3_north  | dims=(11.4, 0.3, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_L3_west  | dims=(0.3, 13.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_garage_L1_west  | dims=(0.3, 11.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  H2_wall_garage_east  | dims=(0.3, 11.0, 3.5) | mats=['M_Stone_AshlarWhite'] | tag=
+  L1_E_N_horiz_glass  | dims=(0.2, 4.33, 0.59) | mats=['M_Glass_TintedBronze'] | tag=
+  L1_E_S_horiz_glass  | dims=(0.2, 4.33, 0.59) | mats=['M_Glass_TintedBronze'] | tag=
+  L1_Garage_W_glass  | dims=(0.06, 10.4, 3.3) | mats=['M_Glass_TintedBronze'] | tag=
+  L1_Garage_W_rail  | dims=(0.12, 10.4, 0.1) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_W_vert  | dims=(0.12, 0.06, 3.3) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_W_vert.001  | dims=(0.12, 0.06, 3.3) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_W_vert.002  | dims=(0.12, 0.06, 3.3) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_W_vert.003  | dims=(0.12, 0.06, 3.3) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_W_vert.004  | dims=(0.12, 0.06, 3.3) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_barn_rail  | dims=(0.04, 2.5, 0.1) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_barn_rail.001  | dims=(0.04, 2.5, 0.1) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_barn_rail.002  | dims=(0.04, 2.5, 0.1) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_barn_rail.003  | dims=(0.04, 2.5, 0.1) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_barn_track  | dims=(0.06, 10.4, 0.1) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_door_main  | dims=(0.32, 10.0, 3.0) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_rail  | dims=(0.34, 10.0, 0.04) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_rail.001  | dims=(0.34, 10.0, 0.04) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_rail.002  | dims=(0.34, 10.0, 0.04) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_rail.003  | dims=(0.34, 10.0, 0.04) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_stile_1  | dims=(0.34, 0.05, 3.0) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_Garage_stile_2  | dims=(0.34, 0.05, 3.0) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_S_glass_main  | dims=(5.9, 0.24, 3.4) | mats=['M_Glass_TintedBronze'] | tag=
+  L1_S_mullion  | dims=(0.07, 0.32, 3.5) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_S_mullion.001  | dims=(0.07, 0.32, 3.5) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_accordion_glass  | dims=(0.2, 16.0, 3.35) | mats=['M_Glass_TintedBronze'] | tag=
+  L1_W_mullion  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_mullion.001  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_mullion.002  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_mullion.003  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_mullion.004  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_mullion.005  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_W_mullion.006  | dims=(0.26, 0.07, 3.35) | mats=['M_Aluminum_Bronze'] | tag=
+  L1_door_centre  | dims=(0.28, 0.1, 3.4) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.001  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.002  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.003  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.004  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.005  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.006  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.007  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.008  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.009  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.010  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_door_slat.011  | dims=(0.24, 2.4, 0.21) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_front_door_wood_panel  | dims=(0.1, 2.4, 3.4) | mats=['M_Wood_DarkCedar'] | tag=
+  L1_gap_N_frost  | dims=(0.2, 1.9, 3.46) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_gap_S_frost  | dims=(0.2, 1.9, 3.46) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_landing_bot  | dims=(3.0, 1.2, 0.18) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_patio_garage  | dims=(3.62, 11.01, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  L1_scullery_S  | dims=(3.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L1_spine_N  | dims=(0.15, 3.97, 3.5) | mats=['M_Plaster_White'] | tag=
+  L1_spine_S  | dims=(0.15, 5.55, 3.5) | mats=['M_Plaster_White'] | tag=
+  L1_stringer  | dims=(0.06, 5.46, 3.87) | mats=['M_Steel_Dark'] | tag=
+  L1_tread_0  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_1  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_10  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_11  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_12  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_13  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_14  | dims=(1.2, 0.26, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_15  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_16  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_17  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_18  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_19  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_2  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_20  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_3  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_4  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_5  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_6  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_7  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_8  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_tread_9  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L1_wc_N  | dims=(3.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L1_wc_S  | dims=(3.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_E_horiz_glass  | dims=(0.2, 13.44, 0.59) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_GN_bed1_glass  | dims=(5.4, 0.08, 3.3) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_GN_bed2_glass  | dims=(5.4, 0.08, 3.3) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_GW_div  | dims=(0.12, 0.1, 3.3) | mats=['M_Plaster_White'] | tag=
+  L2_GW_glass  | dims=(0.06, 10.4, 3.3) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_S_glass_main  | dims=(7.4, 0.24, 3.4) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_S_mullion  | dims=(0.07, 0.32, 3.5) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_S_mullion.001  | dims=(0.07, 0.32, 3.5) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_S_mullion.002  | dims=(0.07, 0.32, 3.5) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_accordion_glass  | dims=(0.2, 16.0, 2.85) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_W_mullion  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_mullion.001  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_mullion.002  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_mullion.003  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_mullion.004  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_mullion.005  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_W_mullion.006  | dims=(0.26, 0.07, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L2_bath_N  | dims=(3.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_bath_S  | dims=(2.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_bath_W  | dims=(0.15, 3.2, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_bed3_N  | dims=(5.2, 0.15, 3.5) | mats=['M_Concrete_WarmBone'] | tag=
+  L2_ge_horiz_glass  | dims=(0.24, 8.19, 0.59) | mats=['M_Glass_TintedBronze'] | tag=
+  L2_guest_balcony_floor  | dims=(12.0, 13.25, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  L2_guest_div  | dims=(6.7, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_guest_ens_W  | dims=(0.15, 10.4, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_guest_ens_div  | dims=(4.7, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_landing_bot  | dims=(2.75, 1.46, 0.18) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_landing_top  | dims=(2.05, 1.2, 0.18) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_lounge_N  | dims=(5.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_master_N  | dims=(6.2, 0.15, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_shaft_W  | dims=(0.15, 6.7, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_spine_S  | dims=(0.15, 7.2, 3.5) | mats=['M_Plaster_White'] | tag=
+  L2_stringer  | dims=(0.12, 5.46, 3.87) | mats=['M_Steel_Dark'] | tag=
+  L2_tread_0  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_1  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_10  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_11  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_12  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_13  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_14  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_15  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_16  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_17  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_18  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_19  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_2  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_20  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_3  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_4  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_5  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_6  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_7  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_8  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_tread_9  | dims=(1.2, 0.28, 0.04) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  L2_wic_N  | dims=(3.2, 0.15, 3.5) | mats=['M_Concrete_WarmBone'] | tag=
+  L3_E_horiz_glass  | dims=(0.2, 9.24, 0.59) | mats=['M_Glass_TintedBronze'] | tag=
+  L3_N_horiz_glass  | dims=(8.49, 0.24, 0.59) | mats=['M_Glass_TintedBronze'] | tag=
+  L3_S_fixed_window  | dims=(1.25, 0.1, 3.2) | mats=['M_Concrete_WarmBone'] | tag=
+  L3_S_fixed_window.001  | dims=(2.25, 0.1, 3.2) | mats=['M_Concrete_WarmBone'] | tag=
+  L3_S_hinged_door  | dims=(3.0, 0.1, 3.2) | mats=['M_Concrete_WarmBone'] | tag=
+  L3_S_hinged_door.001  | dims=(3.0, 0.1, 3.2) | mats=['M_Concrete_WarmBone'] | tag=
+  L3_W_div  | dims=(0.12, 0.12, 3.3) | mats=['M_Plaster_White'] | tag=
+  L3_W_div.001  | dims=(0.12, 0.12, 3.3) | mats=['M_Plaster_White'] | tag=
+  L3_W_glass  | dims=(0.06, 12.5, 3.3) | mats=['M_Glass_TintedBronze'] | tag=
+  L3_div_N  | dims=(0.15, 3.2, 3.2) | mats=['M_Plaster_White'] | tag=
+  L3_div_N.001  | dims=(0.16, 6.92, 1.5) | mats=['M_Plaster_White'] | tag=
+  L3_div_N.002  | dims=(0.16, 6.92, 1.0) | mats=['M_Plaster_White'] | tag=
+  L3_maker_E  | dims=(0.15, 6.7, 3.2) | mats=['M_Plaster_White'] | tag=
+  L3_maker_S  | dims=(7.2, 0.15, 3.2) | mats=['M_Plaster_White'] | tag=
+  L3_maker_S_glass_0  | dims=(2.29, 0.12, 2.85) | mats=['M_Glass_TintedBronze'] | tag=
+  L3_maker_S_glass_1  | dims=(2.29, 0.12, 2.85) | mats=['M_Glass_TintedBronze'] | tag=
+  L3_maker_S_glass_2  | dims=(2.29, 0.12, 2.85) | mats=['M_Glass_TintedBronze'] | tag=
+  L3_maker_S_mull_0  | dims=(0.08, 0.12, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L3_maker_S_mull_1  | dims=(0.08, 0.12, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L3_maker_S_mull_2  | dims=(0.08, 0.12, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L3_maker_S_mull_end  | dims=(0.08, 0.12, 2.85) | mats=['M_Aluminum_Bronze'] | tag=
+  L3_storage_S  | dims=(2.1, 0.15, 3.2) | mats=['M_Plaster_White'] | tag=
+  catch_channel  | dims=(0.41, 13.12, 1.06) | mats=['M_Concrete_WarmBone'] | tag=
+  catch_channel_end  | dims=(0.41, 0.19, 1.06) | mats=['M_Concrete_WarmBone'] | tag=
+  catch_channel_end.001  | dims=(0.41, 0.14, 1.06) | mats=['M_Concrete_WarmBone'] | tag=
+  cladding_edge  | dims=(12.5, 0.5, 0.25) | mats=['M_Cladding_Light'] | tag=
+  combined_pad_slab  | dims=(15.5, 30.9, 0.75) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  curtain_wall  | dims=(16.5, 31.9, 2.25) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  garage_cladding_dark  | dims=(0.4, 10.6, 0.84) | mats=['M_Cladding_Dark'] | tag=
+  map_kitchen_island  | dims=(2.0, 0.83, 0.93) | mats=['M_Plaster_White'] | tag=
+  obj_111  | dims=(6.4, 0.5, 2.74) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_112  | dims=(6.4, 0.4, 0.88) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_113  | dims=(3.5, 0.4, 0.57) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_115  | dims=(4.0, 0.4, 0.78) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_116  | dims=(3.5, 0.4, 0.57) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_117  | dims=(6.4, 0.4, 0.88) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_119  | dims=(1.0, 31.8, 3.3) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_120  | dims=(7.4, 31.8, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_121  | dims=(6.4, 0.5, 2.74) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_122  | dims=(0.5, 19.9, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_124  | dims=(7.53, 9.04, 0.45) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_127  | dims=(12.8, 0.4, 0.49) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_128  | dims=(8.2, 0.3, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_155  | dims=(0.4, 10.6, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_157  | dims=(40.0, 42.0, 8.01) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_31  | dims=(7.95, 17.64, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_56  | dims=(11.4, 12.4, 0.09) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_57  | dims=(0.3, 11.89, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  obj_58  | dims=(0.3, 5.81, 0.25) | mats=['M_Concrete_WarmBone'] | tag=
+  patio_pool_rim  | dims=(4.35, 13.7, 0.04) | mats=['M_Concrete_WarmBone'] | tag=
+  pool_deck  | dims=(7.4, 31.8, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  pool_floor  | dims=(3.65, 12.5, 0.2) | mats=['M_Concrete_WarmBone'] | tag=
+  pool_infinity_weir  | dims=(0.1, 13.0, 1.5) | mats=['M_Bronze_Edge'] | tag=
+  pool_sides  | dims=(4.0, 13.0, 1.5) | mats=['M_Concrete_Pool'] | tag=
+  site_west Retaining_wall  | dims=(1.0, 31.8, 3.3) | mats=['M_Concrete_DarkCharcoal'] | tag=
+  water_surface_new  | dims=(3.85, 12.5, 0.01) | mats=['M_Water_Pool'] | tag=
+  waterfall_new  | dims=(0.0, 12.5, 1.05) | mats=['M_Water_Pool'] | tag=

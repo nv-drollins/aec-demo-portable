@@ -1,0 +1,58 @@
+# Local configuration and credentials
+config/user_config.yaml
+config/runtime.env
+tools/obs/obs_recorder_config.json
+.env
+.env.*
+!.env.example
+
+# Runtime state
+runtime/
+logs/
+*.log
+*.pid
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Heavy portable payloads retained locally, not in ordinary Git
+sample_project/
+assets/
+setup/blender_addons/
+
+# CAD, DCC, render, model, archive, and media payloads
+*.blend
+*.blend1
+*.3dm
+*.FCStd
+*.stp
+*.step
+*.obj
+*.fbx
+*.glb
+*.gltf
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.gguf
+*.hdr
+*.exr
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.mp4
+*.mov
+*.zip
+*.7z
+
+# Operating-system and editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

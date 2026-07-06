@@ -1,0 +1,14 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.blend binary
+*.blend1 binary
+*.3dm binary
+*.FCStd binary
+*.stp binary
+*.step binary
+*.safetensors binary
+*.hdr binary
+*.exr binary
+*.png binary
+*.jpg binary
+*.zip binary

@@ -1,0 +1,292 @@
+#!/usr/bin/env python3
+"""Preflight and manage the local AEC Demo Portable service stack safely."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+import signal
+import socket
+import subprocess
+import sys
+import time
+import urllib.request
+import xmlrpc.client
+
+
+ROOT = Path(__file__).resolve().parent.parent
+RUNTIME = ROOT / "runtime"
+LOGS = ROOT / "logs"
+LOCAL_ENV = ROOT / "config" / "runtime.env"
+EXAMPLE_ENV = ROOT / "config" / "runtime.env.example"
+
+REQUIRED_MODELS = (
+    "models/diffusion_models/klein/flux-2-klein-4b.safetensors",
+    "models/text_encoders/klein/qwen_3_4b.safetensors",
+    "models/vae/flux2-vae.safetensors",
+)
+
+
+def load_env_file(path: Path) -> None:
+    if not path.is_file():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if key and key not in os.environ:
+            os.environ[key] = os.path.expandvars(os.path.expanduser(value.strip()))
+
+
+load_env_file(LOCAL_ENV if LOCAL_ENV.is_file() else EXAMPLE_ENV)
+
+
+def setting(name: str, default: str) -> str:
+    return os.environ.get(name, default)
+
+
+def enabled(name: str, default: bool = False) -> bool:
+    fallback = "1" if default else "0"
+    return setting(name, fallback).lower() in {"1", "true", "yes", "on"}
+
+
+HOST = setting("AEC_PORTABLE_HOST", "127.0.0.1")
+FREECAD_PORT = int(setting("AEC_PORTABLE_FREECAD_PORT", "9875"))
+BLENDER_PORT = int(setting("AEC_PORTABLE_BLENDER_PORT", "9876"))
+COMFY_PORT = int(setting("AEC_PORTABLE_COMFY_PORT", "8188"))
+BLENDER_EXE = setting("AEC_PORTABLE_BLENDER_EXE", "blender")
+BLENDER_SCENE = Path(setting(
+    "AEC_PORTABLE_BLENDER_SCENE",
+    str(ROOT / "sample_project/blender_assets/cliff_house_act2_textured_v3.blend"),
+))
+BLENDER_MIN_VERSION = tuple(
+    int(part) for part in setting("AEC_PORTABLE_BLENDER_MIN_VERSION", "5.1").split(".")[:2]
+)
+COMFY_ROOT = Path(setting("AEC_PORTABLE_COMFY_ROOT", "/home/nvidia/aec-demo/comfyui"))
+COMFY_PYTHON = Path(setting(
+    "AEC_PORTABLE_COMFY_PYTHON", str(COMFY_ROOT / ".venv/bin/python")
+))
+FREECAD_START = Path(setting(
+    "AEC_PORTABLE_FREECAD_START", "/home/nvidia/aec-demo/scripts/start-freecad.sh"
+))
+
+
+def tcp_open(port: int, timeout: float = 1.0) -> bool:
+    try:
+        with socket.create_connection((HOST, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def freecad_healthy() -> bool:
+    try:
+        proxy = xmlrpc.client.ServerProxy(
+            f"http://{HOST}:{FREECAD_PORT}", allow_none=True
+        )
+        return bool(proxy.ping())
+    except Exception:
+        return False
+
+
+def blender_request(kind: str, params: dict | None = None) -> dict:
+    payload = json.dumps({"type": kind, "params": params or {}}).encode()
+    with socket.create_connection((HOST, BLENDER_PORT), timeout=2) as client:
+        client.settimeout(5)
+        client.sendall(payload)
+        response = b""
+        while True:
+            chunk = client.recv(65536)
+            if not chunk:
+                break
+            response += chunk
+            try:
+                return json.loads(response)
+            except json.JSONDecodeError:
+                continue
+    raise RuntimeError("Blender MCP returned no valid response")
+
+
+def blender_healthy() -> bool:
+    try:
+        return blender_request("get_scene_info").get("status") == "success"
+    except Exception:
+        return False
+
+
+def comfy_healthy() -> bool:
+    try:
+        with urllib.request.urlopen(
+            f"http://{HOST}:{COMFY_PORT}/system_stats", timeout=3
+        ) as response:
+            return response.status == 200
+    except Exception:
+        return False
+
+
+def blender_version() -> tuple[tuple[int, int], str]:
+    try:
+        completed = subprocess.run(
+            [BLENDER_EXE, "--version"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return (0, 0), f"unavailable ({exc})"
+    first = completed.stdout.splitlines()[0].strip()
+    try:
+        parts = first.split()[1].split(".")
+        version = (int(parts[0]), int(parts[1]))
+    except (IndexError, ValueError):
+        version = (0, 0)
+    return version, first
+
+
+def missing_models() -> list[Path]:
+    return [COMFY_ROOT / relative for relative in REQUIRED_MODELS if not (COMFY_ROOT / relative).is_file()]
+
+
+def preflight() -> list[str]:
+    errors: list[str] = []
+    if not BLENDER_SCENE.is_file():
+        errors.append(f"Blender scene is missing: {BLENDER_SCENE}")
+    version, description = blender_version()
+    print(f"BLENDER_VERSION={description}")
+    if version < BLENDER_MIN_VERSION:
+        errors.append(
+            f"Blender {BLENDER_MIN_VERSION[0]}.{BLENDER_MIN_VERSION[1]} or newer is required "
+            "for the delivered scenes; "
+            f"configured executable reports {description}"
+        )
+    if not COMFY_PYTHON.is_file():
+        errors.append(f"ComfyUI Python is missing: {COMFY_PYTHON}")
+    if not (COMFY_ROOT / "main.py").is_file():
+        errors.append(f"ComfyUI main.py is missing under: {COMFY_ROOT}")
+    missing = missing_models()
+    for path in missing:
+        print(f"MODEL_MISSING={path}")
+    if missing and enabled("AEC_PORTABLE_REQUIRE_MODELS", True):
+        errors.append(
+            f"{len(missing)} required Flux.2 model files are missing; "
+            "see comfyui/models/MODEL_MANIFEST.md"
+        )
+    if enabled("AEC_PORTABLE_FREECAD_ENABLED", True) and not FREECAD_START.is_file():
+        errors.append(f"FreeCAD launcher is missing: {FREECAD_START}")
+    if errors:
+        print("PORTABLE_PREFLIGHT_BLOCKED")
+        for error in errors:
+            print(f"ERROR={error}")
+    else:
+        print("PORTABLE_PREFLIGHT_OK")
+    return errors
+
+
+def wait_for(check, seconds: int, label: str) -> None:
+    for _ in range(seconds):
+        if check():
+            print(f"{label}_READY")
+            return
+        time.sleep(1)
+    raise RuntimeError(f"{label} did not become ready within {seconds} seconds")
+
+
+def spawn(name: str, command: list[str]) -> None:
+    RUNTIME.mkdir(parents=True, exist_ok=True)
+    LOGS.mkdir(parents=True, exist_ok=True)
+    log_path = LOGS / f"{name}.log"
+    stream = log_path.open("ab")
+    process = subprocess.Popen(
+        command,
+        cwd=ROOT,
+        stdout=stream,
+        stderr=subprocess.STDOUT,
+        start_new_session=True,
+    )
+    (RUNTIME / f"{name}.pid").write_text(f"{process.pid}\n", encoding="utf-8")
+    print(f"{name.upper()}_STARTED pid={process.pid} log={log_path}")
+
+
+def start() -> None:
+    errors = preflight()
+    if errors:
+        raise SystemExit(2)
+    if enabled("AEC_PORTABLE_FREECAD_ENABLED", True):
+        if not freecad_healthy():
+            subprocess.run([str(FREECAD_START)], check=True)
+        wait_for(freecad_healthy, 60, "FREECAD_MCP")
+    if not comfy_healthy():
+        spawn(
+            "comfyui",
+            [str(COMFY_PYTHON), str(COMFY_ROOT / "main.py"), "--listen", HOST],
+        )
+    wait_for(comfy_healthy, 120, "COMFYUI")
+    if not blender_healthy():
+        spawn("blender", [BLENDER_EXE, str(BLENDER_SCENE)])
+    wait_for(blender_healthy, 90, "BLENDER_MCP")
+    status()
+    print("PORTABLE_STACK_OK")
+
+
+def terminate_recorded(name: str) -> None:
+    pid_path = RUNTIME / f"{name}.pid"
+    if not pid_path.is_file():
+        print(f"{name.upper()}_STOP_SKIPPED=not_started_by_this_project")
+        return
+    try:
+        pid = int(pid_path.read_text(encoding="utf-8").strip())
+        os.killpg(pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    except (ValueError, PermissionError) as exc:
+        raise RuntimeError(f"Could not stop recorded {name} process: {exc}") from exc
+    for _ in range(30):
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            break
+        time.sleep(0.25)
+    pid_path.unlink(missing_ok=True)
+    print(f"{name.upper()}_STOPPED pid={pid}")
+
+
+def stop() -> None:
+    terminate_recorded("blender")
+    terminate_recorded("comfyui")
+    print("FREECAD_STOP_SKIPPED=shared_service")
+    print("PORTABLE_STACK_STOPPED")
+
+
+def status() -> None:
+    print(f"ROOT={ROOT}")
+    print(f"FREECAD_MCP={'healthy' if freecad_healthy() else 'down'} endpoint={HOST}:{FREECAD_PORT}")
+    print(f"BLENDER_MCP={'healthy' if blender_healthy() else 'down'} endpoint={HOST}:{BLENDER_PORT}")
+    print(f"COMFYUI={'healthy' if comfy_healthy() else 'down'} endpoint={HOST}:{COMFY_PORT}")
+    print(f"SCENE={'present' if BLENDER_SCENE.is_file() else 'missing'} path={BLENDER_SCENE}")
+    print(f"FLUX_MODELS_MISSING={len(missing_models())}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("command", choices=("preflight", "start", "stop", "restart", "status"))
+    args = parser.parse_args()
+    if args.command == "preflight":
+        raise SystemExit(2 if preflight() else 0)
+    if args.command == "start":
+        start()
+    elif args.command == "stop":
+        stop()
+    elif args.command == "restart":
+        stop()
+        start()
+    else:
+        status()
+
+
+if __name__ == "__main__":
+    main()

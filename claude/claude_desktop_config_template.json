@@ -1,0 +1,54 @@
+{
+  "_instructions": [
+    "Copy this file to: %APPDATA%\\Claude\\claude_desktop_config.json (Windows)",
+    "Or: ~/Library/Application Support/Claude/claude_desktop_config.json (Mac)",
+    "Replace all REPLACE_WITH_... values with your actual settings.",
+    "Adjust port numbers if you changed them in user_config.yaml"
+  ],
+  "mcpServers": {
+    "blender": {
+      "_note": "Connects to BlenderMCP addon. Blender must be open with MCP server running.",
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:9876/mcp"
+      ]
+    },
+    "rhinoceros3d": {
+      "_note": "Connects to Rhino MCP plugin. Rhino must be open.",
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:3001/mcp"
+      ]
+    },
+    "obs": {
+      "_note": "Connects to OBS Studio for recording. OBS must be open with WebSocket enabled.",
+      "command": "npx",
+      "args": [
+        "-y",
+        "obs-mcp@latest"
+      ],
+      "env": {
+        "OBS_WEBSOCKET_PASSWORD": "REPLACE_WITH_YOUR_OBS_PASSWORD"
+      }
+    },
+    "davinci-resolve": {
+      "_note": "Optional — DaVinci Resolve for video editing. Remove this block if not using.",
+      "_enabled": false,
+      "command": "REPLACE_WITH_PYTHON_PATH",
+      "args": [
+        "REPLACE_WITH_DAVINCI_MCP_PATH/src/server.py"
+      ],
+      "env": {
+        "RESOLVE_SCRIPT_API": "C:\\ProgramData\\Blackmagic Design\\DaVinci Resolve\\Support\\Developer\\Scripting",
+        "RESOLVE_SCRIPT_LIB": "C:\\Program Files\\Blackmagic Design\\DaVinci Resolve\\fusionscript.dll",
+        "PYTHONPATH": "C:\\ProgramData\\Blackmagic Design\\DaVinci Resolve\\Support\\Developer\\Scripting\\Modules"
+      }
+    }
+  },
+  "preferences": {
+    "allowAllBrowserActions": true,
+    "keepAwakeEnabled": true
+  }
+}
