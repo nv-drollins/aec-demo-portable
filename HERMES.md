@@ -49,6 +49,12 @@ shaders, finalizes the ten entourage materials, and completes exact
 segmentation tags. Before approval, use only
 `scripts/check-portable-materials-ready.py`; do not begin Phase 8 camera work.
 
+Canonical Phase 8 uses `build-portable-blender-camera` and only
+`scripts/run-portable-camera.py`. It preserves delivered `Camera_day` framing
+as `ocean_view`, adds the utility cameras, and saves a review screenshot. Before
+approval, use only `scripts/check-portable-camera-ready.py`; do not begin Phase 9
+lighting.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

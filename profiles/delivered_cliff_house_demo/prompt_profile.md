@@ -136,8 +136,16 @@ Before Phase 7 approval, readiness validation must run only
 After a separate human approval, Phase 7 must run only
 `scripts/run-portable-materials.py` through the
 `build-portable-blender-materials` skill. Require the input, assignment, shader,
-and preparation markers and stop at its materials review gate. Phase 8 remains
-blocked until its checked portable adapter exists.
+and preparation markers and stop at its materials review gate.
+
+Before Phase 8 approval, readiness validation must run only
+`scripts/check-portable-camera-ready.py` and require
+`PORTABLE_CAMERA_READY_OK` without mutating Blender.
+After a separate human approval, Phase 8 must run only
+`scripts/run-portable-camera.py` through the `build-portable-blender-camera`
+skill. Require the input, build, framing, preview, and preparation markers and
+stop at its camera review gate. Phase 9 remains blocked until its checked
+portable adapter exists.
 
 ## 7. Rendering and ComfyUI defaults
 

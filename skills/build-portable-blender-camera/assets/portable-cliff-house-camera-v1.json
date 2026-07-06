@@ -1,0 +1,24 @@
+{
+  "format": "aec-portable-blender-camera-v1",
+  "id": "delivered-cliff-house-camera-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_materials.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_camera.blend",
+  "preview": "projects/recorded_demo/test_renders/phase8_hero_camera.png",
+  "source_camera": "Camera_day",
+  "hero_camera": "ocean_view",
+  "target_empty": "ocean_view_target",
+  "compass_camera": "compass_cam",
+  "patio_camera": "patio_sweep_cam",
+  "source_location": [-0.007308312691748142,0.04587998241186142,0.0073383948765695095],
+  "source_rotation": [1.5149774551391602,-0.000006335868874884909,-2.8647000789642334],
+  "hero_lens": 20.5,
+  "compass_lens": 35.0,
+  "patio_lens": 24.0,
+  "resolution": [1280,720],
+  "anchors": {
+    "pool": [-0.0048,-0.009,0.0006],
+    "patio": [0.0028,0.009,0.0006],
+    "building_center": [0.002,0.0,0.004],
+    "entry": [0.006,0.013,0.0006]
+  }
+}

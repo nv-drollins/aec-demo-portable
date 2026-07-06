@@ -201,7 +201,24 @@ source meshes, ten finalized entourage meshes, and valid delivered clear,
 frosted, and pale-blue glass shaders. It does not replace the authoritative
 building/site palette from prose.
 
-Do not approve Phase 8 until its checked portable adapter has been added;
+After inspecting and approving Phase 7, one new approval authorizes Phase 8.
+Hermes preserves the delivered camera composition and adds named utility cameras:
+
+```text
+PORTABLE_CAMERA_INPUT_OK
+PORTABLE_CAMERA_BUILD_OK
+PORTABLE_CAMERA_FRAMING_OK
+PORTABLE_CAMERA_PREVIEW_OK
+PORTABLE_CAMERA_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=8 name=camera_placement
+```
+
+The camera gate validates the delivered 20.5mm `Camera_day` composition, creates
+`ocean_view`, `compass_cam`, and `patio_sweep_cam`, confirms four framing anchors,
+and saves a viewport review image. The delivered framing overrides the prompt's
+adjustable 28mm starting value.
+
+Do not approve Phase 9 until its checked portable adapter has been added;
 Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
 
 ## Fast recorded integration proof

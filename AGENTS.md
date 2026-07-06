@@ -135,6 +135,21 @@ For the recorded-demo opening instruction:
 - Show the Blender material-preview result, then stop with
   `PHASE_REVIEW_REQUIRED phase=7 name=materials`.
 
+## Canonical Phase 8 adapter
+
+- Before Phase 8 approval, run only
+  `python3 scripts/check-portable-camera-ready.py`. Require
+  `PORTABLE_CAMERA_READY_OK`, then stop at the human approval marker.
+- Do not use raw Blender MCP code or replace the delivered camera framing.
+- After Phase 7 review and a new human approval, load
+  `build-portable-blender-camera` and run only
+  `python3 scripts/run-portable-camera.py` from this repository.
+- Require `PORTABLE_CAMERA_INPUT_OK`, `PORTABLE_CAMERA_BUILD_OK`,
+  `PORTABLE_CAMERA_FRAMING_OK`, `PORTABLE_CAMERA_PREVIEW_OK`, and
+  `PORTABLE_CAMERA_PREPARATION_OK`.
+- Show the hero camera preview, then stop with
+  `PHASE_REVIEW_REQUIRED phase=8 name=camera_placement`.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with
