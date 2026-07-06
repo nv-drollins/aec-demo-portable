@@ -107,6 +107,20 @@ For the recorded-demo opening instruction:
 - Show the Blender material-preview site result, then stop with
   `PHASE_REVIEW_REQUIRED phase=5 name=landscaping_site_context`.
 
+## Canonical Phase 6 adapter
+
+- Before Phase 6 approval, run only
+  `python3 scripts/check-portable-entourage-ready.py`. Require
+  `PORTABLE_ENTOURAGE_READY_OK`, then stop at the human approval marker.
+- Do not use raw Blender MCP code, generated Python, or asset downloads.
+- After Phase 5 review and a new human approval, load
+  `build-portable-blender-entourage` and run only
+  `python3 scripts/run-portable-entourage.py` from this repository.
+- Require `PORTABLE_ENTOURAGE_INPUT_OK`, `PORTABLE_ENTOURAGE_BUILD_OK`,
+  `PORTABLE_ENTOURAGE_LAYOUT_OK`, and `PORTABLE_ENTOURAGE_PREPARATION_OK`.
+- Show the Blender material-preview result, then stop with
+  `PHASE_REVIEW_REQUIRED phase=6 name=entourage_outdoor_living`.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

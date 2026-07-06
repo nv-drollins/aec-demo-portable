@@ -37,6 +37,12 @@ checkpoint. Before approval, use only the read-only
 `scripts/check-portable-landscaping-ready.py`; never improvise `python3 -c`
 FreeCAD imports. Do not overwrite a delivered scene or add Phase 6 entourage.
 
+Canonical Phase 6 uses `build-portable-blender-entourage` and only
+`scripts/run-portable-entourage.py`. It creates a versioned procedural outdoor-
+living checkpoint because the delivered target has no named entourage meshes.
+Before approval, use only `scripts/check-portable-entourage-ready.py`. Do not
+download assets, improvise raw Blender code, or begin Phase 7 materials.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

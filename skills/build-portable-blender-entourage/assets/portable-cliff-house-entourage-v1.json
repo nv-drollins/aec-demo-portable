@@ -1,0 +1,32 @@
+{
+  "format": "aec-portable-blender-entourage-v1",
+  "id": "delivered-cliff-house-entourage-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_landscaping.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_entourage.blend",
+  "input_collection": "AEC_Phase5_Landscaping",
+  "output_collection": "AEC_Phase6_Entourage",
+  "scene_scale": 0.001,
+  "provenance_note": "The delivered target contains no named entourage meshes. These objects are deterministic procedural interpretations of the upstream Phase 5 entourage prompt, not recovered Rhino or Blender construction history.",
+  "pool_forbidden_bounds": {
+    "min": [-0.0065821, -0.0121001, -0.0011],
+    "max": [-0.0020499, 0.0016001, 0.0025]
+  },
+  "items": [
+    {"name":"AEC_Lounge_01","kind":"lounge","role":"pool_lounger","location":[-0.0052,-0.0144,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_Wood"},
+    {"name":"AEC_Lounge_02","kind":"lounge","role":"pool_lounger","location":[-0.0034,-0.0144,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_Wood"},
+    {"name":"AEC_Pool_Side_Table","kind":"side_table","role":"side_table","location":[-0.0043,-0.0130,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_DarkMetal"},
+    {"name":"AEC_Firepit","kind":"firepit","role":"firepit","location":[-0.0005,-0.0143,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_DarkMetal"},
+    {"name":"AEC_Dining_Table","kind":"dining_table","role":"dining_table","location":[0.0028,0.0090,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_Wood"},
+    {"name":"AEC_Dining_Chair_01","kind":"dining_chair","role":"dining_chair","location":[0.00135,0.0090,0.00055],"rotation_degrees":-90.0,"material":"AEC_Entourage_Wood"},
+    {"name":"AEC_Dining_Chair_02","kind":"dining_chair","role":"dining_chair","location":[0.00425,0.0090,0.00055],"rotation_degrees":90.0,"material":"AEC_Entourage_Wood"},
+    {"name":"AEC_Entry_Planter_01","kind":"planter","role":"entry_planter","location":[0.0003,0.0130,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_Planter"},
+    {"name":"AEC_Entry_Planter_02","kind":"planter","role":"entry_planter","location":[0.0053,0.0130,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_Planter"},
+    {"name":"AEC_Driveway_Vehicle","kind":"vehicle","role":"driveway_vehicle","location":[0.0090,-0.0142,0.00055],"rotation_degrees":0.0,"material":"AEC_Entourage_Vehicle"}
+  ],
+  "materials": {
+    "AEC_Entourage_Wood": [0.24,0.09,0.035,1.0],
+    "AEC_Entourage_DarkMetal": [0.025,0.03,0.035,1.0],
+    "AEC_Entourage_Planter": [0.19,0.12,0.07,1.0],
+    "AEC_Entourage_Vehicle": [0.045,0.055,0.07,1.0]
+  }
+}

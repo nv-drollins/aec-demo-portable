@@ -120,8 +120,16 @@ Before Phase 5 approval, readiness validation must run only
 After a separate human approval, Phase 5 must run only
 `scripts/run-portable-landscaping.py` through the
 `build-portable-blender-landscaping` skill. Require the FreeCAD, target, build,
-and preparation markers and stop at its landscaping review gate. Phase 6
-remains blocked until its checked portable adapter exists.
+and preparation markers and stop at its landscaping review gate.
+
+Before Phase 6 approval, readiness validation must run only
+`scripts/check-portable-entourage-ready.py` and require
+`PORTABLE_ENTOURAGE_READY_OK` without mutating Blender.
+After a separate human approval, Phase 6 must run only
+`scripts/run-portable-entourage.py` through the
+`build-portable-blender-entourage` skill. Require the input, build, layout, and
+preparation markers and stop at its entourage review gate. Phase 7 remains
+blocked until its checked portable adapter exists.
 
 ## 7. Rendering and ComfyUI defaults
 

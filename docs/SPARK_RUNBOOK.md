@@ -166,8 +166,26 @@ PHASE_REVIEW_REQUIRED phase=5 name=landscaping_site_context
 
 The checkpoint organizes and verifies 15 delivered site elements across
 drainage, site edges, dark hardscape, patio/pool deck, pool basin, and pool
-water. Do not approve Phase 6 until its checked portable adapter has been
-added; Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
+water.
+
+After inspecting and approving Phase 5, one new approval authorizes Phase 6.
+Hermes creates a separate deterministic outdoor-living checkpoint:
+
+```text
+PORTABLE_ENTOURAGE_INPUT_OK
+PORTABLE_ENTOURAGE_BUILD_OK
+PORTABLE_ENTOURAGE_LAYOUT_OK
+PORTABLE_ENTOURAGE_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=6 name=entourage_outdoor_living
+```
+
+The checkpoint contains ten procedural objects: two pool loungers, one side
+table, one firepit, one dining table, two dining chairs, two entry planters,
+and one driveway vehicle. The layout gate requires all ten items to be inside
+the established camera, with no item-to-item or pool-volume overlaps.
+
+Do not approve Phase 7 until its checked portable adapter has been added;
+Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
 
 ## Fast recorded integration proof
 
