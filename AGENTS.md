@@ -150,6 +150,21 @@ For the recorded-demo opening instruction:
 - Show the hero camera preview, then stop with
   `PHASE_REVIEW_REQUIRED phase=8 name=camera_placement`.
 
+## Canonical Phase 9 adapter
+
+- Before Phase 9 approval, run only
+  `python3 scripts/check-portable-lighting-ready.py`. Require
+  `PORTABLE_LIGHTING_READY_OK`, then stop at the human approval marker.
+- Do not use raw Blender MCP code or a legacy missing HDRI path.
+- After Phase 8 review and a new human approval, load
+  `build-portable-blender-lighting` and run only
+  `python3 scripts/run-portable-lighting.py` from this repository.
+- Require `PORTABLE_LIGHTING_INPUT_OK`, `PORTABLE_LIGHTING_WORLD_OK`,
+  `PORTABLE_LIGHTING_LIGHTS_OK`, `PORTABLE_LIGHTING_PREVIEWS_OK`, and
+  `PORTABLE_LIGHTING_PREPARATION_OK`.
+- Show the compass previews, then stop with
+  `PHASE_REVIEW_REQUIRED phase=9 name=lighting`.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

@@ -1,0 +1,25 @@
+{
+  "format": "aec-portable-blender-lighting-v1",
+  "id": "delivered-cliff-house-lighting-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_camera.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_lighting.blend",
+  "hdri": "assets/hdri/qwantani_puresky_2k.hdr",
+  "world": "AEC_Phase9_World",
+  "rotation_z": 5.362011432647705,
+  "gamma": 4.0,
+  "strength": 1.2,
+  "hidden_collection": "AEC_Hidden_Lights",
+  "firelight": {"name":"FireLight","location":[-0.0005,-0.0143,0.00155],"energy":700.0,"color":[1.0,0.18,0.035],"radius":0.002},
+  "hero_camera": "ocean_view",
+  "compass_camera": "compass_cam",
+  "compass_target": "lighting_compass_target",
+  "compass_center": [0.002,0.0,0.004],
+  "compass_radius": 0.045,
+  "compass_height": 0.006,
+  "previews": {
+    "NW":"projects/recorded_demo/test_renders/lighting_NW.png",
+    "NE":"projects/recorded_demo/test_renders/lighting_NE.png",
+    "SE":"projects/recorded_demo/test_renders/lighting_SE.png",
+    "SW":"projects/recorded_demo/test_renders/lighting_SW.png"
+  }
+}

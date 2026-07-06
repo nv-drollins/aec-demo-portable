@@ -55,6 +55,11 @@ as `ocean_view`, adds the utility cameras, and saves a review screenshot. Before
 approval, use only `scripts/check-portable-camera-ready.py`; do not begin Phase 9
 lighting.
 
+Canonical Phase 9 uses `build-portable-blender-lighting` and only
+`scripts/run-portable-lighting.py`. It uses the bundled HDRI, hides the Sun,
+adds only the fire practical, and saves four compass previews. Before approval,
+use only `scripts/check-portable-lighting-ready.py`; do not begin Phase 10.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

@@ -218,7 +218,23 @@ The camera gate validates the delivered 20.5mm `Camera_day` composition, creates
 and saves a viewport review image. The delivered framing overrides the prompt's
 adjustable 28mm starting value.
 
-Do not approve Phase 9 until its checked portable adapter has been added;
+After inspecting and approving Phase 8, one new approval authorizes Phase 9.
+Hermes builds a clean bundled-HDRI world and four compass previews:
+
+```text
+PORTABLE_LIGHTING_INPUT_OK
+PORTABLE_LIGHTING_WORLD_OK
+PORTABLE_LIGHTING_LIGHTS_OK
+PORTABLE_LIGHTING_PREVIEWS_OK
+PORTABLE_LIGHTING_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=9 name=lighting
+```
+
+The lighting gate requires `qwantani_puresky_2k.hdr`, gamma 4.0, strength 1.2,
+a permanently hidden delivered Sun, one warm 700-energy FireLight, four valid
+compass screenshots, and a restored `ocean_view` active camera.
+
+Do not approve Phase 10 until its checked portable adapter has been added;
 Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
 
 ## Fast recorded integration proof
