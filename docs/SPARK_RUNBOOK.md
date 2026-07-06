@@ -69,6 +69,39 @@ PORTABLE_STACK_OK
 The controller rejects an old Blender 4.x server already occupying port 9876.
 Blender MCP starts automatically; no sidebar click is required.
 
+## Open Hermes and enter the prompt
+
+Hermes runs as an interactive chat in a terminal. From the repository root,
+run:
+
+```bash
+./scripts/start-hermes-demo.sh
+```
+
+This safely starts any missing demo services and then opens the Hermes chat.
+The terminal displaying the Hermes prompt is where you type or paste all demo
+instructions. Keep it open throughout the demonstration.
+
+At the Hermes prompt, paste this exact opening instruction:
+
+```text
+Load the delivered_cliff_house_demo prompt profile. Validate its sources and
+runtime gates, summarize the approved design intent in five bullets, and begin
+the next uncompleted phase using the checked workflow. Stop at the phase review
+gate and report the success markers. Do not restart the design interview.
+```
+
+When Hermes reaches a review gate, inspect the visible result in FreeCAD or
+Blender. To authorize one additional phase, return to the same Hermes terminal
+and type:
+
+```text
+Approved — proceed to the next phase.
+```
+
+Do not paste several approvals at once. Each approval advances exactly one
+phase so the live model remains synchronized with the review state.
+
 ## Fast recorded integration proof
 
 This command stages the supplied 1024 x 1024 beauty and segmentation passes,
