@@ -121,6 +121,20 @@ For the recorded-demo opening instruction:
 - Show the Blender material-preview result, then stop with
   `PHASE_REVIEW_REQUIRED phase=6 name=entourage_outdoor_living`.
 
+## Canonical Phase 7 adapter
+
+- Before Phase 7 approval, run only
+  `python3 scripts/check-portable-materials-ready.py`. Require
+  `PORTABLE_MATERIALS_READY_OK`, then stop at the human approval marker.
+- Do not use raw Blender MCP code or rewrite delivered shaders from prose.
+- After Phase 6 review and a new human approval, load
+  `build-portable-blender-materials` and run only
+  `python3 scripts/run-portable-materials.py` from this repository.
+- Require `PORTABLE_MATERIALS_INPUT_OK`, `PORTABLE_MATERIALS_ASSIGNMENT_OK`,
+  `PORTABLE_MATERIALS_SHADER_OK`, and `PORTABLE_MATERIALS_PREPARATION_OK`.
+- Show the Blender material-preview result, then stop with
+  `PHASE_REVIEW_REQUIRED phase=7 name=materials`.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

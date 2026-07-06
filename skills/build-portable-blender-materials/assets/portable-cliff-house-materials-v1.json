@@ -1,0 +1,32 @@
+{
+  "format": "aec-portable-blender-materials-v1",
+  "id": "delivered-cliff-house-materials-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_entourage.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_materials.blend",
+  "phase6_collection": "AEC_Phase6_Entourage",
+  "expected_meshes": 160,
+  "expected_missing_tags": 47,
+  "preserved_source_meshes": 150,
+  "required_glass_materials": ["Glass_Clear_Low_E", "Glass_Frosted", "Glass_Pale_Blue"],
+  "allowed_tags": ["wall", "travertine_white", "travertine_light", "concrete_board", "concrete_light", "concrete_dark", "wood_walnut", "window", "aluminum_dark", "glass_clear", "glass_tinted", "glass_railing", "water_blue", "roof", "terrain"],
+  "final_materials": {
+    "M_ChairWood": {"base_color":[0.35,0.22,0.10,1.0],"roughness":0.72,"metallic":0.0},
+    "M_Patio_Stone": {"base_color":[0.12,0.11,0.10,1.0],"roughness":0.88,"metallic":0.0},
+    "M_Planter_Terracotta": {"base_color":[0.22,0.10,0.04,1.0],"roughness":0.85,"metallic":0.0},
+    "M_Vehicle_Dark": {"base_color":[0.03,0.04,0.05,1.0],"roughness":0.30,"metallic":0.70}
+  },
+  "role_materials": {
+    "pool_lounger": ["M_ChairWood", "wood_walnut"],
+    "dining_chair": ["M_ChairWood", "wood_walnut"],
+    "dining_table": ["M_ChairWood", "wood_walnut"],
+    "side_table": ["M_Patio_Stone", "concrete_dark"],
+    "firepit": ["M_Patio_Stone", "concrete_dark"],
+    "entry_planter": ["M_Planter_Terracotta", "terrain"],
+    "driveway_vehicle": ["M_Vehicle_Dark", "aluminum_dark"]
+  },
+  "tag_assignments": {
+    "H2__L2_balcony_floor":"travertine_white", "H2_balcon_floor_L3":"travertine_white", "H2_floor_L1_garage":"travertine_white", "H2_floor_L1_house":"travertine_white", "H2_floor_L2_balccony_strip":"travertine_white", "H2_floor_L2_guest":"wood_walnut", "H2_floor_L2_guest.001":"travertine_white", "H2_floor_L2_house":"wood_walnut", "H2_floor_L2_house.001":"travertine_white", "H2_floor_L3":"wood_walnut", "H2_floor_L3.001":"travertine_white",
+    "L1_Garage_stile_1":"aluminum_dark", "L1_Garage_stile_2":"aluminum_dark", "L1_Garage_W_vert":"aluminum_dark", "L1_Garage_W_vert.001":"aluminum_dark", "L1_Garage_W_vert.002":"aluminum_dark", "L1_Garage_W_vert.003":"aluminum_dark", "L1_Garage_W_vert.004":"aluminum_dark", "L2_GW_div":"aluminum_dark", "L3_W_div":"aluminum_dark", "L3_W_div.001":"aluminum_dark",
+    "L1_patio_garage":"travertine_white", "L2_guest_balcony_floor":"travertine_white", "Object":"travertine_white", "Object.001":"travertine_white", "Object.002":"travertine_white", "Object.003":"concrete_dark", "Object.004":"concrete_dark", "Object.005":"travertine_white", "Object.006":"travertine_white", "patio_pool_rim":"travertine_white", "pool_floor":"concrete_dark", "pool_infinity_weir.002":"travertine_white", "pool_sides.001":"concrete_dark", "waterfall_new.001":"water_blue", "Plane":"terrain", "Sphere":"terrain"
+  }
+}

@@ -128,7 +128,15 @@ Before Phase 6 approval, readiness validation must run only
 After a separate human approval, Phase 6 must run only
 `scripts/run-portable-entourage.py` through the
 `build-portable-blender-entourage` skill. Require the input, build, layout, and
-preparation markers and stop at its entourage review gate. Phase 7 remains
+preparation markers and stop at its entourage review gate.
+
+Before Phase 7 approval, readiness validation must run only
+`scripts/check-portable-materials-ready.py` and require
+`PORTABLE_MATERIALS_READY_OK` without mutating Blender.
+After a separate human approval, Phase 7 must run only
+`scripts/run-portable-materials.py` through the
+`build-portable-blender-materials` skill. Require the input, assignment, shader,
+and preparation markers and stop at its materials review gate. Phase 8 remains
 blocked until its checked portable adapter exists.
 
 ## 7. Rendering and ComfyUI defaults

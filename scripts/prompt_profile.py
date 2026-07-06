@@ -39,6 +39,8 @@ REQUIRED_PROFILE_TEXT = (
     "scripts/run-portable-landscaping.py",
     "scripts/check-portable-entourage-ready.py",
     "scripts/run-portable-entourage.py",
+    "scripts/check-portable-materials-ready.py",
+    "scripts/run-portable-materials.py",
 )
 
 

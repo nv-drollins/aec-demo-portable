@@ -184,7 +184,24 @@ table, one firepit, one dining table, two dining chairs, two entry planters,
 and one driveway vehicle. The layout gate requires all ten items to be inside
 the established camera, with no item-to-item or pool-volume overlaps.
 
-Do not approve Phase 7 until its checked portable adapter has been added;
+After inspecting and approving Phase 6, one new approval authorizes Phase 7.
+Hermes preserves the delivered shaders, finalizes entourage materials, and
+completes segmentation metadata in a separate checkpoint:
+
+```text
+PORTABLE_MATERIALS_INPUT_OK
+PORTABLE_MATERIALS_ASSIGNMENT_OK
+PORTABLE_MATERIALS_SHADER_OK
+PORTABLE_MATERIALS_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=7 name=materials
+```
+
+The materials gate requires 160 materialized and tagged meshes, 150 preserved
+source meshes, ten finalized entourage meshes, and valid delivered clear,
+frosted, and pale-blue glass shaders. It does not replace the authoritative
+building/site palette from prose.
+
+Do not approve Phase 8 until its checked portable adapter has been added;
 Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
 
 ## Fast recorded integration proof

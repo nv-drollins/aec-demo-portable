@@ -43,6 +43,12 @@ living checkpoint because the delivered target has no named entourage meshes.
 Before approval, use only `scripts/check-portable-entourage-ready.py`. Do not
 download assets, improvise raw Blender code, or begin Phase 7 materials.
 
+Canonical Phase 7 uses `build-portable-blender-materials` and only
+`scripts/run-portable-materials.py`. It preserves delivered building/site
+shaders, finalizes the ten entourage materials, and completes exact
+segmentation tags. Before approval, use only
+`scripts/check-portable-materials-ready.py`; do not begin Phase 8 camera work.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:
