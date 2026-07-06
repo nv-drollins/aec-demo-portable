@@ -5,6 +5,10 @@ This repository is the independent control layer for the complete
 The extracted heavyweight assets remain local source material and are ignored
 by ordinary Git.
 
+## Prompt profiles
+
+The recorded delivered demo uses `profiles/delivered_cliff_house_demo/prompt_profile.md`. Validate or materialize it with `scripts/prompt_profile.py`; do not run the design interview when that approved preset is selected.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

@@ -36,6 +36,17 @@ does not track sample scenes, textures, model weights, bundled add-on archives,
 renders, local credentials, logs, or PID files. If large assets eventually
 need remote versioning, choose an artifact store or Git LFS deliberately.
 
+## Prompt profile
+
+The delivered demo does not use a file literally named `prompt_profile.md` upstream. Its complete brief is `prompts/master_workflow/01_user_prompt.md`; this port exposes it as a pinned, approved preset at `profiles/delivered_cliff_house_demo/prompt_profile.md`.
+
+```bash
+python3 scripts/prompt_profile.py validate profiles/delivered_cliff_house_demo/prompt_profile.md
+python3 scripts/prompt_profile.py materialize --preset delivered_cliff_house_demo --output projects/recorded_demo/prompt_profile.md
+```
+
+Use `python3 scripts/prompt_profile.py new --output projects/my_project/prompt_profile.md` for a blank interview template.
+
 ## Commands
 
 ```bash

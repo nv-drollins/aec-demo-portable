@@ -4,6 +4,9 @@
 
 ## DGX Spark control layer
 
+A complete no-interview demo profile is available at [profiles/delivered_cliff_house_demo/prompt_profile.md](profiles/delivered_cliff_house_demo/prompt_profile.md). Use `python3 scripts/prompt_profile.py list` and `materialize` to create a checked project copy.
+
+
 This delivered package targets Windows, Claude Desktop, Rhino 8, Blender 5.1, and Flux.2 Klein. On the DGX Spark, start with [docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md) and the guarded service controller:
 
 ```bash
