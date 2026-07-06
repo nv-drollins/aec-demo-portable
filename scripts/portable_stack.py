@@ -23,9 +23,26 @@ LOCAL_ENV = ROOT / "config" / "runtime.env"
 EXAMPLE_ENV = ROOT / "config" / "runtime.env.example"
 
 REQUIRED_MODELS = (
-    "models/diffusion_models/klein/flux-2-klein-4b.safetensors",
-    "models/text_encoders/klein/qwen_3_4b.safetensors",
+    "models/diffusion_models/klein/flux-2-klein-9b.safetensors",
+    "models/text_encoders/klein/qwen_3_8b_fp8mixed.safetensors",
     "models/vae/flux2-vae.safetensors",
+    "models/vae/flux/flux2-vae.safetensors",
+    "models/checkpoints/depth_anything_vitl14.pth",
+)
+
+REQUIRED_NODE_TYPES = (
+    "AnyLineArtPreprocessor_aux",
+    "BatchImagesNode",
+    "ColorCode",
+    "DepthAnythingPreprocessor",
+    "GetImageSize",
+    "Image Comparer (rgthree)",
+    "ImageScaleToTotalPixels",
+    "MaskFromColor+",
+    "ResizeImageMaskNode",
+    "SimpleInpaintCrop",
+    "SimpleInpaintStitch",
+    "Text Multiline",
 )
 
 
@@ -152,6 +169,25 @@ def missing_models() -> list[Path]:
     return [COMFY_ROOT / relative for relative in REQUIRED_MODELS if not (COMFY_ROOT / relative).is_file()]
 
 
+def comfy_node_types() -> set[str] | None:
+    if not comfy_healthy():
+        return None
+    try:
+        with urllib.request.urlopen(
+            f"http://{HOST}:{COMFY_PORT}/object_info", timeout=30
+        ) as response:
+            return set(json.load(response))
+    except Exception:
+        return None
+
+
+def missing_workflow_nodes() -> list[str] | None:
+    available = comfy_node_types()
+    if available is None:
+        return None
+    return [name for name in REQUIRED_NODE_TYPES if name not in available]
+
+
 def preflight() -> list[str]:
     errors: list[str] = []
     if not BLENDER_SCENE.is_file():
@@ -176,6 +212,17 @@ def preflight() -> list[str]:
             f"{len(missing)} required Flux.2 model files are missing; "
             "see comfyui/models/MODEL_MANIFEST.md"
         )
+    missing_nodes = missing_workflow_nodes()
+    if missing_nodes is None:
+        print("WORKFLOW_NODE_CHECK=skipped_comfyui_not_running")
+    else:
+        for name in missing_nodes:
+            print(f"WORKFLOW_NODE_MISSING={name}")
+        if missing_nodes:
+            errors.append(
+                f"{len(missing_nodes)} required ComfyUI node classes are missing; "
+                "see docs/REPLICATION_READINESS.md"
+            )
     if enabled("AEC_PORTABLE_FREECAD_ENABLED", True) and not FREECAD_START.is_file():
         errors.append(f"FreeCAD launcher is missing: {FREECAD_START}")
     if errors:
@@ -226,6 +273,9 @@ def start() -> None:
             [str(COMFY_PYTHON), str(COMFY_ROOT / "main.py"), "--listen", HOST],
         )
     wait_for(comfy_healthy, 120, "COMFYUI")
+    nodes = missing_workflow_nodes()
+    if nodes:
+        raise RuntimeError(f"ComfyUI is missing required workflow nodes: {nodes}")
     if not blender_healthy():
         spawn("blender", [BLENDER_EXE, str(BLENDER_SCENE)])
     wait_for(blender_healthy, 90, "BLENDER_MCP")
@@ -269,6 +319,8 @@ def status() -> None:
     print(f"COMFYUI={'healthy' if comfy_healthy() else 'down'} endpoint={HOST}:{COMFY_PORT}")
     print(f"SCENE={'present' if BLENDER_SCENE.is_file() else 'missing'} path={BLENDER_SCENE}")
     print(f"FLUX_MODELS_MISSING={len(missing_models())}")
+    nodes = missing_workflow_nodes()
+    print(f"WORKFLOW_NODES_MISSING={'unknown' if nodes is None else len(nodes)}")
 
 
 def main() -> None:

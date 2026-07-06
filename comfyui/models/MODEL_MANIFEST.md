@@ -123,19 +123,15 @@ Install: `comfyui_controlnet_aux` (https://github.com/Fannovel16/comfyui_control
 `was-node-suite-comfyui` (https://github.com/WASasquatch/was-node-suite-comfyui),
 `ComfyUI_essentials` (https://github.com/cubiq/ComfyUI_essentials) if not already present.
 
-### ❌ Confirmed MISSING — the workflow will show "unknown node type" for these until resolved
+### Current compatibility notes for formerly unresolved node classes
 
 | class_type used by workflow | What was checked | Status |
 |---|---|---|
-| `ResizeImageMaskNode` | Searched every installed pack's source for this class name AND for its telltale inputs (`resize_type.match`, `"match size"`) | **Not found anywhere.** Source pack unknown — this needs tracking down from wherever the original workflow author got it (check their ComfyUI Manager "installed" list, or the node's right-click → "Node info" if you still have it in a working canvas). |
+| `ResizeImageMaskNode` | Live DGX Spark registry (`python_module=comfy_extras.nodes_post_processing`) | **Core in current ComfyUI**; require a recent ComfyUI version. |
 | `Image Comparer (rgthree)` | Checked for `rgthree-comfy` pack | **Not installed at all.** A different pack (`skbundle/comparerplus.py`) registers a similarly-purposed `"ImageComparer"` node, but it's a different class name from a different pack and will NOT satisfy this workflow. Install `rgthree-comfy`: https://github.com/rgthree/rgthree-comfy |
-| `BatchImagesNode` | Searched for the exact class name across all packs | **Not found under this exact name.** Several installed packs have *some* batch-image node (Easy-Use, KJNodes, Impact-Pack, WAS, Comfyroll) but none registered as `BatchImagesNode` specifically. |
+| `BatchImagesNode` | Live DGX Spark registry (`python_module=comfy_extras.nodes_post_processing`) | **Core in current ComfyUI**; require a recent ComfyUI version. |
 
-> If your team's "workflows that already work" run on a machine where these
-> three load fine, the fastest fix is diffing that machine's `custom_nodes/`
-> folder against this one rather than guessing further — or just try loading
-> `AEC_last_submitted_workflow.json` in ComfyUI and use Manager's "Install
-> Missing Custom Nodes" on whatever comes up red.
+> `Image Comparer (rgthree)` still requires `rgthree-comfy`. The two other classes are now provided by current ComfyUI core; older ComfyUI builds may still report them as unknown.
 
 ### Previously-listed packs — not used by this specific workflow
 

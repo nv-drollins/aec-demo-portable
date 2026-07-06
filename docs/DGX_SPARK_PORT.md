@@ -17,6 +17,9 @@ modifying its 19 GB sample project or other heavyweight assets.
 
 ## Current Spark compatibility
 
+See [REPLICATION_READINESS.md](REPLICATION_READINESS.md) for the complete asset, model, custom-node, and parity checklist.
+
+
 | Component | Delivered expectation | Current Spark state | Status |
 |---|---|---|---|
 | Agent | Claude Desktop | Hermes + local Qwen available | Port required |
