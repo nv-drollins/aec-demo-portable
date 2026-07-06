@@ -1,0 +1,40 @@
+{
+  "format": "aec-portable-blender-landscaping-v1",
+  "id": "delivered-cliff-house-landscaping-v1",
+  "source_scene": "sample_project/blender_assets/cliff_house_act2_textured_v3.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_landscaping.blend",
+  "collection": "AEC_Phase5_Landscaping",
+  "representation": "delivered-target landscaping checkpoint",
+  "provenance_note": "The delivered Blender scene is the authoritative visual target. Saved FreeCAD documents are checked reconstruction evidence, not recovered Rhino construction history.",
+  "required_freecad_documents": [
+    "PortableCliffHouseReference",
+    "PortableCliffHouseSite",
+    "PortableCliffHouseMassing",
+    "PortableCliffHouseDetailing"
+  ],
+  "roles": {
+    "drainage": ["catch_channel.001"],
+    "site_edges": ["Object", "Object.001", "Object.002", "Object.005", "Object.006", "site_west Retaining_wall"],
+    "dark_hardscape": ["Object.003", "Object.004"],
+    "patio_pool_deck": ["L1_patio_garage", "patio_pool_rim"],
+    "pool_basin": ["pool_floor", "pool_infinity_weir.002", "pool_sides.001"],
+    "pool_water": ["waterfall_new.001"]
+  },
+  "targets": [
+    {"name":"catch_channel.001","material":"Concrete_Black_v17","min":[-0.006811773404479027,-0.01199805736541748,-0.0013529411517083645],"max":[-0.006400000303983688,0.0014525838196277618,7.056140394201549e-11]},
+    {"name":"Object","material":"White_Travertine","min":[-0.005400000140070915,0.014000000432133675,-0.0005808650166727602],"max":[0.004600000102072954,0.014399999752640724,0.0003000000142492354]},
+    {"name":"Object.001","material":"White_Travertine","min":[-0.005400000140070915,-0.017400000244379044,-0.0024423205759376287],"max":[0.013899999670684338,-0.016899999231100082,0.0003000000142492354]},
+    {"name":"Object.002","material":"White_Travertine","min":[-0.006400000303983688,-0.017400000244379044,0.0003000000142492354],"max":[0.0010999999940395355,0.014399999752640724,0.0005000000237487257]},
+    {"name":"Object.003","material":"Concrete_Black_v17","min":[0.001500000013038516,0.003000000026077032,0.0003000000142492354],"max":[0.004999999888241291,0.0034000000450760126,0.0005000000237487257]},
+    {"name":"Object.004","material":"Concrete_Black_v17","min":[0.0010999999940395355,-0.017400000244379044,0.0003000000142492354],"max":[0.001500000013038516,0.0034000000450760126,0.0005000000237487257]},
+    {"name":"Object.005","material":"White_Travertine","min":[0.004600000102072954,0.0034000000450760126,0.0003000000142492354],"max":[0.004999999888241291,0.014000000432133675,0.0005000000237487257]},
+    {"name":"Object.006","material":"White_Travertine","min":[0.004600000102072954,0.014000000432133675,-0.00019402372709009796],"max":[0.017400000244379044,0.014399999752640724,0.0003000000142492354]},
+    {"name":"L1_patio_garage","material":"White_Travertine","min":[0.0010999999940395355,0.0034000000450760126,0.0003000000142492354],"max":[0.004553438164293766,0.014399999752640724,0.0005000000237487257]},
+    {"name":"patio_pool_rim","material":"White_Travertine","min":[-0.006400000303983688,-0.01209999993443489,0.0005000000237487257],"max":[-0.0020500002428889275,0.001600000075995922,0.0005400000372901559]},
+    {"name":"pool_floor","material":"Concrete_Black_v17","min":[-0.006300000008195639,-0.011500000022351742,-0.0010000000474974513],"max":[-0.0026500001549720764,0.0010000000474974513,-0.000800000037997961]},
+    {"name":"pool_infinity_weir.002","material":"White_Travertine","min":[-0.006400000303983688,-0.011749999597668648,-0.0010057504987344146],"max":[-0.006400000303983688,-0.005005325190722942,0.0003897921124007553]},
+    {"name":"pool_sides.001","material":"Concrete_Black_v17","min":[-0.006500000134110451,-0.01175518799573183,-0.0010057504987344146],"max":[-0.0023925979621708393,0.001249999739229679,0.0005206095520406961]},
+    {"name":"site_west Retaining_wall","material":"White_Travertine","min":[-0.006400000303983688,-0.017400000244379044,-0.003000000026077032],"max":[-0.005400000140070915,0.014399999752640724,0.0003000000142492354]},
+    {"name":"waterfall_new.001","material":"Water_Pool_v17","min":[-0.006582004018127918,-0.011500000953674316,-0.0008370167342945933],"max":[-0.0025929082185029984,0.0010008300887420774,0.0004651188792195171]}
+  ]
+}

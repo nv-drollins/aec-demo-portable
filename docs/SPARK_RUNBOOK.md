@@ -150,9 +150,24 @@ PHASE_REVIEW_REQUIRED phase=4 name=architectural_detailing
 ```
 
 The result contains 109 target-derived FreeCAD detail objects covering slabs,
-walls, glazing, mullions, frames, doors, and railings. Do not approve Phase 5
-until its checked portable adapter has been added; Hermes must report
-`BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
+walls, glazing, mullions, frames, doors, and railings.
+
+After inspecting and approving Phase 4, one new approval authorizes Phase 5.
+Hermes validates the saved FreeCAD reconstruction and creates a separate
+Blender landscaping checkpoint without overwriting the delivered target:
+
+```text
+PORTABLE_LANDSCAPING_FREECAD_OK
+PORTABLE_LANDSCAPING_TARGET_OK
+PORTABLE_LANDSCAPING_BUILD_OK
+PORTABLE_LANDSCAPING_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=5 name=landscaping_site_context
+```
+
+The checkpoint organizes and verifies 15 delivered site elements across
+drainage, site edges, dark hardscape, patio/pool deck, pool basin, and pool
+water. Do not approve Phase 6 until its checked portable adapter has been
+added; Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
 
 ## Fast recorded integration proof
 

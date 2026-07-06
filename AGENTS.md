@@ -88,6 +88,20 @@ For the recorded-demo opening instruction:
 - Show the Isometric, Front, and Right results, then stop with
   `PHASE_REVIEW_REQUIRED phase=4 name=architectural_detailing`.
 
+## Canonical Phase 5 adapter
+
+- After Phase 4 review and a new human approval, load
+  `build-portable-blender-landscaping` and run only
+  `python3 scripts/run-portable-landscaping.py` from this repository.
+- Do not call Blender MCP `execute_code` directly, overwrite the delivered
+  target, or add entourage. The checked runner owns target validation,
+  collection organization, material checks, and checkpoint saving.
+- Require `PORTABLE_LANDSCAPING_FREECAD_OK`,
+  `PORTABLE_LANDSCAPING_TARGET_OK`, `PORTABLE_LANDSCAPING_BUILD_OK`, and
+  `PORTABLE_LANDSCAPING_PREPARATION_OK`.
+- Show the Blender material-preview site result, then stop with
+  `PHASE_REVIEW_REQUIRED phase=5 name=landscaping_site_context`.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

@@ -112,8 +112,13 @@ gate. No later phase may execute until its checked portable adapter exists.
 After a separate human approval, Phase 4 must run only
 `scripts/run-portable-detailing.py` through the
 `build-portable-freecad-detailing` skill. Require the target, overlap, build,
-and preparation markers and stop at its review gate. Phase 5 remains blocked
-until its checked portable adapter exists.
+and preparation markers and stop at its review gate.
+
+After a separate human approval, Phase 5 must run only
+`scripts/run-portable-landscaping.py` through the
+`build-portable-blender-landscaping` skill. Require the FreeCAD, target, build,
+and preparation markers and stop at its landscaping review gate. Phase 6
+remains blocked until its checked portable adapter exists.
 
 ## 7. Rendering and ComfyUI defaults
 
