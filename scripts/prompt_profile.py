@@ -34,6 +34,7 @@ REQUIRED_PROFILE_TEXT = (
     "WAITING_FOR_HUMAN_APPROVAL",
     "scripts/run-portable-site-preparation.py",
     "scripts/run-portable-massing.py",
+    "scripts/run-portable-detailing.py",
 )
 
 

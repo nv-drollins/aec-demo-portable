@@ -109,6 +109,12 @@ After a separate human approval, Phase 3 must run only
 `build-portable-freecad-massing` skill. It must stop after the 11-solid review
 gate. No later phase may execute until its checked portable adapter exists.
 
+After a separate human approval, Phase 4 must run only
+`scripts/run-portable-detailing.py` through the
+`build-portable-freecad-detailing` skill. Require the target, overlap, build,
+and preparation markers and stop at its review gate. Phase 5 remains blocked
+until its checked portable adapter exists.
+
 ## 7. Rendering and ComfyUI defaults
 
 - Render resolution: 1024 × 1024 for the AI pipeline unless the phase prompt

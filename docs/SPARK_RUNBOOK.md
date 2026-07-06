@@ -136,9 +136,23 @@ PHASE_REVIEW_REQUIRED phase=3 name=building_massing
 ```
 
 The Phase 3 FreeCAD view contains 11 massing solids plus six read-only links to
-the approved site context. Do not approve Phase 4 until its checked portable
-adapter has been added; Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER`
-instead of guessing.
+the approved site context.
+
+After inspecting and approving Phase 3, one new approval authorizes Phase 4.
+Hermes must use the checked target-detailing adapter and report:
+
+```text
+PORTABLE_DETAILING_TARGET_OK
+PORTABLE_DETAILING_OVERLAP_OK
+PORTABLE_DETAILING_BUILD_OK
+PORTABLE_DETAILING_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=4 name=architectural_detailing
+```
+
+The result contains 109 target-derived FreeCAD detail objects covering slabs,
+walls, glazing, mullions, frames, doors, and railings. Do not approve Phase 5
+until its checked portable adapter has been added; Hermes must report
+`BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
 
 ## Fast recorded integration proof
 

@@ -25,6 +25,11 @@ Canonical Phase 3 uses `build-portable-freecad-massing` and only
 document or object names. Phases without an explicit `AGENTS.md` adapter are
 blocked rather than improvised.
 
+Canonical Phase 4 uses `build-portable-freecad-detailing` and only
+`scripts/run-portable-detailing.py`. The runner reconstructs target detail
+envelopes and owns all opening/clearance booleans. Do not improvise detailing
+through raw FreeCAD code.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

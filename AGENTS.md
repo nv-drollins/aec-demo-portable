@@ -75,6 +75,19 @@ For the recorded-demo opening instruction:
 - Stop with `PHASE_REVIEW_REQUIRED phase=3 name=building_massing` and wait for
   a new human approval.
 
+## Canonical Phase 4 adapter
+
+- After Phase 3 review and a new human approval, load
+  `build-portable-freecad-detailing` and run only
+  `python3 scripts/run-portable-detailing.py` from this repository.
+- Do not call FreeCAD `execute_code` directly or recreate target details from
+  prose. The checked runner owns target selection, openings, and clearances.
+- Require `PORTABLE_DETAILING_TARGET_OK`,
+  `PORTABLE_DETAILING_OVERLAP_OK`, `PORTABLE_DETAILING_BUILD_OK`, and
+  `PORTABLE_DETAILING_PREPARATION_OK`.
+- Show the Isometric, Front, and Right results, then stop with
+  `PHASE_REVIEW_REQUIRED phase=4 name=architectural_detailing`.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with
