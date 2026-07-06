@@ -23,11 +23,15 @@ PLACEHOLDERS = (
 )
 REQUIRED_PROFILE_TEXT = (
     "profile_format: aec-demo-prompt-profile-v1",
-    "status: approved_for_demo",
+    "status: ready_for_human_gated_demo",
+    "execution_phases_authorized: none",
+    "execution_approval_source: current_human_user_turn_only",
     "## 2. Authoritative instructions",
     "## 4. Authoritative assets",
-    "## 6. Approved phase sequence",
+    "## 6. Human-gated phase sequence",
     "## 8. Review and success gates",
+    "Do not begin or execute the phase",
+    "WAITING_FOR_HUMAN_APPROVAL",
 )
 
 

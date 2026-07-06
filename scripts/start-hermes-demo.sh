@@ -10,11 +10,19 @@ if [[ ! -x "$HERMES_BIN" ]]; then
   exit 1
 fi
 
+if [[ ! -f "$ROOT/AGENTS.md" ]]; then
+  echo "Required Hermes guardrails are missing: $ROOT/AGENTS.md" >&2
+  exit 1
+fi
+
+python3 "$ROOT/scripts/prompt_profile.py" validate \
+  "$ROOT/profiles/delivered_cliff_house_demo/prompt_profile.md"
 python3 "$ROOT/scripts/portable_stack.py" start
 
 echo
 echo "Opening the interactive Hermes chat in $ROOT"
 echo "Paste the recorded-demo opening instruction from docs/SPARK_RUNBOOK.md."
+echo "Hermes must stop at WAITING_FOR_HUMAN_APPROVAL before any phase mutation."
 echo
 
 cd "$ROOT"

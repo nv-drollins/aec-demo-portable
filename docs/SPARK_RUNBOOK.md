@@ -24,22 +24,15 @@ This port wraps it in the approved no-interview preset:
 
 `profiles/delivered_cliff_house_demo/prompt_profile.md`
 
-Validate or create a project copy:
+The delivered profile is already fully populated. For this standard demo, do
+not create a project copy and do not run the profile-generation commands.
+The launcher validates the supplied profile automatically.
+
+For diagnostics only, its validation command is:
 
 ```bash
-python3 scripts/prompt_profile.py list
 python3 scripts/prompt_profile.py validate \
   profiles/delivered_cliff_house_demo/prompt_profile.md
-python3 scripts/prompt_profile.py materialize \
-  --preset delivered_cliff_house_demo \
-  --output projects/recorded_demo/prompt_profile.md
-```
-
-For a different project that should use the original interview questions:
-
-```bash
-python3 scripts/prompt_profile.py new \
-  --output projects/my_project/prompt_profile.md
 ```
 
 Begin a Hermes session with the exact opening instruction stored in section 9
@@ -85,22 +78,32 @@ instructions. Keep it open throughout the demonstration.
 At the Hermes prompt, paste this exact opening instruction:
 
 ```text
-Load the delivered_cliff_house_demo prompt profile. Validate its sources and
-runtime gates, summarize the approved design intent in five bullets, and begin
-the next uncompleted phase using the checked workflow. Stop at the phase review
-gate and report the success markers. Do not restart the design interview.
+Load the delivered_cliff_house_demo prompt profile and obey AGENTS.md. Perform
+read-only source validation, preflight, and status checks. Summarize the
+accepted design intent in five bullets, identify the next phase, and explain
+what that phase will visibly do. Do not begin or execute the phase, do not
+launch Rhino or OBS, and do not generate an approval on my behalf. Stop with
+the WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
 ```
 
-When Hermes reaches a review gate, inspect the visible result in FreeCAD or
-Blender. To authorize one additional phase, return to the same Hermes terminal
-and type:
+Hermes must now stop without changing FreeCAD, Blender, ComfyUI, or project
+files. Confirm that its final line resembles:
+
+```text
+WAITING_FOR_HUMAN_APPROVAL phase=1 name=configuration-and-source-audit
+```
+
+Only after it displays that marker and its proposed phase is correct, return
+to the same Hermes terminal and type:
 
 ```text
 Approved — proceed to the next phase.
 ```
 
 Do not paste several approvals at once. Each approval advances exactly one
-phase so the live model remains synchronized with the review state.
+phase and is consumed immediately. Hermes must never print or supply this
+approval for you. After completing the phase, it must stop at the next review
+gate before another approval.
 
 ## Fast recorded integration proof
 

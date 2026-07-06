@@ -5,9 +5,16 @@ This repository is the independent control layer for the complete
 The extracted heavyweight assets remain local source material and are ignored
 by ordinary Git.
 
+`AGENTS.md` is the automatically loaded execution policy for this workspace.
+Its human-only phase gate is absolute. A ready profile or approved design
+default does not authorize a phase, and Hermes must never approve itself.
+
 ## Prompt profiles
 
-The recorded delivered demo uses `profiles/delivered_cliff_house_demo/prompt_profile.md`. Validate or materialize it with `scripts/prompt_profile.py`; do not run the design interview when that approved preset is selected.
+The recorded delivered demo uses
+`profiles/delivered_cliff_house_demo/prompt_profile.md`. It is already fully
+populated; do not materialize a copy or run the design interview for the
+standard demo. Its defaults approve design choices only, never execution.
 
 ## Authoritative bundle assets
 
@@ -44,6 +51,9 @@ before `start` or `restart`. Do not claim the full bundle is ready unless:
 FreeCAD on `127.0.0.1:9875` is the approved open-source replacement track for
 Rhino on this Spark. Preserve the original Rhino prompts and skills as source
 evidence; do not describe FreeCAD reconstruction as recovered Rhino history.
+Never launch or operate Rhino for this workflow. If an upstream prompt names
+Rhino, RhinoCommon, or OBS, apply the FreeCAD mapping in `AGENTS.md`; if a
+checked FreeCAD adapter is unavailable, stop and report that gap.
 
 ## Security
 
