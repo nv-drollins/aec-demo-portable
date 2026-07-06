@@ -114,6 +114,9 @@ After a separate human approval, Phase 4 must run only
 `build-portable-freecad-detailing` skill. Require the target, overlap, build,
 and preparation markers and stop at its review gate.
 
+Before Phase 5 approval, readiness validation must run only
+`scripts/check-portable-landscaping-ready.py` and require
+`PORTABLE_LANDSCAPING_READY_OK` without mutating either application.
 After a separate human approval, Phase 5 must run only
 `scripts/run-portable-landscaping.py` through the
 `build-portable-blender-landscaping` skill. Require the FreeCAD, target, build,

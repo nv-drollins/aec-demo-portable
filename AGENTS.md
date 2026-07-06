@@ -90,6 +90,11 @@ For the recorded-demo opening instruction:
 
 ## Canonical Phase 5 adapter
 
+- Before Phase 5 approval, the only permitted state validation is
+  `python3 scripts/check-portable-landscaping-ready.py`. Require
+  `PORTABLE_LANDSCAPING_READY_OK`, then stop at the human approval marker.
+- Do not use terminal `python3 -c`, import FreeCAD in system Python, call raw
+  MCP code, or enumerate every document object during readiness validation.
 - After Phase 4 review and a new human approval, load
   `build-portable-blender-landscaping` and run only
   `python3 scripts/run-portable-landscaping.py` from this repository.

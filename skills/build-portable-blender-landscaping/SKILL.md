@@ -16,6 +16,20 @@ It does not overwrite the delivered target or add Phase 6 entourage.
 - Require approved, saved Phase 2, Phase 3, and Phase 4 portable documents.
 - Consume the approval when the runner begins.
 
+## Read-only readiness check
+
+Before approval, run only:
+
+```bash
+python3 scripts/check-portable-landscaping-ready.py
+```
+
+Require `PORTABLE_LANDSCAPING_READY_OK`, report the six-role Phase 5 scope,
+and stop with
+`WAITING_FOR_HUMAN_APPROVAL phase=5 name=landscaping_site_context`.
+Do not use system-Python FreeCAD imports, raw MCP code, or generated shell
+snippets for this check.
+
 ## Procedure
 
 1. Resolve `ROOT=/home/nvidia/AEC_Demo_Portable`; do not search elsewhere.

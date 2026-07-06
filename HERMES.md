@@ -33,7 +33,9 @@ through raw FreeCAD code.
 Canonical Phase 5 uses `build-portable-blender-landscaping` and only
 `scripts/run-portable-landscaping.py`. It validates the approved FreeCAD state,
 checks the delivered Blender site target, and saves a separate landscaping
-checkpoint. Do not overwrite a delivered scene or add Phase 6 entourage.
+checkpoint. Before approval, use only the read-only
+`scripts/check-portable-landscaping-ready.py`; never improvise `python3 -c`
+FreeCAD imports. Do not overwrite a delivered scene or add Phase 6 entourage.
 
 ## Authoritative bundle assets
 
