@@ -41,6 +41,13 @@ except Exception as e:
     COMFY_INPUT = Path("D:/tools/comfy_for_blender/ComfyUI_ForDemo/ComfyUI/input")
     BEAUTY_SAMPLES = 32
 
+# Portable Spark runtime overrides take precedence over the local desktop YAML.
+_portable_comfy_root = os.environ.get("AEC_PORTABLE_COMFY_ROOT", "")
+_portable_comfy_url = os.environ.get("AEC_PORTABLE_COMFY_URL", "")
+if _portable_comfy_root:
+    COMFY_INPUT = Path(_portable_comfy_root) / "input"
+if _portable_comfy_url:
+    COMFY_URL = _portable_comfy_url
 RGB_FILE = "beauty_input.png"
 SEG_FILE = "seg_input.png"
 
@@ -525,7 +532,7 @@ def submit(render=True):
     # The AEC Render+Submit button posts directly to /prompt and bypasses the
     # addon, so without these patches ComfyUI rejects the workflow with
     # validation errors on OllamaConnectivityV2 / ResizeImageMaskNode.
-    patched = {"resize": 0, "removed_ollama": 0, "cond": 0}
+    patched = {"resize": 0, "removed_ollama": 0, "removed_debug": 0, "cond": 0, "paths": 0, "crop": 0}
 
     # Remove the Ollama auto-caption branch entirely. It is bypassed in the
     # graph and only feeds a PreviewAny, so it does nothing for our pipeline -
@@ -543,9 +550,24 @@ def submit(render=True):
         if prompt.pop(nid, None) is not None:
             patched["removed_ollama"] += 1
 
+    # Browser-only preview/comparison outputs create extra validation roots.
+    # Production submission keeps only SaveImage outputs.
+    for nid in list(prompt):
+        if prompt[nid].get("class_type") in {"PreviewImage", "Image Comparer (rgthree)"}:
+            del prompt[nid]
+            patched["removed_debug"] += 1
+
     for nid, node in prompt.items():
         ct = node.get("class_type", "")
         inputs = node.setdefault("inputs", {})
+        for key in ("unet_name", "clip_name", "vae_name", "ckpt_name"):
+            value = inputs.get(key)
+            if isinstance(value, str) and "\\" in value:
+                inputs[key] = value.replace("\\", "/")
+                patched["paths"] += 1
+        if ct == "SimpleInpaintCrop":
+            inputs.setdefault("blur", False)
+            patched["crop"] += 1
         if ct == "ConditioningAverage":
             # Weight the lineart structure reference much harder so the output
             # sticks to the building's geometry. Was 0.10 (10% structure, 90%
@@ -572,9 +594,28 @@ def submit(render=True):
                 inputs["resize_type.height"] = 512
                 inputs.setdefault("resize_type.crop", "center")
                 patched["resize"] += 1
-    if patched["removed_ollama"] or patched["resize"] or patched["cond"]:
+    if any(patched.values()):
         print(f"[AEC] Patched: removed Ollama={patched['removed_ollama']}, "
-              f"ResizeImageMask={patched['resize']}, ConditioningAverage->0.75={patched['cond']}")
+              f"removed debug={patched['removed_debug']}, model paths={patched['paths']}, "
+              f"SimpleInpaintCrop={patched['crop']}, ResizeImageMask={patched['resize']}, "
+              f"ConditioningAverage->0.75={patched['cond']}")
+
+    for node in prompt.values():
+        if (
+            node.get("class_type") == "SaveImage"
+            and node.get("inputs", {}).get("images") == ["1113", 0]
+        ):
+            node["inputs"]["filename_prefix"] = "Change_Roof"
+
+    has_make_real = any(
+        node.get("class_type") == "SaveImage"
+        and any(tag in str(node.get("inputs", {}).get("filename_prefix", ""))
+                for tag in ("Change_Roof", "Make_Real"))
+        for node in prompt.values()
+    )
+    if SAVE_VARIATIONS.get("Change_Roof") and "1113" in prompt and not has_make_real:
+        prompt["1210"] = {"class_type": "SaveImage", "inputs": {"images": ["1113", 0], "filename_prefix": "Change_Roof"}}
+        print("[AEC] Restored missing Make Real SaveImage from final material cascade")
 
     # Drop SaveImage nodes for variations the user disabled in SAVE_VARIATIONS.
     # Also apply RENAME_VARIATIONS so the kept SaveImage gets a friendlier

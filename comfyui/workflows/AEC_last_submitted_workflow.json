@@ -46,7 +46,7 @@
   },
   "947": {
     "inputs": {
-      "vae_name": "flux\\flux2-vae.safetensors"
+      "vae_name": "flux/flux2-vae.safetensors"
     },
     "class_type": "VAELoader"
   },
@@ -183,7 +183,7 @@
   },
   "1013": {
     "inputs": {
-      "noise_seed": 1015271095,
+      "noise_seed": 1301369284,
       "control_after_generate": "randomize"
     },
     "class_type": "RandomNoise"
@@ -269,7 +269,7 @@
   },
   "1039": {
     "inputs": {
-      "noise_seed": 2064411270,
+      "noise_seed": 1951914167,
       "control_after_generate": "randomize"
     },
     "class_type": "RandomNoise"
@@ -290,7 +290,7 @@
   },
   "1054": {
     "inputs": {
-      "clip_name": "klein\\qwen_3_4b.safetensors",
+      "clip_name": "klein/qwen_3_4b.safetensors",
       "type": "flux2",
       "device": "default"
     },
@@ -377,7 +377,7 @@
   },
   "1064": {
     "inputs": {
-      "noise_seed": 1264610838,
+      "noise_seed": 2049766922,
       "control_after_generate": "randomize"
     },
     "class_type": "RandomNoise"
@@ -446,7 +446,8 @@
         0
       ],
       "padding": 0,
-      "invert_mask": false
+      "invert_mask": false,
+      "blur": false
     },
     "class_type": "SimpleInpaintCrop"
   },
@@ -516,7 +517,7 @@
   },
   "972": {
     "inputs": {
-      "noise_seed": 585824710,
+      "noise_seed": 1862712375,
       "control_after_generate": "randomize"
     },
     "class_type": "RandomNoise"
@@ -629,7 +630,7 @@
   },
   "1102": {
     "inputs": {
-      "noise_seed": 1012520156,
+      "noise_seed": 1072069023,
       "control_after_generate": "randomize"
     },
     "class_type": "RandomNoise"
@@ -714,7 +715,7 @@
         "1116",
         0
       ],
-      "filename_prefix": "Comfy_20260530_182027_Change_Environment"
+      "filename_prefix": "Comfy_20260706_175507_Change_Environment"
     },
     "class_type": "SaveImage"
   },
@@ -724,7 +725,7 @@
         "1117",
         0
       ],
-      "filename_prefix": "Comfy_20260530_182027_Time_Of_Day"
+      "filename_prefix": "Comfy_20260706_175507_Time_Of_Day"
     },
     "class_type": "SaveImage"
   },
@@ -740,15 +741,6 @@
       ]
     },
     "class_type": "CLIPTextEncode"
-  },
-  "1120": {
-    "inputs": {
-      "images": [
-        "1121",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
   },
   "1123": {
     "inputs": {
@@ -809,7 +801,7 @@
   },
   "1010": {
     "inputs": {
-      "vae_name": "flux\\flux2-vae.safetensors"
+      "vae_name": "flux/flux2-vae.safetensors"
     },
     "class_type": "VAELoader"
   },
@@ -856,62 +848,17 @@
     },
     "class_type": "ResizeImageMaskNode"
   },
-  "1153": {
-    "inputs": {
-      "images": [
-        "1109",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
-  },
   "1125": {
     "inputs": {
       "text": "Vertical wood paneling. Warm modern wood cabin architecture."
     },
     "class_type": "Text Multiline"
   },
-  "1154": {
-    "inputs": {
-      "images": [
-        "1111",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
-  },
-  "1155": {
-    "inputs": {
-      "images": [
-        "1113",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
-  },
   "1128": {
     "inputs": {
       "text": "The building is the only structure in the scene. Remote uninhabited Southern California coastal cliff in the Santa Barbara area. No other buildings, no houses, no roads, no streets, no human construction anywhere. The building stays in the exact same position, scale, and framing as input. Keep any deck, terrace, pool, or patio that is visible in the input exactly as rendered; do NOT add or invent a pool, deck, terrace, or patio that is not already visible in the frame. Any deck, patio, or pool surround is smooth pale concrete or stone paving, never wood. Do not invent extra structures, railings, fences, or decorative details. The building's structure is FIXED and takes priority over everything else: keep every wall, floor slab, railing and the deck's exact edges as in the input - do not move, remove, open up, or add walls. Do not extend the building or deck with extra terrain, rock, or planting; the deck's outer edges stay exactly as in the input and the cliff drops away beyond them. The deck and pool surround stay pale concrete or stone even though the walls are wood - never extend wood cladding onto the deck or ground. The floor-to-ceiling windows are dark tinted glass - smoky charcoal, clearly darkened, NOT clear - with soft reflections of the sky and cliffs; only faint hints of simple furniture show through. Any interior furniture stays WITHIN the existing rooms - never alter a wall to make room for it. No people. Replace only the sky, the cliff face, the ocean, and the ground beyond the building's footprint. The pool is an infinity pool whose open overflow (infinity) edge faces the view, parallel to the pool's long side; the house sits on a cliff above a rugged coastline. Beyond the pool, show a dramatic Southern California cliff COASTLINE - sandstone cliffs, headlands and coves curving away into the distance with the sea between them. Show MORE rugged coast and cliffs than open flat ocean; the horizon sits high so the coastline fills the background. Native coastal shrubs on the cliffs. Blue sky, daytime, photoreal architectural photography."
     },
     "class_type": "Text Multiline"
-  },
-  "1156": {
-    "inputs": {
-      "images": [
-        "1116",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
-  },
-  "1157": {
-    "inputs": {
-      "images": [
-        "1117",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
   },
   "1126": {
     "inputs": {
@@ -936,7 +883,8 @@
         0
       ],
       "padding": 0,
-      "invert_mask": false
+      "invert_mask": false,
+      "blur": false
     },
     "class_type": "SimpleInpaintCrop"
   },
@@ -1025,7 +973,8 @@
         0
       ],
       "padding": 0,
-      "invert_mask": false
+      "invert_mask": false,
+      "blur": false
     },
     "class_type": "SimpleInpaintCrop"
   },
@@ -1053,7 +1002,7 @@
   },
   "998": {
     "inputs": {
-      "clip_name": "klein\\qwen_3_8b_fp8mixed.safetensors",
+      "clip_name": "klein/qwen_3_8b_fp8mixed.safetensors",
       "type": "flux2",
       "device": "default"
     },
@@ -1061,7 +1010,7 @@
   },
   "999": {
     "inputs": {
-      "unet_name": "flux\\flux-2-klein-9b.safetensors",
+      "unet_name": "flux/flux-2-klein-9b.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader"
@@ -1152,15 +1101,6 @@
     },
     "class_type": "DepthAnythingPreprocessor"
   },
-  "1164": {
-    "inputs": {
-      "images": [
-        "1206",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
-  },
   "1183": {
     "inputs": {
       "conditioning": [
@@ -1220,7 +1160,7 @@
   },
   "932": {
     "inputs": {
-      "clip_name": "klein\\qwen_3_8b_fp8mixed.safetensors",
+      "clip_name": "klein/qwen_3_8b_fp8mixed.safetensors",
       "type": "flux2",
       "device": "default"
     },
@@ -1242,7 +1182,7 @@
   },
   "933": {
     "inputs": {
-      "unet_name": "flux\\flux-2-klein-9b.safetensors",
+      "unet_name": "flux/flux-2-klein-9b.safetensors",
       "weight_dtype": "default"
     },
     "class_type": "UNETLoader"
@@ -1255,31 +1195,9 @@
     },
     "class_type": "Flux2Scheduler"
   },
-  "1161": {
-    "inputs": {
-      "image_a": [
-        "1111",
-        0
-      ],
-      "image_b": [
-        "4",
-        0
-      ]
-    },
-    "class_type": "Image Comparer (rgthree)"
-  },
-  "1152": {
-    "inputs": {
-      "images": [
-        "1107",
-        0
-      ]
-    },
-    "class_type": "PreviewImage"
-  },
   "939": {
     "inputs": {
-      "noise_seed": 606055101,
+      "noise_seed": 790951888,
       "control_after_generate": "randomize"
     },
     "class_type": "RandomNoise"
@@ -1599,5 +1517,15 @@
       "resize_type.crop": "center"
     },
     "class_type": "ResizeImageMaskNode"
+  },
+  "1210": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "1113",
+        0
+      ],
+      "filename_prefix": "Comfy_20260706_175507_Make_Real"
+    }
   }
 }

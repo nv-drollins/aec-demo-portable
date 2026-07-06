@@ -17,9 +17,11 @@ All models go inside your ComfyUI installation at:
 ### 1. Flux.2 Klein 9B (Diffusion Model)
 | Field | Value |
 |-------|-------|
-| File | `models/diffusion_models/klein/flux-2-klein-9b.safetensors` |
-| Source | https://huggingface.co/ostris/flux-2-klein (verify exact repo/filename for the 9B variant) |
-| Notes | The core image generation model actually referenced by both `UNETLoader` nodes in the bundled workflow (`999`, `933`). The 4B variant previously listed here is NOT what this workflow loads — create the `klein/` subfolder. |
+| File | `models/diffusion_models/flux/flux-2-klein-9b.safetensors` |
+| Source | https://huggingface.co/black-forest-labs/FLUX.2-klein-9b-kv-fp8/resolve/main/flux-2-klein-9b-kv-fp8.safetensors |
+| Size | 9,818,935,984 bytes |
+| SHA-256 | `33f7da5625a00798349a719742999d3c7dd20c1a7eda14663922c363640728f1` |
+| Notes | Exact public KV-FP8 model embedded in the editable workflow metadata. It is renamed locally to match both submitted `UNETLoader` nodes (`999`, `933`). |
 
 ---
 
@@ -27,45 +29,34 @@ All models go inside your ComfyUI installation at:
 | Field | Value |
 |-------|-------|
 | File | `models/text_encoders/klein/qwen_3_8b_fp8mixed.safetensors` |
-| Source | https://huggingface.co/Qwen/Qwen3-8B (verify exact fp8-mixed export used) |
+| Source | https://huggingface.co/Comfy-Org/flux2-klein-9B/resolve/main/split_files/text_encoders/qwen_3_8b_fp8mixed.safetensors |
+| Size | 8,664,848,742 bytes |
+| SHA-256 | `abad16806e0cbabc54e0325d6565847443fe396d5f0be38bb3cd3fe75a1201d6` |
 | Notes | This is the text encoder actually wired into the working graph (`CLIPLoader` nodes `998`, `932`) — used for every text prompt in the cascade. |
 
-### 2b. Qwen 3 4B Text Encoder — present but unused in the current graph
-| Field | Value |
-|-------|-------|
-| File | `models/text_encoders/klein/qwen_3_4b.safetensors` |
-| Source | https://huggingface.co/Qwen/Qwen3-4B |
-| Notes | Referenced by one `CLIPLoader` node (`1054`) that isn't wired to anything downstream in the bundled workflow — looks like a leftover from an earlier iteration. ComfyUI may still validate that this file exists even though it's not on the execution path, so keep it around unless you trim the orphan node from the graph. |
-
-**Download commands:**
-```bash
-huggingface-cli download ostris/flux-2-klein --local-dir ./ComfyUI/models/diffusion_models/klein
-huggingface-cli download Qwen/Qwen3-8B --local-dir ./ComfyUI/models/text_encoders/klein
-# optional, only needed to satisfy the orphaned node above:
-huggingface-cli download Qwen/Qwen3-4B --local-dir ./ComfyUI/models/text_encoders/klein
-```
+The orphaned 4B `CLIPLoader` node is not on any retained output path and does not require a model file.
+Use `scripts/install-comfy-portable.sh` for resumable, checksum-verified downloads.
 
 ---
 
 ### 3. Depth Anything (ViT-L) — REQUIRED
 | Field | Value |
 |-------|-------|
-| File | `models/checkpoints/depth_anything_vitl14.pth` (or wherever your ControlNet-aux preprocessor pack expects it — check its own model-download helper) |
-| Source | comfyui_controlnet_aux ships a downloader for this; see custom node section below |
-| Notes | Used by the `DepthAnythingPreprocessor` node (`1165`) for the structural depth reference. Missing entirely from the previous version of this manifest. |
+| File | `custom_nodes/comfyui_controlnet_aux/ckpts/` cache managed by the node pack |
+| Source | `comfyui_controlnet_aux` downloads `LiheYoung/depth-anything-large-hf` on first use |
+| Notes | Used by `DepthAnythingPreprocessor` node `1165`; it is not a top-level Comfy model file and therefore is not part of strict static model preflight. |
 
 ---
 
 ### 4. FLUX.2 VAE
 | Field | Value |
 |-------|-------|
-| File | `models/vae/flux2-vae.safetensors` |
-| Size | ~310 MB |
-| Source | https://huggingface.co/black-forest-labs/FLUX.1-dev |
-| Notes | Also copy to `models/vae/flux/flux2-vae.safetensors` |
+| File | `models/vae/flux/flux2-vae.safetensors` |
+| Size | 336,213,556 bytes |
+| Source | https://huggingface.co/Comfy-Org/flux2-dev/resolve/main/split_files/vae/flux2-vae.safetensors |
+| SHA-256 | `d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5` |
+| Notes | The submitted graph uses the `flux/` subfolder; no duplicate is needed. |
 
-**Direct link:** https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/vae/diffusion_pytorch_model.safetensors
-(rename to `flux2-vae.safetensors`)
 
 ---
 
@@ -151,20 +142,17 @@ submitting).
 ComfyUI/
 └── models/
     ├── diffusion_models/
-    │   └── klein/
-    │       └── flux-2-klein-9b.safetensors            ← REQUIRED
+    │   └── flux/
+    │       └── flux-2-klein-9b.safetensors
     ├── text_encoders/
     │   └── klein/
-    │       ├── qwen_3_8b_fp8mixed.safetensors         ← REQUIRED (actually wired in)
-    │       └── qwen_3_4b.safetensors                  ← present but orphaned node (see above)
-    ├── vae/
-    │   ├── flux2-vae.safetensors                      ← REQUIRED
-    │   └── flux/
-    │       └── flux2-vae.safetensors                  ← REQUIRED (duplicate)
-    └── checkpoints/
-        └── depth_anything_vitl14.pth                  ← REQUIRED (path depends on your
-                                                            controlnet_aux install — verify)
+    │       └── qwen_3_8b_fp8mixed.safetensors
+    └── vae/
+        └── flux/
+            └── flux2-vae.safetensors
 ```
+
+Depth Anything is cached under the `comfyui_controlnet_aux` custom-node directory on first use.
 
 ---
 
@@ -177,4 +165,4 @@ ComfyUI/
 | Storage | 60 GB free | 100+ GB SSD |
 | GPU | RTX 3090 | RTX 4090 / H100 |
 
-> The Flux.2 Klein 4B pipeline uses ~16 GB VRAM at 1024×1024.
+> This exact 9B KV-FP8 graph was validated on DGX Spark at 1024×1024 with dynamic VRAM loading.

@@ -29,52 +29,31 @@ the delivered Blender scenes.
 - ComfyUI UI graph (83 nodes) and submitted API graph (136 nodes).
 - Bundled `aec_utility_nodes`, original prompts, skills, and project template.
 
-## Runtime work still required
+## Validated Spark runtime
 
 ### Blender
 
-- Install a compatible Blender 5.1+ ARM64 build separately from the working
-  Ubuntu Blender 4.0 installation.
-- Install and validate the bundled Blender MCP and ComfyUI-BlenderAI add-ons in
-  that Blender version.
-- Replace hard-coded Windows paths in the delivered Blender startup/submission
-  integration with `config/runtime.env` values.
-- Open a copy of the 106 MB v17 scene first; then validate the 1.55 GB canonical
-  scene.
+- Isolated ARM64 Blender 5.1.0 is installed under `runtime/blender`.
+- Both the 106 MB v17 scene and 1.55 GB canonical textured scene open.
+- Blender MCP auto-starts on port 9876 and reports the intended 5.1 runtime.
+- The controller rejects an older Blender instance occupying the same port.
 
-### ComfyUI models
+### ComfyUI
 
-Strict preflight checks the execution graph's required files:
+The isolated CUDA 13 runtime is installed under `runtime/comfyui`. Strict
+preflight checks the execution graph's three static model files:
 
-- `models/diffusion_models/klein/flux-2-klein-9b.safetensors`
+- `models/diffusion_models/flux/flux-2-klein-9b.safetensors`
 - `models/text_encoders/klein/qwen_3_8b_fp8mixed.safetensors`
-- `models/vae/flux2-vae.safetensors`
-- `models/vae/flux/flux2-vae.safetensors` (may be a symlink to the same VAE)
-- `models/checkpoints/depth_anything_vitl14.pth`
+- `models/vae/flux/flux2-vae.safetensors`
 
-The graph also contains an orphan Qwen 3 4B loader. It is not on the execution
-path but may be removed or supplied if the UI requires its dropdown value.
+All 12 required workflow classes are registered. Depth Anything downloads its
+own cache under `comfyui_controlnet_aux` on first use. The orphaned 4B loader
+is not on a retained output path and needs no model.
 
-### ComfyUI nodes
-
-The current shared ComfyUI already provides `ResizeImageMaskNode`,
-`BatchImagesNode`, `GetImageSize`, and `ImageScaleToTotalPixels`. The first two
-are now core nodes from `comfy_extras.nodes_post_processing`, not unknown
-third-party packs.
-
-The current shared runtime is missing eight classes needed by the submitted
-graph:
-
-| Missing class | Source |
-|---|---|
-| `ColorCode` | Bundled `comfyui/custom_nodes/aec_utility_nodes` |
-| `SimpleInpaintCrop` | Bundled `aec_utility_nodes` |
-| `SimpleInpaintStitch` | Bundled `aec_utility_nodes` |
-| `AnyLineArtPreprocessor_aux` | `comfyui_controlnet_aux` |
-| `DepthAnythingPreprocessor` | `comfyui_controlnet_aux` |
-| `MaskFromColor+` | `ComfyUI_essentials` |
-| `Image Comparer (rgthree)` | `rgthree-comfy` |
-| `Text Multiline` | `was-node-suite-comfyui` |
+The submitted API graph now normalizes Windows separators for Linux, supplies
+the crop-node defaults required by the bundled utility node, removes
+browser-only debug outputs, and retains exactly three SaveImage branches.
 
 ## Agent/CAD parity
 

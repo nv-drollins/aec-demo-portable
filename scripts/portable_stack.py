@@ -23,11 +23,9 @@ LOCAL_ENV = ROOT / "config" / "runtime.env"
 EXAMPLE_ENV = ROOT / "config" / "runtime.env.example"
 
 REQUIRED_MODELS = (
-    "models/diffusion_models/klein/flux-2-klein-9b.safetensors",
+    "models/diffusion_models/flux/flux-2-klein-9b.safetensors",
     "models/text_encoders/klein/qwen_3_8b_fp8mixed.safetensors",
-    "models/vae/flux2-vae.safetensors",
     "models/vae/flux/flux2-vae.safetensors",
-    "models/checkpoints/depth_anything_vitl14.pth",
 )
 
 REQUIRED_NODE_TYPES = (
@@ -76,6 +74,10 @@ FREECAD_PORT = int(setting("AEC_PORTABLE_FREECAD_PORT", "9875"))
 BLENDER_PORT = int(setting("AEC_PORTABLE_BLENDER_PORT", "9876"))
 COMFY_PORT = int(setting("AEC_PORTABLE_COMFY_PORT", "8188"))
 BLENDER_EXE = setting("AEC_PORTABLE_BLENDER_EXE", "blender")
+BLENDER_MCP_BOOTSTRAP = Path(setting(
+    "AEC_PORTABLE_BLENDER_MCP_BOOTSTRAP",
+    str(ROOT / "scripts/start_blender_mcp.py"),
+))
 BLENDER_SCENE = Path(setting(
     "AEC_PORTABLE_BLENDER_SCENE",
     str(ROOT / "sample_project/blender_assets/cliff_house_act2_textured_v3.blend"),
@@ -133,6 +135,20 @@ def blender_healthy() -> bool:
         return blender_request("get_scene_info").get("status") == "success"
     except Exception:
         return False
+
+
+def blender_remote_version() -> tuple[tuple[int, int], str] | None:
+    try:
+        response = blender_request(
+            "execute_code",
+            {"code": "print('AEC_REMOTE_VERSION=' + bpy.app.version_string)"},
+        )
+        output = response["result"]["result"].strip()
+        description = output.split("AEC_REMOTE_VERSION=", 1)[1].splitlines()[0]
+        parts = description.split(".")
+        return (int(parts[0]), int(parts[1])), description
+    except (KeyError, IndexError, TypeError, ValueError, OSError, RuntimeError):
+        return None
 
 
 def comfy_healthy() -> bool:
@@ -200,6 +216,17 @@ def preflight() -> list[str]:
             "for the delivered scenes; "
             f"configured executable reports {description}"
         )
+    if blender_healthy():
+        remote = blender_remote_version()
+        print(f"BLENDER_MCP_VERSION={'unknown' if remote is None else remote[1]}")
+        if remote is None or remote[0] < BLENDER_MIN_VERSION:
+            errors.append(
+                f"Blender MCP port {BLENDER_PORT} is occupied by an incompatible "
+                f"instance ({'unknown version' if remote is None else remote[1]}); "
+                "close that Blender instance before starting the portable stack"
+            )
+    if not BLENDER_MCP_BOOTSTRAP.is_file():
+        errors.append(f"Blender MCP bootstrap is missing: {BLENDER_MCP_BOOTSTRAP}")
     if not COMFY_PYTHON.is_file():
         errors.append(f"ComfyUI Python is missing: {COMFY_PYTHON}")
     if not (COMFY_ROOT / "main.py").is_file():
@@ -248,9 +275,18 @@ def spawn(name: str, command: list[str]) -> None:
     LOGS.mkdir(parents=True, exist_ok=True)
     log_path = LOGS / f"{name}.log"
     stream = log_path.open("ab")
+    environment = os.environ.copy()
+    if name == "blender":
+        display = setting("AEC_PORTABLE_DISPLAY", "")
+        xauthority = setting("AEC_PORTABLE_XAUTHORITY", "")
+        if display:
+            environment["DISPLAY"] = display
+        if xauthority:
+            environment["XAUTHORITY"] = xauthority
     process = subprocess.Popen(
         command,
         cwd=ROOT,
+        env=environment,
         stdout=stream,
         stderr=subprocess.STDOUT,
         start_new_session=True,
@@ -277,7 +313,15 @@ def start() -> None:
     if nodes:
         raise RuntimeError(f"ComfyUI is missing required workflow nodes: {nodes}")
     if not blender_healthy():
-        spawn("blender", [BLENDER_EXE, str(BLENDER_SCENE)])
+        spawn(
+            "blender",
+            [
+                BLENDER_EXE,
+                str(BLENDER_SCENE),
+                "--python",
+                str(BLENDER_MCP_BOOTSTRAP),
+            ],
+        )
     wait_for(blender_healthy, 90, "BLENDER_MCP")
     status()
     print("PORTABLE_STACK_OK")
@@ -315,7 +359,9 @@ def stop() -> None:
 def status() -> None:
     print(f"ROOT={ROOT}")
     print(f"FREECAD_MCP={'healthy' if freecad_healthy() else 'down'} endpoint={HOST}:{FREECAD_PORT}")
-    print(f"BLENDER_MCP={'healthy' if blender_healthy() else 'down'} endpoint={HOST}:{BLENDER_PORT}")
+    blender_status = blender_healthy()
+    remote = blender_remote_version() if blender_status else None
+    print(f"BLENDER_MCP={'healthy' if blender_status else 'down'} endpoint={HOST}:{BLENDER_PORT} version={'unknown' if remote is None else remote[1]}")
     print(f"COMFYUI={'healthy' if comfy_healthy() else 'down'} endpoint={HOST}:{COMFY_PORT}")
     print(f"SCENE={'present' if BLENDER_SCENE.is_file() else 'missing'} path={BLENDER_SCENE}")
     print(f"FLUX_MODELS_MISSING={len(missing_models())}")

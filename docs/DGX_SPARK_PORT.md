@@ -24,9 +24,9 @@ See [REPLICATION_READINESS.md](REPLICATION_READINESS.md) for the complete asset,
 |---|---|---|---|
 | Agent | Claude Desktop | Hermes + local Qwen available | Port required |
 | CAD | Rhino 8, optional in this drop | FreeCAD 1.1.1 + FreeCAD MCP | Replacement track available |
-| Blender | 5.1 | Ubuntu Blender 4.0.2 | Blocked pending compatible Blender |
-| ComfyUI | 0.16+ with Flux.2 Klein | Existing local SD 1.5 runtime | Blocked pending models/nodes |
-| Blender MCP | Add-on on port 9876 | Existing 4.0 add-on works | Must reinstall/verify for Blender 5.1 |
+| Blender | 5.1 | Isolated ARM64 Blender 5.1.0 | Validated with both delivered scenes |
+| ComfyUI | Flux.2 Klein 9B | Isolated ComfyUI 0.27.0 + CUDA 13 | Validated, 0 missing nodes/models |
+| Blender MCP | Add-on on port 9876 | Auto-started by controller | Validated against full textured scene |
 
 ## Repository boundary
 
@@ -56,6 +56,8 @@ cp config/runtime.env.example config/runtime.env
 ./scripts/start-portable-demo.sh
 ./scripts/restart-portable-demo.sh
 ./scripts/stop-portable-demo.sh
+./scripts/run-comfy-demo.py --sample-inputs
+./scripts/run-comfy-demo.py --render
 ```
 
 `start` and `restart` are strict: they stop before launching anything if the
@@ -63,14 +65,10 @@ configured Blender is too old or required Flux.2 models are absent. Set
 `AEC_PORTABLE_REQUIRE_MODELS=0` only for infrastructure testing, never for a
 claimed end-to-end demonstration.
 
-## Next porting steps
+## Validated result
 
-1. Install or provide a DGX Spark-compatible Blender 5.1 executable.
-2. Install the portable Blender MCP and ComfyUI-BlenderAI add-ons for that
-   Blender version, without replacing the working Blender 4.0 setup.
-3. Install the Flux.2 Klein model set and required custom nodes into an
-   isolated ComfyUI environment.
-4. Open a copy of Scene B first, validate materials/cameras/render passes, then
-   test the 1.55 GB canonical Scene A.
-5. Adapt the Claude/Rhino phase prompts to Hermes/FreeCAD while preserving the
-   original files for comparison.
+The Spark opened both supplied Blender scenes, served the full scene through
+Blender MCP, registered every required Comfy node, loaded the public 9B
+KV-FP8 model and 8B encoder, and produced the three expected 1024 x 1024
+outputs: Make Real, Change Environment, and Time of Day. See
+[SPARK_RUNBOOK.md](SPARK_RUNBOOK.md) for the concise operating procedure.
