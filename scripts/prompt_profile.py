@@ -33,6 +33,7 @@ REQUIRED_PROFILE_TEXT = (
     "Do not begin or execute the phase",
     "WAITING_FOR_HUMAN_APPROVAL",
     "scripts/run-portable-site-preparation.py",
+    "scripts/run-portable-massing.py",
 )
 
 

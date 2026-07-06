@@ -74,7 +74,8 @@ run:
 This safely starts any missing demo services and then opens the Hermes chat.
 The terminal displaying the Hermes prompt is where you type or paste all demo
 instructions. Keep it open throughout the demonstration. The launcher defaults
-to the local `qwen3.6:latest` model and a 30-iteration safety limit.
+to the local `qwen3.6:latest` model, a 30-iteration safety limit, and preloads
+the checked portable Phase 2 and Phase 3 skills.
 
 At the Hermes prompt, paste this exact opening instruction:
 
@@ -123,6 +124,21 @@ lot boundary, and four site pads. Hermes must then stop with:
 ```text
 PHASE_REVIEW_REQUIRED phase=2 name=site_preparation
 ```
+
+After inspecting and approving the Phase 2 site, one new approval authorizes
+Phase 3. Hermes must use the checked target-massing adapter and report:
+
+```text
+PORTABLE_MASSING_TARGET_OK
+PORTABLE_MASSING_BUILD_OK
+PORTABLE_MASSING_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=3 name=building_massing
+```
+
+The Phase 3 FreeCAD view contains 11 massing solids plus six read-only links to
+the approved site context. Do not approve Phase 4 until its checked portable
+adapter has been added; Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER`
+instead of guessing.
 
 ## Fast recorded integration proof
 

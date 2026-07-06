@@ -62,3 +62,21 @@ For the recorded-demo opening instruction:
   then stop with `PHASE_REVIEW_REQUIRED phase=2 name=site_preparation`.
 - A failure or missing marker ends the phase attempt. Report it without trying
   alternative APIs or guessed code.
+
+## Canonical Phase 3 adapter
+
+- After Phase 2 review and a new human approval, load
+  `build-portable-freecad-massing` and run only
+  `python3 scripts/run-portable-massing.py` from this repository.
+- Do not call FreeCAD `execute_code` directly, alias documents, rename source
+  objects, or use the older `/home/nvidia/aec-demo` massing skill.
+- Require `PORTABLE_MASSING_TARGET_OK`, `PORTABLE_MASSING_BUILD_OK`, and
+  `PORTABLE_MASSING_PREPARATION_OK`, then show the active isometric result.
+- Stop with `PHASE_REVIEW_REQUIRED phase=3 name=building_massing` and wait for
+  a new human approval.
+
+## Unimplemented phases
+
+If a canonical phase has no explicit adapter section in this file, stop with
+`BLOCKED_MISSING_CHECKED_ADAPTER phase=<number> name=<name>`. Never improvise,
+fall back to an older repository skill, or try raw application code.

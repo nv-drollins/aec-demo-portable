@@ -20,6 +20,11 @@ Canonical Phase 2 uses the `prepare-portable-freecad-site` skill and only the
 checked `scripts/run-portable-site-preparation.py` entrypoint. Raw FreeCAD
 `execute_code` experimentation is prohibited for that phase.
 
+Canonical Phase 3 uses `build-portable-freecad-massing` and only
+`scripts/run-portable-massing.py`. Never create compatibility aliases for old
+document or object names. Phases without an explicit `AGENTS.md` adapter are
+blocked rather than improvised.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

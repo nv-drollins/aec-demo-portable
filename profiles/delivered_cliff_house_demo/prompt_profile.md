@@ -104,6 +104,11 @@ marker is `WAITING_FOR_HUMAN_APPROVAL phase=2 name=site_preparation`. Phase 2
 must run only `scripts/run-portable-site-preparation.py` through the
 `prepare-portable-freecad-site` skill; it may not use raw FreeCAD code.
 
+After a separate human approval, Phase 3 must run only
+`scripts/run-portable-massing.py` through the
+`build-portable-freecad-massing` skill. It must stop after the 11-solid review
+gate. No later phase may execute until its checked portable adapter exists.
+
 ## 7. Rendering and ComfyUI defaults
 
 - Render resolution: 1024 × 1024 for the AI pipeline unless the phase prompt
