@@ -112,7 +112,10 @@ not fabricate phase approvals. It runs only the checked deterministic adapter
 wrapper, waits for completion, and presents the final result. This mode uses an
 isolated Hermes home under `runtime/hermes-auto-home`, a terminal-only toolset,
 and normal Hermes command-safety controls. It does not change the manual
-workflow's one-human-approval-per-phase policy.
+workflow's one-human-approval-per-phase policy. Hermes refreshes the
+visible phase log every 10 seconds and briefly explains newly observed markers.
+For denser scrolling narration, use `AEC_HERMES_AUTO_POLL_SECONDS=5`; accepted
+values are 5 through 60 seconds.
 
 The default local model is `ollama/qwen3.6:latest`. Override it only when a
 compatible local model has already been installed:

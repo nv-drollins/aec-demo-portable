@@ -9,6 +9,12 @@ RUNNER="$ROOT/scripts/run-portable-hermes-authorized-cycle.py"
 AUTO_WORKSPACE="$ROOT/profiles/hermes_auto"
 AUTO_HOME="$ROOT/runtime/hermes-auto-home"
 AUTO_HOME_CONFIGURATOR="$ROOT/scripts/configure-hermes-auto-home.py"
+POLL_SECONDS="${AEC_HERMES_AUTO_POLL_SECONDS:-10}"
+
+if ! [[ "$POLL_SECONDS" =~ ^[0-9]+$ ]] || (( POLL_SECONDS < 5 || POLL_SECONDS > 60 )); then
+    echo "AEC_HERMES_AUTO_POLL_SECONDS must be an integer from 5 through 60." >&2
+    exit 1
+fi
 
 if [[ ! -x "$HERMES_BIN" ]]; then
     echo "Hermes was not found at: $HERMES_BIN" >&2
@@ -43,9 +49,11 @@ AUTHORIZATION_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 PROMPT="$(<"$PROMPT_PATH")"
 printf -v RUNNER_COMMAND 'python3 %q' "$RUNNER"
 QUERY="${PROMPT//__AUTHORIZED_RUNNER__/$RUNNER_COMMAND}"
+QUERY="${QUERY//__POLL_SECONDS__/$POLL_SECONDS}"
 
 echo "HERMES_AUTO_LAUNCH_AUTHORIZED id=$AUTHORIZATION_ID scope=one_cycle phases=2-12"
 echo "Hermes model: $HERMES_MODEL"
+echo "Verbose progress refresh: ${POLL_SECONDS}s"
 echo "This isolated session retains normal Hermes command safety controls."
 
 cd "$AUTO_WORKSPACE"
@@ -57,6 +65,6 @@ exec "$HERMES_BIN" chat \
     --query "$QUERY" \
     --model "$HERMES_MODEL" \
     --toolsets terminal \
-    --max-turns "${AEC_HERMES_AUTO_MAX_TURNS:-5}" \
+    --max-turns "${AEC_HERMES_AUTO_MAX_TURNS:-48}" \
     --source aec-auto \
     --cli

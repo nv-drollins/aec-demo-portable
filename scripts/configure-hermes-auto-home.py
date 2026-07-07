@@ -29,7 +29,7 @@ model:
   provider: custom
   base_url: http://127.0.0.1:11434/v1
 agent:
-  max_turns: 6
+  max_turns: 48
   verbose: false
   reasoning_effort: medium
 terminal:

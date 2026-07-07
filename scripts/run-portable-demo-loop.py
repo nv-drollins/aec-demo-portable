@@ -48,10 +48,130 @@ PHASES = (
     Phase(12, "final_blender_comfyui", "run-portable-final-transformation.py"),
 )
 
+PHASE_PRESENTATION = {
+    1: (
+        "Configuration and source audit",
+        (
+            "Validate the populated design profile and checked project paths.",
+            "Confirm FreeCAD, Blender MCP, and ComfyUI service health.",
+        ),
+    ),
+    2: (
+        "FreeCAD site preparation",
+        (
+            "Import the Rhino curve template as a read-only reference.",
+            "Build native FreeCAD terrain, lot, pad, driveway, patio, and stairs.",
+        ),
+    ),
+    3: (
+        "FreeCAD building massing",
+        (
+            "Validate the delivered Blender target envelopes.",
+            "Construct the eleven checked level, balcony, and roof masses.",
+        ),
+    ),
+    4: (
+        "FreeCAD architectural detailing",
+        (
+            "Reconstruct structure, wall, glazing, frame, door, and railing solids.",
+            "Verify wall/glass, wall/door, and frame/glass clearance checks.",
+        ),
+    ),
+    5: (
+        "Blender landscaping and site context",
+        (
+            "Transfer the approved site roles into a versioned Blender checkpoint.",
+            "Preserve the delivered target scene while adding terrain and hardscape context.",
+        ),
+    ),
+    6: (
+        "Blender entourage and outdoor living",
+        (
+            "Place loungers, tables, chairs, planters, firepit, and vehicle.",
+            "Check the procedural layout for site and pool conflicts.",
+        ),
+    ),
+    7: (
+        "Blender materials",
+        (
+            "Assign the checked architectural and entourage material palette.",
+            "Apply segmentation tags and verify all meshes are materialized.",
+        ),
+    ),
+    8: (
+        "Reference-matching hero camera",
+        (
+            "Build the southeast left-side three-quarter ocean-view camera.",
+            "Verify the complete house and pool remain inside the 30 mm hero frame.",
+        ),
+    ),
+    9: (
+        "Blender lighting",
+        (
+            "Apply the approved coastal HDRI and restrained fire practical.",
+            "Render diagonal compass previews and restore the hero camera.",
+        ),
+    ),
+    10: (
+        "Still-image animation decision",
+        (
+            "Record the approved animation skip for this Blender-to-ComfyUI demo.",
+            "Verify that no camera or geometry keyframes were introduced.",
+        ),
+    ),
+    11: (
+        "Aligned test render passes",
+        (
+            "Render beauty, depth, and segmentation from the same hero camera.",
+            "Validate resolution, alignment, and usable image variance.",
+        ),
+    ),
+    12: (
+        "Final ComfyUI transformation",
+        (
+            "Submit the checked Blender passes to the Flux workflow.",
+            "Validate Make Real, Change Environment, and Time of Day outputs.",
+        ),
+    ),
+}
+
+HERMES_PRESENTATION = os.environ.get("AEC_AUTOPLAY_HERMES_MODE") == "driver"
+
 
 def emit(marker: str, **values: object) -> None:
     fields = " ".join(f"{key}={value}" for key, value in values.items())
     print(f"{marker}{' ' if fields else ''}{fields}", flush=True)
+
+def present_phase_begin(number: int) -> None:
+    if not HERMES_PRESENTATION:
+        return
+    title, activities = PHASE_PRESENTATION[number]
+    print("", flush=True)
+    emit(
+        "HERMES_DEMO_PHASE",
+        phase=number,
+        title=json.dumps(title),
+        status="starting",
+    )
+    for step, activity in enumerate(activities, 1):
+        emit(
+            "HERMES_DEMO_ACTIVITY",
+            phase=number,
+            step=f"{step}/{len(activities)}",
+            message=json.dumps(activity),
+        )
+
+
+def present_phase_complete(number: int) -> None:
+    if not HERMES_PRESENTATION:
+        return
+    title, _ = PHASE_PRESENTATION[number]
+    emit(
+        "HERMES_DEMO_CHECKPOINT",
+        phase=number,
+        title=json.dumps(title),
+        status="validated",
+    )
 
 
 def run(command: list[str], *, label: str) -> None:
@@ -147,6 +267,7 @@ def pause(seconds: float, *, reason: str) -> None:
 
 def phase_one(cycle: int) -> None:
     emit("AUTOPLAY_PHASE_BEGIN", cycle=cycle, phase=1, name="config_source_audit")
+    present_phase_begin(1)
     run(
         [sys.executable, "scripts/prompt_profile.py", "validate", str(PROFILE)],
         label="profile_validation",
@@ -156,6 +277,7 @@ def phase_one(cycle: int) -> None:
         label="stack_status",
     )
     emit("AUTOPLAY_PHASE_OK", cycle=cycle, phase=1, name="config_source_audit")
+    present_phase_complete(1)
 
 
 def run_cycle(cycle: int, phase_delay: float, keep_final_sets: int) -> None:
@@ -176,6 +298,7 @@ def run_cycle(cycle: int, phase_delay: float, keep_final_sets: int) -> None:
             phase=phase.number,
             name=phase.name,
         )
+        present_phase_begin(phase.number)
         run(
             [sys.executable, str(ROOT / "scripts" / phase.script)],
             label=f"phase_{phase.number}_{phase.name}",
@@ -186,6 +309,7 @@ def run_cycle(cycle: int, phase_delay: float, keep_final_sets: int) -> None:
             phase=phase.number,
             name=phase.name,
         )
+        present_phase_complete(phase.number)
         pause(phase_delay, reason=f"phase_{phase.number}_review")
 
     prune_final_sets(keep_final_sets)

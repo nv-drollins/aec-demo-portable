@@ -11,13 +11,22 @@ command. Use the terminal tool exactly once to execute this exact command with
 
 __AUTHORIZED_RUNNER__
 
-Call the process tool once with `action=wait` and `timeout=7200`; do not poll,
-restart it, read its process log, or inspect the wrapper. The wait result carries
-the process exit code and final output. `HERMES_AUTO_DRY_RUN_OK` is a complete
-success marker during launcher testing and must not trigger further inspection;
-state explicitly that the launcher passed and no demonstration phases ran.
-Report only markers and facts present in the wrapper output; never infer or invent
-health checks, initialized phases, files, or completed work.
+After launch, repeatedly call the process tool with `action=wait` and
+`timeout=__POLL_SECONDS__` until it reports `status=exited`. A wait timeout is a
+normal presentation refresh, not a failure: never restart or duplicate the
+process. Do not use process poll/log or inspect the wrapper.
+
+After each timed-out wait, give a concise one-to-three sentence live update that
+explains only newly visible `HERMES_DEMO_*`, `AUTOPLAY_*`, and checked adapter
+markers in audience-friendly language, then immediately wait again. Do not
+repeat old markers. This narration and the raw tool output are the scrolling
+presentation. When the process exits, report its exit code and final markers.
+
+`HERMES_AUTO_DRY_RUN_OK` is a complete success marker during launcher testing
+and must not trigger further inspection; state explicitly that the launcher
+passed and no demonstration phases ran. Report only markers and facts present in
+the wrapper output; never infer or invent health checks, initialized phases,
+files, or completed work.
 
 Do not execute any other terminal command, edit any file, invoke raw MCP code,
 ask for phase approvals, or produce approval language. The authorized wrapper

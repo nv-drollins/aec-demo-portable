@@ -13,11 +13,13 @@ root's human-gated manual policy.
   the supplied user message. The launcher already verifies that wrapper; do
   not inspect or list it. Start it once with `background=true` and
   `notify_on_complete=true`.
-- Use one blocking process `wait` call with a 7200-second timeout. Do not poll,
-  restart it, read its process log, or inspect the wrapper. The wait result is
-  authoritative. `HERMES_AUTO_DRY_RUN_OK` is a successful launcher test in
-  which zero demonstration phases ran. Report only wrapper-produced facts and
-  never infer checks, phases, files, or work that its output does not contain.
+- Repeatedly use blocking process `wait` calls at the presentation interval
+  supplied in the user message until the process exits. A wait timeout means
+  report newly visible markers briefly and wait again; it is not a failure.
+  Never restart the process, use process poll/log, or inspect the wrapper.
+- Report only new wrapper-produced facts. Never infer checks, phases, files, or
+  work that its output does not contain. `HERMES_AUTO_DRY_RUN_OK` is a
+  successful launcher test in which zero demonstration phases ran.
 - Do not read files, edit files, invoke raw MCP methods, download assets, or run
   alternative terminal commands.
 - Briefly identify Hermes and the authorized one-cycle scope before invoking
