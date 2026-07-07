@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import shutil
 import stat
 import tempfile
 
@@ -54,6 +55,28 @@ def main():
             resolved.append(expanded)
     skills["external_dirs"] = resolved
 
+    # Register the repository-pinned FreeCAD MCP server with Hermes. Hermes
+    # bundles uv under ~/.hermes/bin; fall back to a system uv when present.
+    uv = HERMES_HOME / "bin" / "uv"
+    if not uv.is_file():
+        located = shutil.which("uv")
+        uv = Path(located) if located else uv
+    freecad_mcp = ROOT / "runtime" / "freecad-mcp"
+    if freecad_mcp.is_dir() and uv.is_file():
+        servers = config.setdefault("mcp_servers", {})
+        if not isinstance(servers, dict):
+            raise RuntimeError("Hermes config key 'mcp_servers' must be a mapping")
+        servers["freecad"] = {
+            "command": str(uv.resolve()),
+            "args": [
+                "--directory",
+                str(freecad_mcp.resolve()),
+                "run",
+                "freecad-mcp",
+            ],
+            "enabled": True,
+        }
+
     mode = stat.S_IMODE(CONFIG_PATH.stat().st_mode) if CONFIG_PATH.exists() else 0o600
     descriptor, temporary_name = tempfile.mkstemp(
         dir=HERMES_HOME, prefix=".config.yaml."
@@ -70,6 +93,8 @@ def main():
         if temporary.exists():
             temporary.unlink()
     print(f"HERMES_SKILLS_REGISTERED={SKILLS_DIR} config={CONFIG_PATH}")
+    if freecad_mcp.is_dir() and uv.is_file():
+        print(f"HERMES_FREECAD_MCP_REGISTERED={freecad_mcp} command={uv}")
 
 
 if __name__ == "__main__":

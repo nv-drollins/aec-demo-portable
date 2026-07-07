@@ -58,11 +58,11 @@ browser-only debug outputs, and retains exactly three SaveImage branches.
 ## Agent/CAD parity
 
 The original package assumes Claude Desktop and Rhino MCP. On this Spark,
-Hermes plus FreeCAD MCP is the replacement track. The previous
-`/home/nvidia/aec-demo` project supplies proven local Hermes, FreeCAD,
-Blender-MCP, startup, and reset patterns. Porting the original phase prompts to
-FreeCAD remains integration work; it is not required to demonstrate the
-already-finished Blender scene and ComfyUI transformation pipeline.
+Hermes plus FreeCAD MCP is the replacement track. The portable installer now
+downloads the pinned FreeCAD 1.1.1 ARM64 AppImage and FreeCAD MCP source,
+installs the auto-start RPC links, and registers that MCP source with Hermes.
+The portable controller no longer depends on a separate `/home/nvidia/aec-demo`
+checkout.
 
 ## Readiness gates
 

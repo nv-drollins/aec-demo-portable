@@ -104,8 +104,11 @@ cd /home/nvidia/AEC_Demo_Portable
 ./scripts/preflight-portable-demo.sh
 ```
 
-`runtime/` is intentionally not transferred. The installer rebuilds Blender,
-ComfyUI, custom nodes, and model files for the destination Spark.
+`runtime/` is intentionally not transferred. The installer downloads the
+pinned FreeCAD 1.1.1 ARM64 AppImage and FreeCAD MCP source, then rebuilds
+Blender, ComfyUI, custom nodes, and model files for the destination Spark.
+FreeCAD, Blender, and model downloads show progress and verify SHA-256 where an
+upstream digest is pinned.
 
 ## Prompt profile
 

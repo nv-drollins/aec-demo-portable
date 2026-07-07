@@ -42,7 +42,8 @@ download_model() {
     if [[ -f "$target" ]]; then
         mv "$target" "$target.bad.$(date +%s)"
     fi
-    curl -fL --silent --show-error --retry 5 -C - -o "$target.part" "$url"
+    echo "MODEL_DOWNLOAD_BEGIN target=$target"
+    curl -fL --progress-bar --show-error --retry 5 -C - -o "$target.part" "$url"
     if ! echo "$sha  $target.part" | sha256sum -c -; then
         mv "$target.part" "$target.part.bad.$(date +%s)"
         return 1

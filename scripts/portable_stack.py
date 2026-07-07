@@ -22,6 +22,7 @@ RUNTIME = ROOT / "runtime"
 LOGS = ROOT / "logs"
 LOCAL_ENV = ROOT / "config" / "runtime.env"
 EXAMPLE_ENV = ROOT / "config" / "runtime.env.example"
+os.environ.setdefault("AEC_PORTABLE_ROOT", str(ROOT))
 
 REQUIRED_MODELS = (
     "models/diffusion_models/flux/flux-2-klein-9b.safetensors",
@@ -86,12 +87,15 @@ BLENDER_SCENE = Path(setting(
 BLENDER_MIN_VERSION = tuple(
     int(part) for part in setting("AEC_PORTABLE_BLENDER_MIN_VERSION", "5.1").split(".")[:2]
 )
-COMFY_ROOT = Path(setting("AEC_PORTABLE_COMFY_ROOT", "/home/nvidia/aec-demo/comfyui"))
+COMFY_ROOT = Path(setting("AEC_PORTABLE_COMFY_ROOT", str(ROOT / "runtime/comfyui")))
 COMFY_PYTHON = Path(setting(
     "AEC_PORTABLE_COMFY_PYTHON", str(COMFY_ROOT / ".venv/bin/python")
 ))
 FREECAD_START = Path(setting(
-    "AEC_PORTABLE_FREECAD_START", "/home/nvidia/aec-demo/scripts/start-freecad.sh"
+    "AEC_PORTABLE_FREECAD_START", str(ROOT / "scripts/start-freecad.sh")
+))
+FREECAD_EXE = Path(setting(
+    "AEC_PORTABLE_FREECAD_EXE", str(ROOT / "runtime/freecad/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage")
 ))
 
 
@@ -251,8 +255,11 @@ def preflight() -> list[str]:
                 f"{len(missing_nodes)} required ComfyUI node classes are missing; "
                 "see docs/REPLICATION_READINESS.md"
             )
-    if enabled("AEC_PORTABLE_FREECAD_ENABLED", True) and not FREECAD_START.is_file():
-        errors.append(f"FreeCAD launcher is missing: {FREECAD_START}")
+    if enabled("AEC_PORTABLE_FREECAD_ENABLED", True):
+        if not FREECAD_START.is_file():
+            errors.append(f"FreeCAD launcher is missing: {FREECAD_START}")
+        if not FREECAD_EXE.is_file():
+            errors.append(f"FreeCAD executable is missing: {FREECAD_EXE}")
     if errors:
         print("PORTABLE_PREFLIGHT_BLOCKED")
         for error in errors:
