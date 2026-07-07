@@ -41,6 +41,11 @@ Hermes loads this file automatically when launched from this repository. Read
   and continue with the already authorized canonical runner.
 - Never rerun the previous phase and never advance to the next phase unless the
   current phase's runner returned all required markers after this approval.
+- After the approved runner completes, the only permitted work for the next
+  phase in the same turn is its canonical read-only readiness check. Clearly
+  report it as readiness, never completion, and stop at
+  `WAITING_FOR_HUMAN_APPROVAL` for that next phase. It does not consume or
+  manufacture the next approval.
 - Do not create, update, or curate Hermes memories or skills during this demo.
   Background self-improvement is outside the approved workflow; only the
   source-controlled skills explicitly preloaded by the launcher are valid.
@@ -225,8 +230,16 @@ For the recorded-demo opening instruction:
 - After Phase 11 review and a new human approval, load
   `run-portable-blender-comfy-final` and run only
   `python3 scripts/run-portable-final-transformation.py` from this repository.
-- Require `PORTABLE_FINAL_INPUT_OK`, `PORTABLE_FINAL_SUBMISSION_OK`,
+- Require `PORTABLE_FINAL_INPUT_OK`, `PORTABLE_FINAL_CAMERA_OK`,
+  `PORTABLE_FINAL_STRUCTURE_OK`, `PORTABLE_FINAL_SUBMISSION_OK`,
   `PORTABLE_FINAL_IMAGES_OK`, and `PORTABLE_FINAL_PREPARATION_OK`.
+- A nonzero runner exit or missing marker means Phase 12 did not complete. Show
+  the exact runner error and return to the Phase 12 human approval marker. Do
+  not emit `FINAL_REVIEW_REQUIRED`, investigate with improvised shell/Python,
+  or patch code during the demo.
+- Raw files in `runtime/comfyui/output/` are not final delivery. Only the three
+  validated copies in `projects/recorded_demo/final_outputs/` satisfy the final
+  image gate.
 - Stop with `FINAL_REVIEW_REQUIRED phase=12 name=final_blender_comfyui`.
 - Never use sample inputs or claim success without three validated images.
 

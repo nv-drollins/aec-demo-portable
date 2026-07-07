@@ -160,6 +160,7 @@ COMFY_CUDA_OK
 COMFY_PORTABLE_RUNTIME_OK=...
 BLENDER_VERSION=Blender 5.1.0
 PORTABLE_PREFLIGHT_OK
+COMFY_CONTROLLER_RUNTIME_OK root=/home/nvidia/AEC_Demo_Portable/runtime/comfyui url=http://127.0.0.1:8188
 ```
 
 The installer creates `config/runtime.env` from the checked example when it is

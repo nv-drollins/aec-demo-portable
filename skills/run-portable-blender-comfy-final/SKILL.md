@@ -13,6 +13,14 @@ description: "Run canonical Phase 12 final Blender-to-ComfyUI transformation, va
 - Require `PORTABLE_FINAL_INPUT_OK`, `PORTABLE_FINAL_CAMERA_OK`,
   `PORTABLE_FINAL_STRUCTURE_OK`, `PORTABLE_FINAL_SUBMISSION_OK`,
   `PORTABLE_FINAL_IMAGES_OK`, and `PORTABLE_FINAL_PREPARATION_OK`.
+- If the runner exits nonzero or any marker is missing, Phase 12 is incomplete.
+  Report the runner's exact stdout/stderr and stop at
+  `WAITING_FOR_HUMAN_APPROVAL phase=12 name=final_blender_comfyui`; do not emit
+  a final review marker, run ad-hoc curl/Python investigations, or patch source
+  code during the demo.
+- Files under `runtime/comfyui/output/` are raw ComfyUI staging outputs, not
+  delivered Phase 12 results. Completion requires the runner to validate and
+  copy exactly three images into `projects/recorded_demo/final_outputs/`.
 - Stop with `FINAL_REVIEW_REQUIRED phase=12 name=final_blender_comfyui`.
 
 Do not use sample inputs, inferred DepthAnything geometry, raw ComfyUI requests,

@@ -18,6 +18,11 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def load_runtime_env() -> None:
+    # A clean install copies runtime.env.example, whose values intentionally
+    # reference $AEC_PORTABLE_ROOT. Unlike a shell, Python does not expand
+    # those nested variables automatically. Establish the root first, then
+    # expand both $VARS and ~ while loading each value.
+    os.environ["AEC_PORTABLE_ROOT"] = str(ROOT)
     path = ROOT / "config/runtime.env"
     if not path.is_file():
         path = ROOT / "config/runtime.env.example"
@@ -26,7 +31,13 @@ def load_runtime_env() -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
-        os.environ.setdefault(key, os.path.expanduser(value.strip()))
+        expanded = os.path.expandvars(os.path.expanduser(value.strip()))
+        os.environ.setdefault(key, expanded)
+    comfy_root = Path(os.environ.get("AEC_PORTABLE_COMFY_ROOT", ""))
+    if not comfy_root.is_absolute() or "$" in str(comfy_root):
+        raise RuntimeError(
+            f"AEC_PORTABLE_COMFY_ROOT did not resolve to an absolute path: {comfy_root}"
+        )
 
 
 def blender_execute(code: str, host: str, port: int) -> dict:
@@ -95,6 +106,7 @@ def main() -> None:
         help="Stage the supplied reference beauty/segmentation images and reuse them.",
     )
     parser.add_argument("--no-wait", action="store_true")
+    parser.add_argument("--check-runtime", action="store_true")
     parser.add_argument("--timeout", type=int, default=900)
     args = parser.parse_args()
 
@@ -103,6 +115,14 @@ def main() -> None:
     blender_port = int(os.environ.get("AEC_PORTABLE_BLENDER_PORT", "9876"))
     comfy_root = Path(os.environ["AEC_PORTABLE_COMFY_ROOT"])
     comfy_url = os.environ.get("AEC_PORTABLE_COMFY_URL", "http://127.0.0.1:8188")
+
+    if args.check_runtime:
+        if not comfy_root.is_dir():
+            raise RuntimeError(f"ComfyUI runtime directory is missing: {comfy_root}")
+        print(
+            f"COMFY_CONTROLLER_RUNTIME_OK root={comfy_root.resolve()} url={comfy_url}"
+        )
+        return
 
     if args.sample_inputs:
         stage_sample_inputs(comfy_root)

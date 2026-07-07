@@ -226,6 +226,12 @@ phase and is consumed immediately. Hermes must never print or supply this
 approval for you. After completing the phase, it must stop at the next review
 gate before another approval.
 
+Hermes may run the following phase's checked read-only readiness command in
+the same turn after completing the approved phase. This is expected preparation,
+not execution of another phase. It must report the `PORTABLE_*_READY_OK` marker
+as readiness and stop at `WAITING_FOR_HUMAN_APPROVAL` before any next-phase
+mutation.
+
 A `PORTABLE_*_READY_OK` marker is not phase completion. If Hermes asks you to
 select a phase, reruns the previous one, or proposes skipping ahead, mutate
 nothing and paste:
@@ -400,6 +406,8 @@ After inspecting Phase 11, one new approval authorizes the final transformation:
 
 ```text
 PORTABLE_FINAL_INPUT_OK
+PORTABLE_FINAL_CAMERA_OK
+PORTABLE_FINAL_STRUCTURE_OK
 PORTABLE_FINAL_SUBMISSION_OK
 PORTABLE_FINAL_IMAGES_OK
 PORTABLE_FINAL_PREPARATION_OK
@@ -410,6 +418,11 @@ The final gate renders fresh Blender beauty and segmentation inputs, submits the
 verified ComfyUI API graph, waits for exactly three 1280x720 outputs (Make Real,
 Change Environment, and Time of Day), validates them, and saves the final Blender
 checkpoint. Sample inputs are not used.
+
+ComfyUI first writes raw generated files under `runtime/comfyui/output/`. The
+checked Phase 12 runner then validates and copies exactly three delivered files
+to `projects/recorded_demo/final_outputs/`. If the second directory has no new
+set, Phase 12 did not complete even when raw ComfyUI files exist.
 
 ## Fast recorded integration proof
 

@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+export AEC_PORTABLE_ROOT="$ROOT"
 HERMES_BIN="${HERMES_BIN:-$HOME/.local/bin/hermes}"
 HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/qwen3.6:latest}"
 PROMPT_PATH="$ROOT/prompts/auto/hermes_authorized_cycle.md"

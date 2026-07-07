@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export AEC_PORTABLE_ROOT="$ROOT"
 PHASE_DELAY="${AEC_AUTO_PHASE_DELAY:-5}"
 CYCLE_DELAY="${AEC_AUTO_CYCLE_DELAY:-60}"
 KEEP_FINAL_SETS="${AEC_AUTO_KEEP_FINAL_SETS:-12}"
