@@ -140,7 +140,7 @@ After a separate human approval, Phase 7 must run only
 and preparation markers and stop at its materials review gate.
 
 Phase 8 project delta: the adjustable southwest hero-camera default in the
-preserved upstream brief is superseded by the checked southeast/left-side
+preserved upstream brief is superseded by the checked northwest/front-diagonal
 three-quarter reference-match composition in the portable camera skill and
 manifest. It uses a 30 mm lens and must retain the full house and pool in frame.
 

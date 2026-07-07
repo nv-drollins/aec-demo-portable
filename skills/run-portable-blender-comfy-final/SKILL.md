@@ -16,4 +16,4 @@ description: "Run canonical Phase 12 final Blender-to-ComfyUI transformation, va
 - Stop with `FINAL_REVIEW_REQUIRED phase=12 name=final_blender_comfyui`.
 
 Do not use sample inputs, inferred DepthAnything geometry, raw ComfyUI requests,
-or claim completion without the camera-v4 exact depth contract, three validated output images and a saved final Blender checkpoint.
+or claim completion without the camera-v5 exact depth contract, three validated output images and a saved final Blender checkpoint.

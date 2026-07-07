@@ -1,13 +1,13 @@
 ---
 name: build-portable-blender-camera
-description: "Build the canonical wide southeast reference-matching Phase 8 camera in Blender, preserve the delivered Camera_day framing, add utility cameras, and save a review still. Use only for Phase 8 in AEC_Demo_Portable."
+description: "Build the canonical northwest front-diagonal reference-matching Phase 8 camera in Blender, preserve the delivered Camera_day framing, add utility cameras, and save a review still. Use only for Phase 8 in AEC_Demo_Portable."
 ---
 
 # Build the delivered portable camera checkpoint
 
 This is the only supported canonical Phase 8 procedure. It preserves the
 delivered `Camera_day` framing, then creates a wider, slightly elevated
-southeast exterior three-quarter `ocean_view` matched to the original final-image side. It also creates the named utility
+northwest front-diagonal three-quarter `ocean_view` matched to the original final-image facade. It also creates the named utility
 cameras required by the original prompt and saves a separate checkpoint plus a
 viewport review image.
 
@@ -38,7 +38,7 @@ Require `PORTABLE_CAMERA_READY_OK` and stop with
 
 - Do not overwrite Phase 7 or delete `Camera_day`.
 - Do not change geometry, materials, world lighting, or render passes.
-- Do not change the checked 30mm southeast exterior reference-matching composition. The delivered
+- Do not change the checked 30mm northwest front-diagonal reference-matching composition. The delivered
   20.5mm `Camera_day` remains preserved for comparison.
-- Reject any hero position north of the building, west of the checked target, or inside the courtyard.
+- Reject any hero position south of the checked target, east of the checked target, or inside the courtyard.
 - Do not proceed to Phase 9.

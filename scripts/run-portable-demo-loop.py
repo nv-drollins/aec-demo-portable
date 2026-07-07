@@ -102,7 +102,7 @@ PHASE_PRESENTATION = {
     8: (
         "Reference-matching hero camera",
         (
-            "Build the southeast left-side three-quarter ocean-view camera.",
+            "Build the northwest front-diagonal view of the original reference facade.",
             "Verify the complete house and pool remain inside the 30 mm hero frame.",
         ),
     ),
@@ -130,7 +130,7 @@ PHASE_PRESENTATION = {
     12: (
         "Final ComfyUI transformation",
         (
-            "Verify camera-v4 and render exact camera-space geometry depth.",
+            "Verify camera-v5 and render exact camera-space geometry depth.",
             "Submit beauty, segmentation, and exact depth at 90 percent structural weight.",
             "Validate Make Real, Change Environment, and Time of Day outputs.",
         ),
