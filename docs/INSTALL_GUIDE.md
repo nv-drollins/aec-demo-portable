@@ -69,6 +69,43 @@ Download these files through a browser into `/home/nvidia`:
 - [SHA-256 checksum](https://drive.google.com/file/d/1cSwuquJ5L4xXVeJEGEHgZ5Q6OinK3_wv/view?usp=sharing)
 - [Archive contents list](https://drive.google.com/file/d/1vCgAOfh6D2UKSt_hAJYPBEGDMI9hmZYV/view?usp=sharing) — optional
 
+### Optional command-line download
+
+On a workstation with command-line access only, use
+[`gdown`](https://github.com/wkentaro/gdown). It handles Google Drive's
+large-file confirmation flow and can resume an interrupted archive download.
+
+Install it in an isolated Python environment:
+
+```bash
+sudo apt update
+sudo apt install -y python3-venv
+python3 -m venv ~/.venvs/gdown
+~/.venvs/gdown/bin/pip install --upgrade gdown
+```
+
+Download the required archive and checksum with their expected filenames:
+
+```bash
+cd /home/nvidia
+GDOWN="$HOME/.venvs/gdown/bin/gdown"
+
+"$GDOWN" --continue 1BmZM-zApyu2sGcPgJuk2EFLibAwjoWE- \
+  -O aec-demo-portable-payload-demo-20260707_130002.tar.gz
+
+"$GDOWN" 1cSwuquJ5L4xXVeJEGEHgZ5Q6OinK3_wv \
+  -O aec-demo-portable-payload-demo-20260707_130002.tar.gz.sha256
+```
+
+Optionally download the archive contents listing:
+
+```bash
+"$GDOWN" 1vCgAOfh6D2UKSt_hAJYPBEGDMI9hmZYV \
+  -O aec-demo-portable-payload-demo-20260707_130002.tar.gz.contents.txt
+```
+
+If the archive transfer is interrupted, rerun its `gdown --continue` command.
+
 The published archive name is:
 
 ```text
