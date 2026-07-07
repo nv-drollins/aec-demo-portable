@@ -139,6 +139,11 @@ After a separate human approval, Phase 7 must run only
 `build-portable-blender-materials` skill. Require the input, assignment, shader,
 and preparation markers and stop at its materials review gate.
 
+Phase 8 project delta: the adjustable southwest hero-camera default in the
+preserved upstream brief is superseded by the checked southeast/left-side
+three-quarter reference-match composition in the portable camera skill and
+manifest. It uses a 30 mm lens and must retain the full house and pool in frame.
+
 Before Phase 8 approval, readiness validation must run only
 `scripts/check-portable-camera-ready.py` and require
 `PORTABLE_CAMERA_READY_OK` without mutating Blender.
