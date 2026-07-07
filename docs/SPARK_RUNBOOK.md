@@ -321,7 +321,7 @@ PHASE_REVIEW_REQUIRED phase=8 name=camera_placement
 The camera gate validates and preserves the delivered 20.5mm `Camera_day`.
 It creates the original slightly elevated 28mm southwest exterior camera-v3
 `ocean_view`, plus `compass_cam` and `patio_sweep_cam`; confirms four framing
-anchors and the complete subject extent; and saves a viewport review image.
+anchors and the checked lower-edge crop; and saves a viewport review image.
 The side rule rejects courtyard or interior compositions.
 
 After inspecting and approving Phase 8, one new approval authorizes Phase 9.
