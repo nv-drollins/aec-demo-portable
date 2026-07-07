@@ -202,7 +202,8 @@ frosted, and pale-blue glass shaders. It does not replace the authoritative
 building/site palette from prose.
 
 After inspecting and approving Phase 7, one new approval authorizes Phase 8.
-Hermes preserves the delivered camera composition and adds named utility cameras:
+Hermes preserves the delivered camera composition and builds a checked wider
+three-quarter hero plus named utility cameras:
 
 ```text
 PORTABLE_CAMERA_INPUT_OK
@@ -213,10 +214,11 @@ PORTABLE_CAMERA_PREPARATION_OK
 PHASE_REVIEW_REQUIRED phase=8 name=camera_placement
 ```
 
-The camera gate validates the delivered 20.5mm `Camera_day` composition, creates
-`ocean_view`, `compass_cam`, and `patio_sweep_cam`, confirms four framing anchors,
-and saves a viewport review image. The delivered framing overrides the prompt's
-adjustable 28mm starting value.
+The camera gate validates and preserves the delivered 20.5mm `Camera_day`.
+It creates a farther, slightly elevated northwest three-quarter `ocean_view`
+with the same 20.5mm lens, plus `compass_cam` and `patio_sweep_cam`; confirms
+four framing anchors; and saves a viewport review image. The checked composition
+overrides the adjustable 28mm starting value.
 
 After inspecting and approving Phase 8, one new approval authorizes Phase 9.
 Hermes builds a clean bundled-HDRI world and four compass previews:

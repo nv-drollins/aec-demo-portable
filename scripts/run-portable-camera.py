@@ -54,13 +54,22 @@ def main() -> None:
     data = {key:json.loads(result.split(marker,1)[1].splitlines()[0]) for key,marker in markers.items()}
     if Path(data["build"]["output"]).resolve() != output_scene:
         raise RuntimeError(f"Camera checkpoint was saved to the wrong path: {data['build']}")
+    reframe_code = f'''import bpy,json,os\nfrom bpy_extras.object_utils import world_to_camera_view\nfrom mathutils import Vector\nspec=json.loads({embedded!r})\nhero=bpy.data.objects.get(spec["hero_camera"]); target=bpy.data.objects.get(spec["target_empty"])\nif hero is None or hero.type!="CAMERA" or target is None: raise RuntimeError("Phase 8 cameras are missing")\nhero.location=spec["hero_location"]; target.location=spec["hero_target"]; hero.data.lens=spec["hero_lens"]\nbpy.context.scene.camera=hero; bpy.context.view_layer.update()\nframing={{}}\nfor name,coordinate in spec["anchors"].items():\n    point=world_to_camera_view(bpy.context.scene,hero,Vector(coordinate)); framing[name]=[float(point.x),float(point.y),float(point.z)]\ninvalid=[name for name,p in framing.items() if not (0.02<=p[0]<=0.98 and 0.02<=p[1]<=0.98 and p[2]>0)]\nif invalid: raise RuntimeError("Wide hero framing lost anchors: "+repr(invalid))\nbpy.context.scene["aec_camera_composition"]=spec["composition"]\nbpy.ops.wm.save_as_mainfile(filepath={str(output_scene)!r},compress=True)\nprint("PORTABLE_CAMERA_WIDE_DATA="+json.dumps({{"composition":spec["composition"],"location":list(hero.location),"target":list(target.location),"lens":hero.data.lens,"resolution":[bpy.context.scene.render.resolution_x,bpy.context.scene.render.resolution_y],"anchors":framing}},separators=(",",":"),sort_keys=True))\n'''
+    reframe_response = blender_request("execute_code", {"code": reframe_code})
+    if reframe_response.get("status") != "success":
+        raise RuntimeError(f"Wide three-quarter camera failed: {reframe_response}")
+    reframe_result = reframe_response.get("result", {}).get("result", "")
+    wide_marker = "PORTABLE_CAMERA_WIDE_DATA="
+    if wide_marker not in reframe_result:
+        raise RuntimeError("Wide three-quarter camera returned no framing marker")
+    data["framing"] = json.loads(reframe_result.split(wide_marker,1)[1].splitlines()[0])
     screenshot = blender_request("get_viewport_screenshot", {"max_size":1200,"filepath":str(preview),"format":"png"}, timeout=60)
     shot = screenshot.get("result", {})
     if screenshot.get("status") != "success" or not shot.get("success") or not preview.is_file() or preview.stat().st_size < 10000:
         raise RuntimeError(f"Hero camera preview failed: {screenshot}")
     print(f"PORTABLE_CAMERA_INPUT_OK scene={data['input']['scene']} source={data['input']['source']} lens={data['input']['lens']} meshes={data['input']['meshes']}")
     print(f"PORTABLE_CAMERA_BUILD_OK output={output_scene} active={data['build']['active']} cameras={json.dumps(data['build']['cameras'],separators=(',',':'))} target={data['build']['target']}")
-    print(f"PORTABLE_CAMERA_FRAMING_OK lens={data['framing']['lens']} resolution={data['framing']['resolution'][0]}x{data['framing']['resolution'][1]} anchors={json.dumps(data['framing']['anchors'],separators=(',',':'))}")
+    print(f"PORTABLE_CAMERA_FRAMING_OK composition={data['framing']['composition']} location={json.dumps(data['framing']['location'],separators=(',',':'))} target={json.dumps(data['framing']['target'],separators=(',',':'))} lens={data['framing']['lens']} resolution={data['framing']['resolution'][0]}x{data['framing']['resolution'][1]} anchors={json.dumps(data['framing']['anchors'],separators=(',',':'))}")
     print(f"PORTABLE_CAMERA_PREVIEW_OK path={preview} width={shot['width']} height={shot['height']} bytes={preview.stat().st_size}")
     print(f"PORTABLE_CAMERA_PREPARATION_OK output={output_scene} spec={spec['id']}")
 
