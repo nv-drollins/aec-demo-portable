@@ -212,6 +212,19 @@ phase and is consumed immediately. Hermes must never print or supply this
 approval for you. After completing the phase, it must stop at the next review
 gate before another approval.
 
+A `PORTABLE_*_READY_OK` marker is not phase completion. If Hermes asks you to
+select a phase, reruns the previous one, or proposes skipping ahead, mutate
+nothing and paste:
+
+```text
+Readiness is not completion. Do not execute or rerun any phase now. Return to
+the phase named by the most recent readiness marker and stop with its
+WAITING_FOR_HUMAN_APPROVAL marker.
+```
+
+Then send the normal approval again. The canonical runner and all required
+completion markers must appear before advancing.
+
 For Phase 2, Hermes must run the checked portable adapter rather than writing
 FreeCAD code. Its terminal output must contain all four markers:
 

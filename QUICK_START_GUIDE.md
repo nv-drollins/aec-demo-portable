@@ -70,6 +70,20 @@ Approved — proceed to the next phase.
 Each approval advances one phase only. Do not paste multiple approvals at once.
 The sequence finishes with Phase 12 and three final ComfyUI images.
 
+If Hermes ever treats a `PORTABLE_*_READY_OK` marker as completion, reruns the
+previous phase, asks you to select a phase number, or proposes skipping ahead,
+do not choose a later phase. Paste this recovery instruction:
+
+```text
+Readiness is not completion. Do not execute or rerun any phase now. Return to
+the phase named by the most recent readiness marker and stop with its
+WAITING_FOR_HUMAN_APPROVAL marker.
+```
+
+After Hermes returns the correct pending marker, send the normal approval line
+again. The checked runner for that phase must appear in the terminal before the
+phase can be considered complete.
+
 ### Unattended looping display
 
 ```bash

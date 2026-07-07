@@ -23,6 +23,28 @@ Hermes loads this file automatically when launched from this repository. Read
   `WAITING_FOR_HUMAN_APPROVAL phase=<number> name=<name>` and perform no
   mutating CAD, Blender, ComfyUI, filesystem, or recording action.
 
+## Manual phase-state lock
+
+- The phase named by the most recent valid pending approval marker and its
+  immediately preceding `PORTABLE_*_READY_OK` result is the only phase a new
+  approval may execute. Never infer a different phase from a todo list, old
+  checkpoint file, prior session, or model summary.
+- A readiness command is read-only preparation. `PORTABLE_*_READY_OK` never
+  means that phase completed. A phase completes only when its canonical
+  `scripts/run-portable-*.py` command runs in the current approved turn and
+  returns every required build/preparation marker.
+- Immediately after consuming an approval, do not call todo, plan, or phase
+  selection tools; do not rerun readiness; and do not ask which phase to run.
+  Load the named skill if required, then execute only that pending phase's
+  canonical runner.
+- A failed or malformed todo/plan call does not alter phase state. Ignore it
+  and continue with the already authorized canonical runner.
+- Never rerun the previous phase and never advance to the next phase unless the
+  current phase's runner returned all required markers after this approval.
+- If conversation state is genuinely ambiguous, mutate nothing and return the
+  pending marker for the last phase whose readiness marker was observed. Do
+  not offer the operator a menu of phase numbers.
+
 ## Required opening behavior
 
 For the recorded-demo opening instruction:

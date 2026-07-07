@@ -9,6 +9,15 @@ by ordinary Git.
 Its human-only phase gate is absolute. A ready profile or approved design
 default does not authorize a phase, and Hermes must never approve itself.
 
+## Manual phase transitions
+
+Treat readiness and execution as different states. A `PORTABLE_*_READY_OK`
+marker only identifies the phase awaiting approval; it is never evidence that
+the phase ran. After approval, skip todo/plan tools and execute that phase's
+single checked runner immediately. Do not rerun the previous phase, advance to
+the following phase, or ask the operator to choose a phase unless the approved
+runner has returned all required completion markers.
+
 ## Prompt profiles
 
 The recorded delivered demo uses

@@ -26,6 +26,13 @@ Do not use raw MCP code, generated shell snippets, or direct scene edits.
 ## Authorization and procedure
 
 - Require a new human approval for canonical Phase 6 under `AGENTS.md`.
+- `PORTABLE_ENTOURAGE_READY_OK` is readiness only; it does not mean Phase 6
+  completed. Phase 6 completes only after the runner below returns all four
+  ordered markers in the approved turn.
+- After approval, do not call todo/plan tools, rerun Phase 5, ask for a phase
+  selection, or begin Phase 7. Run the canonical Phase 6 command immediately.
+- Existing Phase 5 or Phase 6 checkpoint files may be from a prior rehearsal
+  and do not change the current chat's pending phase.
 - Consume the approval when the runner begins.
 - From `ROOT=/home/nvidia/AEC_Demo_Portable`, run exactly:
 
