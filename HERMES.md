@@ -51,8 +51,8 @@ segmentation tags. Before approval, use only
 
 Canonical Phase 8 uses `build-portable-blender-camera` and only
 `scripts/run-portable-camera.py`. It preserves delivered `Camera_day` framing,
-creates the checked wide northwest three-quarter `ocean_view`, adds the utility
-cameras, and saves a review screenshot. Before approval, use only
+creates the checked wide southwest exterior three-quarter `ocean_view`, adds
+the utility cameras, and saves a review screenshot. Before approval, use only
 `scripts/check-portable-camera-ready.py`; do not begin Phase 9 lighting.
 
 Canonical Phase 9 uses `build-portable-blender-lighting` and only

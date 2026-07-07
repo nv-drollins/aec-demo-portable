@@ -1,13 +1,13 @@
 ---
 name: build-portable-blender-camera
-description: "Build the canonical wide three-quarter Phase 8 camera in Blender, preserve the delivered Camera_day framing, add utility cameras, and save a review still. Use only for Phase 8 in AEC_Demo_Portable."
+description: "Build the canonical wide southwest exterior Phase 8 camera in Blender, preserve the delivered Camera_day framing, add utility cameras, and save a review still. Use only for Phase 8 in AEC_Demo_Portable."
 ---
 
 # Build the delivered portable camera checkpoint
 
 This is the only supported canonical Phase 8 procedure. It preserves the
 delivered `Camera_day` framing, then creates a wider, slightly elevated
-northwest three-quarter `ocean_view`. It also creates the named utility
+southwest exterior three-quarter `ocean_view`. It also creates the named utility
 cameras required by the original prompt and saves a separate checkpoint plus a
 viewport review image.
 
@@ -38,6 +38,7 @@ Require `PORTABLE_CAMERA_READY_OK` and stop with
 
 - Do not overwrite Phase 7 or delete `Camera_day`.
 - Do not change geometry, materials, world lighting, or render passes.
-- Do not substitute the prompt’s adjustable 28mm default. The checked hero
-  keeps the delivered 20.5mm lens and changes only camera position and aim.
+- Do not change the checked 28mm southwest exterior composition. The delivered
+  20.5mm `Camera_day` remains preserved for comparison.
+- Reject any hero position north of the building or inside the courtyard.
 - Do not proceed to Phase 9.

@@ -215,10 +215,10 @@ PHASE_REVIEW_REQUIRED phase=8 name=camera_placement
 ```
 
 The camera gate validates and preserves the delivered 20.5mm `Camera_day`.
-It creates a farther, slightly elevated northwest three-quarter `ocean_view`
-with the same 20.5mm lens, plus `compass_cam` and `patio_sweep_cam`; confirms
-four framing anchors; and saves a viewport review image. The checked composition
-overrides the adjustable 28mm starting value.
+It creates a slightly elevated 28mm southwest exterior three-quarter
+`ocean_view`, plus `compass_cam` and `patio_sweep_cam`; confirms four framing
+anchors; and saves a viewport review image. The exterior-side rule rejects
+north-side courtyard or interior compositions.
 
 After inspecting and approving Phase 8, one new approval authorizes Phase 9.
 Hermes builds a clean bundled-HDRI world and four compass previews:

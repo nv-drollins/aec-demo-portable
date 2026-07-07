@@ -141,7 +141,8 @@ For the recorded-demo opening instruction:
   `python3 scripts/check-portable-camera-ready.py`. Require
   `PORTABLE_CAMERA_READY_OK`, then stop at the human approval marker.
 - Do not use raw Blender MCP code or improvise a camera transform outside the
-  checked wide three-quarter specification. Preserve the delivered framing.
+  checked southwest exterior three-quarter specification. Preserve the
+  delivered framing and reject courtyard/interior hero views.
 - After Phase 7 review and a new human approval, load
   `build-portable-blender-camera` and run only
   `python3 scripts/run-portable-camera.py` from this repository.
