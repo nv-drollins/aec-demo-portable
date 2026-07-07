@@ -100,6 +100,18 @@ Use this for a kiosk or an all-day looping display:
 ./scripts/start-portable-auto-demo.sh
 ```
 
+To launch playback in a separate large terminal and continuously watch its
+phase markers:
+
+```bash
+./scripts/start-portable-auto-terminal.sh
+```
+
+The monitor terminal shows the deterministic checked-adapter output. It is not
+a Hermes chat and does not imply agent-generated approval. Use the manual mode
+when the audience should see Hermes reason, prepare a phase, and wait for a
+human approval.
+
 This mode does not launch Hermes and does not manufacture approvals. The
 operator's launch directly runs the same checked Phase 2-12 adapters, resetting
 Blender to the delivered source before each cycle. By default it pauses five

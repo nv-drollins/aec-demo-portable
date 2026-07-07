@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+"$ROOT/scripts/install-cad-tools.sh"
 "$ROOT/scripts/install-freecad-spark.sh"
 "$ROOT/scripts/install-blender-spark.sh"
 "$ROOT/scripts/install-comfy-portable.sh"

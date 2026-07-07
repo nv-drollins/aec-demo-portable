@@ -20,7 +20,10 @@ REFERENCE_FCSTD = FREECAD_DIR / "portable_cliff_house_reference.FCStd"
 SITE_FCSTD = FREECAD_DIR / "portable_cliff_house_site.FCStd"
 REFERENCE_DOCUMENT = "PortableCliffHouseReference"
 SITE_DOCUMENT = "PortableCliffHouseSite"
-UV = Path(os.environ.get("UV", str(Path.home() / ".hermes/bin/uv")))
+CAD_PYTHON = Path(os.environ.get(
+    "AEC_PORTABLE_CAD_PYTHON",
+    str(ROOT / "runtime/cad-tools/bin/python"),
+))
 
 
 def require(output: str, marker: str) -> None:
@@ -55,17 +58,13 @@ def main() -> None:
         raise RuntimeError(
             f"Delivered Rhino template fingerprint changed: {digest}"
         )
-    if not UV.is_file():
-        raise RuntimeError(f"uv executable is missing: {UV}")
+    if not CAD_PYTHON.is_file():
+        raise RuntimeError(f"Portable CAD Python is missing: {CAD_PYTHON}")
 
     MANIFEST.parent.mkdir(parents=True, exist_ok=True)
     extraction = subprocess.run(
         [
-            str(UV),
-            "run",
-            "--with",
-            "rhino3dm",
-            "python",
+            str(CAD_PYTHON),
             str(ROOT / "scripts/extract-portable-rhino-reference.py"),
             str(SOURCE),
             str(MANIFEST),

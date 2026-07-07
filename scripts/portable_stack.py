@@ -91,6 +91,9 @@ COMFY_ROOT = Path(setting("AEC_PORTABLE_COMFY_ROOT", str(ROOT / "runtime/comfyui
 COMFY_PYTHON = Path(setting(
     "AEC_PORTABLE_COMFY_PYTHON", str(COMFY_ROOT / ".venv/bin/python")
 ))
+CAD_PYTHON = Path(setting(
+    "AEC_PORTABLE_CAD_PYTHON", str(ROOT / "runtime/cad-tools/bin/python")
+))
 FREECAD_START = Path(setting(
     "AEC_PORTABLE_FREECAD_START", str(ROOT / "scripts/start-freecad.sh")
 ))
@@ -234,6 +237,8 @@ def preflight() -> list[str]:
         errors.append(f"Blender MCP bootstrap is missing: {BLENDER_MCP_BOOTSTRAP}")
     if not COMFY_PYTHON.is_file():
         errors.append(f"ComfyUI Python is missing: {COMFY_PYTHON}")
+    if not CAD_PYTHON.is_file():
+        errors.append(f"Portable CAD Python is missing: {CAD_PYTHON}")
     if not (COMFY_ROOT / "main.py").is_file():
         errors.append(f"ComfyUI main.py is missing under: {COMFY_ROOT}")
     missing = missing_models()
