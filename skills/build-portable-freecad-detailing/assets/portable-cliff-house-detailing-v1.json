@@ -1,0 +1,69 @@
+{
+  "format": "aec-portable-freecad-detailing-v1",
+  "id": "delivered-cliff-house-detailing-v1",
+  "target_scene": "sample_project/blender_assets/cliff_house_act2_textured_v3.blend",
+  "blender_units_to_mm": 1000000.0,
+  "translation_mm": [0.0, 0.0, -200.0],
+  "representation": "axis-aligned target-element envelopes",
+  "provenance_note": "Named detail elements and their world bounds come from the delivered Blender target. FreeCAD boxes reconstruct those target envelopes in native solids; they are not recovered Rhino construction history.",
+  "target_checks": [
+    {
+      "object": "H2_roof_slab",
+      "min": [-0.001, -0.0135, 0.0115],
+      "max": [0.015, 0.0045, 0.012300001]
+    },
+    {
+      "object": "L1_front_door_wood_panel",
+      "min": [0.01322, -0.0072, 0.0005],
+      "max": [0.01344, -0.0048, 0.0039]
+    }
+  ],
+  "groups": [
+    {"name": "Detail_Structure", "label": "Detailing / Structure"},
+    {"name": "Detail_Walls", "label": "Detailing / Walls"},
+    {"name": "Detail_Glazing", "label": "Detailing / Glazing"},
+    {"name": "Detail_Frames", "label": "Detailing / Mullions and Frames"},
+    {"name": "Detail_Doors", "label": "Detailing / Doors"},
+    {"name": "Detail_Railings", "label": "Detailing / Railings"}
+  ],
+  "structural_entries": [
+    {"name": "Structure_L1_house_floor", "targets": ["H2_floor_L1_house"], "role": "structural_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L1_garage_floor", "targets": ["H2_floor_L1_garage"], "role": "structural_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L2_house_floor", "targets": ["H2_floor_L2_house", "H2_floor_L2_house.001"], "role": "structural_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L2_guest_floor", "targets": ["H2_floor_L2_guest", "H2_floor_L2_guest.001"], "role": "structural_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L2_balcony", "targets": ["H2__L2_balcony_floor"], "role": "balcony_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L2_balcony_strip", "targets": ["H2_floor_L2_balccony_strip"], "role": "balcony_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L2_guest_balcony", "targets": ["L2_guest_balcony_floor"], "role": "balcony_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L3_floor", "targets": ["H2_floor_L3", "H2_floor_L3.001"], "role": "structural_slab", "group": "Detail_Structure"},
+    {"name": "Structure_L3_balcony", "targets": ["H2_balcon_floor_L3"], "role": "balcony_slab", "group": "Detail_Structure"},
+    {"name": "Structure_garage_roof", "targets": ["H2_roof_garage"], "role": "roof_slab", "group": "Detail_Structure"},
+    {"name": "Structure_garage_roof_south", "targets": ["H2_roof_garage_S"], "role": "roof_slab", "group": "Detail_Structure"},
+    {"name": "Structure_main_roof", "targets": ["H2_roof_slab"], "role": "roof_slab", "group": "Detail_Structure"}
+  ],
+  "selectors": [
+    {"id": "walls", "prefix": "H2_wall_", "expected_count": 22, "role": "wall", "group": "Detail_Walls"},
+    {"id": "balcony_glass", "prefix": "H2_glass_balc_", "expected_count": 4, "role": "glass_railing", "group": "Detail_Railings"},
+    {"id": "railings", "prefix": "H2_railing_", "expected_count": 6, "role": "glass_railing", "group": "Detail_Railings"},
+    {"id": "l1_glass", "prefix": "L1_", "contains_any": ["glass", "frost"], "expected_count": 7, "role": "glazing", "group": "Detail_Glazing"},
+    {"id": "l2_glass", "prefix": "L2_", "contains_any": ["glass"], "expected_count": 7, "role": "glazing", "group": "Detail_Glazing"},
+    {"id": "l3_glass", "prefix": "L3_", "contains_any": ["glass", "window"], "expected_count": 5, "role": "glazing", "group": "Detail_Glazing"},
+    {"id": "l1_mullions", "prefix": "L1_", "contains_any": ["mullion"], "expected_count": 9, "role": "mullion", "group": "Detail_Frames"},
+    {"id": "l2_mullions", "prefix": "L2_", "contains_any": ["mullion"], "expected_count": 10, "role": "mullion", "group": "Detail_Frames"},
+    {"id": "l3_frames", "prefix": "H2_L3_S_", "contains_any": ["col", "header", "sill"], "expected_count": 7, "role": "frame", "group": "Detail_Frames"},
+    {"id": "doors", "names": ["L1_front_door_wood_panel", "L1_Garage_door_main", "L3_S_hinged_door", "L3_S_hinged_door.001"], "expected_count": 4, "role": "door", "group": "Detail_Doors"},
+    {"id": "garage_frames", "prefix": "L1_Garage_", "contains_any": ["rail", "stile", "track"], "expected_count": 12, "role": "frame", "group": "Detail_Frames"},
+    {"id": "entry_reveals", "prefix": "H2_reveal_", "expected_count": 4, "role": "entry_frame", "group": "Detail_Frames"}
+  ],
+  "role_style": {
+    "structural_slab": {"color": [0.48, 0.49, 0.52], "transparency": 0},
+    "balcony_slab": {"color": [0.56, 0.54, 0.50], "transparency": 0},
+    "roof_slab": {"color": [0.20, 0.21, 0.23], "transparency": 0},
+    "wall": {"color": [0.74, 0.72, 0.67], "transparency": 0},
+    "glazing": {"color": [0.36, 0.62, 0.72], "transparency": 0},
+    "glass_railing": {"color": [0.45, 0.68, 0.78], "transparency": 62},
+    "mullion": {"color": [0.10, 0.11, 0.13], "transparency": 0},
+    "frame": {"color": [0.10, 0.11, 0.13], "transparency": 0},
+    "entry_frame": {"color": [0.12, 0.13, 0.15], "transparency": 0},
+    "door": {"color": [0.40, 0.25, 0.13], "transparency": 0}
+  }
+}

@@ -19,7 +19,7 @@ __pycache__/
 
 # Heavy portable payloads retained locally, not in ordinary Git
 sample_project/
-assets/
+/assets/
 setup/blender_addons/
 
 # CAD, DCC, render, model, archive, and media payloads
