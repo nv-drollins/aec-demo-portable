@@ -56,6 +56,8 @@ cp config/runtime.env.example config/runtime.env
 ./scripts/start-portable-demo.sh
 ./scripts/restart-portable-demo.sh
 ./scripts/stop-portable-demo.sh
+./scripts/start-portable-manual-demo.sh
+./scripts/start-portable-auto-demo.sh
 ./scripts/run-comfy-demo.py --sample-inputs
 ./scripts/run-comfy-demo.py --render
 ```
@@ -64,6 +66,10 @@ cp config/runtime.env.example config/runtime.env
 configured Blender is too old or required Flux.2 models are absent. Set
 `AEC_PORTABLE_REQUIRE_MODELS=0` only for infrastructure testing, never for a
 claimed end-to-end demonstration.
+
+`start-portable-manual-demo.sh` opens the human-gated Hermes walkthrough.
+`start-portable-auto-demo.sh` bypasses Hermes approvals without fabricating
+them and continuously runs the same checked phase adapters for kiosk playback.
 
 ## Validated result
 

@@ -10,6 +10,7 @@ from pathlib import Path
 import signal
 import socket
 import subprocess
+import shutil
 import sys
 import time
 import urllib.request
@@ -295,12 +296,45 @@ def spawn(name: str, command: list[str]) -> None:
     print(f"{name.upper()}_STARTED pid={process.pid} log={log_path}")
 
 
+def archive_stale_freecad_recovery() -> None:
+    """Move crash-recovery state aside before a fresh FreeCAD launch.
+
+    A power loss leaves FreeCAD_Doc_* folders and FreeCAD_*.lock files. On the
+    next GUI launch FreeCAD presents a modal Document Recovery window, which
+    intentionally blocks MCP GUI dispatch. The portable demo checkpoints are
+    already saved independently, so archive this stale state under runtime/
+    instead of deleting it.
+    """
+    cache = Path.home() / ".cache/FreeCAD/v1-1/Cache"
+    if not cache.is_dir():
+        return
+    candidates = sorted(cache.glob("FreeCAD_*.lock")) + sorted(
+        path for path in cache.glob("FreeCAD_Doc_*") if path.is_dir()
+    )
+    if not candidates:
+        return
+    stamp = time.strftime("%Y%m%d_%H%M%S")
+    archive = RUNTIME / "freecad-recovery-archive" / stamp
+    archive.mkdir(parents=True, exist_ok=True)
+    moved = 0
+    for source in candidates:
+        target = archive / source.name
+        if target.exists():
+            target = archive / f"{source.name}_{moved}"
+        shutil.move(str(source), str(target))
+        moved += 1
+    print(
+        f"FREECAD_RECOVERY_ARCHIVED items={moved} archive={archive}"
+    )
+
+
 def start() -> None:
     errors = preflight()
     if errors:
         raise SystemExit(2)
     if enabled("AEC_PORTABLE_FREECAD_ENABLED", True):
         if not freecad_healthy():
+            archive_stale_freecad_recovery()
             subprocess.run([str(FREECAD_START)], check=True)
         wait_for(freecad_healthy, 60, "FREECAD_MCP")
     if not comfy_healthy():

@@ -62,13 +62,65 @@ PORTABLE_STACK_OK
 The controller rejects an old Blender 4.x server already occupying port 9876.
 Blender MCP starts automatically; no sidebar click is required.
 
-## Open Hermes and enter the prompt
+After a reboot, `restart-portable-demo.sh` is sufficient to restore the whole
+stack. The mode launchers below also start any missing service idempotently, so
+running `restart` first is recommended for a clean presentation but is not
+required twice.
+
+If a power loss left FreeCAD crash-recovery state, the stack launcher moves it
+to `runtime/freecad-recovery-archive/` before starting FreeCAD. This prevents a
+modal Document Recovery window from blocking MCP; nothing is deleted.
+
+## Choose the demo mode
+
+### Human-gated Hermes walkthrough
+
+Use this when presenting the reasoning and reviewing every phase:
+
+```bash
+./scripts/start-portable-manual-demo.sh
+```
+
+This is an explicit alias for `start-hermes-demo.sh`. It opens Hermes and
+retains the one-human-approval-per-phase policy in `AGENTS.md`. Nothing is
+approved automatically.
+
+### Unattended continuous playback
+
+Use this for a kiosk or an all-day looping display:
+
+```bash
+./scripts/start-portable-auto-demo.sh
+```
+
+This mode does not launch Hermes and does not manufacture approvals. The
+operator's launch directly runs the same checked Phase 2-12 adapters, resetting
+Blender to the delivered source before each cycle. By default it pauses five
+seconds after each phase, keeps the final images visible for 60 seconds, and
+retains the latest twelve timestamped three-image sets.
+
+Stop the loop with `Ctrl+C`; Blender, FreeCAD, and ComfyUI stay available.
+`./scripts/stop-portable-demo.sh` stops Blender and ComfyUI; FreeCAD is shared and can be closed from its GUI.
+
+Useful one-time rehearsal and timing overrides:
+
+```bash
+python3 scripts/run-portable-demo-loop.py --cycles 1 --phase-delay 0
+AEC_AUTO_PHASE_DELAY=10 AEC_AUTO_CYCLE_DELAY=120 \
+  ./scripts/start-portable-auto-demo.sh
+```
+
+The loop retries after transient service failures, refuses to run two copies at
+once, and emits `AUTOPLAY_PHASE_*` and `AUTOPLAY_CYCLE_*` markers in its
+terminal.
+
+## Manual mode: open Hermes and enter the prompt
 
 Hermes runs as an interactive chat in a terminal. From the repository root,
 run:
 
 ```bash
-./scripts/start-hermes-demo.sh
+./scripts/start-portable-manual-demo.sh
 ```
 
 This safely starts any missing demo services and then opens the Hermes chat.
