@@ -37,10 +37,25 @@ download_package() {
 download_package libgoogle-glog0v6t64
 download_package libgflags2.2
 download_package libmetis5
+download_package libspnav0
 mkdir -p "$RUNTIME/libExt"
-find "$PACKAGES" -type f \( -name 'libglog.so*' -o -name 'libgflags.so*' -o -name 'libmetis.so*' \) -exec cp -a {} "$RUNTIME/libExt/" \;
-find "$PACKAGES" -type l \( -name 'libglog.so*' -o -name 'libgflags.so*' -o -name 'libmetis.so*' \) -exec cp -a {} "$RUNTIME/libExt/" \;
+find "$PACKAGES" -type f \( -name 'libglog.so*' -o -name 'libgflags.so*' -o -name 'libmetis.so*' -o -name 'libspnav.so*' \) -exec cp -a {} "$RUNTIME/libExt/" \;
+find "$PACKAGES" -type l \( -name 'libglog.so*' -o -name 'libgflags.so*' -o -name 'libmetis.so*' -o -name 'libspnav.so*' \) -exec cp -a {} "$RUNTIME/libExt/" \;
 
 chmod +x "$ROOT/scripts/blender-portable.sh"
+
+MISSING_LIBS="$(
+    LD_LIBRARY_PATH="$RUNTIME/libExt${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+        ldd "$RUNTIME/bin/blender" |
+        awk '/not found/ {print $1}' |
+        sort -u
+)"
+if [[ -n "$MISSING_LIBS" ]]; then
+    echo "BLENDER_PORTABLE_LIBRARIES_MISSING" >&2
+    printf 'MISSING_LIBRARY=%s\n' $MISSING_LIBS >&2
+    exit 1
+fi
+echo "BLENDER_PORTABLE_LIBRARIES_OK"
+
 "$ROOT/scripts/blender-portable.sh" --version
 echo "BLENDER_SPARK_RUNTIME_OK=$RUNTIME"
