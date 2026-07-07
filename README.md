@@ -37,6 +37,9 @@ Then install and verify:
 ./scripts/restart-portable-demo.sh
 ```
 
+Initial installation includes Hermes, Ollama, and the approximately 23 GB local
+Qwen model, in addition to the FreeCAD, Blender, and ComfyUI runtimes.
+
 Choose the human-gated or unattended looping presentation:
 
 ```bash

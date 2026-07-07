@@ -100,6 +100,10 @@ FREECAD_START = Path(setting(
 FREECAD_EXE = Path(setting(
     "AEC_PORTABLE_FREECAD_EXE", str(ROOT / "runtime/freecad/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage")
 ))
+HERMES_BIN = Path(setting("AEC_PORTABLE_HERMES_BIN", str(Path.home() / ".local/bin/hermes")))
+HERMES_MODEL = setting("AEC_HERMES_MODEL", "ollama/qwen3.6:latest")
+OLLAMA_MODEL = setting("AEC_PORTABLE_OLLAMA_MODEL", HERMES_MODEL.removeprefix("ollama/"))
+OLLAMA_URL = setting("AEC_PORTABLE_OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
 
 
 def tcp_open(port: int, timeout: float = 1.0) -> bool:
@@ -168,6 +172,16 @@ def comfy_healthy() -> bool:
     except Exception:
         return False
 
+def ollama_models() -> set[str] | None:
+    try:
+        with urllib.request.urlopen(f"{OLLAMA_URL}/api/tags", timeout=3) as response:
+            payload = json.load(response)
+        return {
+            str(item.get("name")) for item in payload.get("models", [])
+            if item.get("name")
+        }
+    except Exception:
+        return None
 
 def blender_version() -> tuple[tuple[int, int], str]:
     try:
@@ -265,6 +279,16 @@ def preflight() -> list[str]:
             errors.append(f"FreeCAD launcher is missing: {FREECAD_START}")
         if not FREECAD_EXE.is_file():
             errors.append(f"FreeCAD executable is missing: {FREECAD_EXE}")
+    if enabled("AEC_PORTABLE_REQUIRE_HERMES", True):
+        if not HERMES_BIN.is_file():
+            errors.append(f"Hermes executable is missing: {HERMES_BIN}")
+        models = ollama_models()
+        if models is None:
+            errors.append(f"Ollama is unavailable: {OLLAMA_URL}")
+        elif OLLAMA_MODEL not in models:
+            errors.append(f"Ollama model is missing: {OLLAMA_MODEL}")
+        else:
+            print(f"HERMES_MODEL_READY={HERMES_MODEL} endpoint={OLLAMA_URL}")
     if errors:
         print("PORTABLE_PREFLIGHT_BLOCKED")
         for error in errors:

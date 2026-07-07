@@ -20,6 +20,12 @@ The installers are idempotent. Heavy runtimes and model files stay under
 required custom-node commits, excludes only the unavailable optional ARM64
 `onnxruntime-gpu` wheel, and verifies all three production model checksums.
 
+The same command installs the stable Hermes Agent v0.18.0 release, Ollama
+0.31.1, and the local `qwen3.6:latest` model used by the walkthrough. The Qwen
+model is approximately 23 GB. For staged infrastructure testing only, set
+`AEC_SKIP_OLLAMA_MODEL_DOWNLOAD=1`; preflight remains blocked until
+`ollama pull qwen3.6:latest` completes.
+
 ## Prompt profile
 
 There was no upstream file literally named `prompt_profile.md`. The complete,

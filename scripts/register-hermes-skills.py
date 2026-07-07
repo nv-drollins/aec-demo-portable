@@ -44,6 +44,21 @@ def main():
     )
     if not isinstance(config, dict):
         raise RuntimeError(f"Hermes config must be a mapping: {CONFIG_PATH}")
+    model = config.setdefault("model", {})
+    if not isinstance(model, dict):
+        raise RuntimeError("Hermes config key 'model' must be a mapping")
+    selected_model = os.environ.get("AEC_HERMES_MODEL", "ollama/qwen3.6:latest")
+    force_model = os.environ.get("AEC_FORCE_HERMES_MODEL_CONFIG", "0") == "1"
+    if force_model:
+        model.update(default=selected_model, provider="custom", base_url="http://127.0.0.1:11434/v1")
+    else:
+        model.setdefault("default", selected_model)
+        model.setdefault("provider", "custom")
+        model.setdefault("base_url", "http://127.0.0.1:11434/v1")
+    terminal = config.setdefault("terminal", {})
+    if not isinstance(terminal, dict):
+        raise RuntimeError("Hermes config key 'terminal' must be a mapping")
+    terminal.setdefault("cwd", str(ROOT))
     skills = config.setdefault("skills", {})
     if not isinstance(skills, dict):
         raise RuntimeError("Hermes config key 'skills' must be a mapping")
@@ -93,6 +108,7 @@ def main():
         if temporary.exists():
             temporary.unlink()
     print(f"HERMES_SKILLS_REGISTERED={SKILLS_DIR} config={CONFIG_PATH}")
+    print(f"HERMES_MODEL_CONFIGURED={model['default']} base_url={model.get('base_url', '')}")
     if freecad_mcp.is_dir() and uv.is_file():
         print(f"HERMES_FREECAD_MCP_REGISTERED={freecad_mcp} command={uv}")
 
