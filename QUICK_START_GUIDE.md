@@ -1,230 +1,162 @@
-# AEC Demo — Quick Start Guide
+# AEC Demo Portable — Quick Start
 
-> This is the original Windows/Claude/Rhino quick start. DGX Spark users should first read `docs/DGX_SPARK_PORT.md` and run `scripts/status-portable-demo.sh`.
-### From zero to rendered AI architectural visualization in 30 minutes
+Use this guide after completing [docs/INSTALL_GUIDE.md](docs/INSTALL_GUIDE.md).
+It is the supported DGX Spark quick start for Hermes, FreeCAD, Blender, and
+ComfyUI.
 
----
+## 1. Start the stack
 
-## What This Demo Does
-
-You will:
-1. Open a 3D architectural model in Blender
-2. Let Claude (via MCP) render beauty, depth, and segmentation passes
-3. Send those passes to ComfyUI running Flux.2 Klein
-4. Get three AI-transformed views: photorealistic, environment change, and time-of-day
-
-No manual node-wiring. No command-line work. Claude handles it.
-
----
-
-## Before You Begin
-
-✅ You have completed the installation (see `docs/INSTALL_GUIDE.md`)
-✅ `python setup/system_check.py` passes with no failures
-✅ Your `config/user_config.yaml` is filled in
-
----
-
-## Step 1 — Start All Services (5 minutes)
-
-Open three windows and start each service:
-
-**Terminal 1 — ComfyUI**
-```batch
-cd D:\tools\comfy_for_blender\ComfyUI_ForDemo
-set PYTHONIOENCODING=utf-8
-python_embeded\python.exe -X utf8 -s ComfyUI\main.py --windows-standalone-build
-```
-Wait until you see: `To see the GUI go to: http://127.0.0.1:8188`
-
-**Terminal 2 — Blender**
-Open Blender and load: `sample_project/blender_assets/cliff_house_act2_textured_v3.blend`
-
-*(Alternative: `cliff_house_v17.blend` — the earlier, simpler version of the same
-house, from before it was customized for the live video demo. Same steps below
-work with either file — see README.md "Two Sample Scenes" for the difference.)*
-
-Then in Blender's N panel (press N) → MCP tab → click **Start Server**
-
-**Terminal 3 — Rhino** *(optional, for modeling)*
-This drop does not include a bundled `.3dm` — Rhino is only needed if you're
-modeling from scratch rather than starting from the Blender sample scene.
-
-**OBS** *(optional, for recording)*
-Open OBS Studio. It will connect automatically.
-
----
-
-## Step 2 — First ComfyUI Run (3 minutes)
-
-This step is required once to create a valid entry in ComfyUI history.
-
-1. Open your browser: http://127.0.0.1:8188
-2. Click **Load** (top right)
-3. Navigate to `comfyui/workflows/AEC_Transform_Pipeline.json`
-4. The workflow loads — do NOT change anything yet
-5. Click **Queue** (top right)
-6. Wait for it to finish (~20 seconds)
-
-You will see output images appear in: `<comfyui_path>/ComfyUI/output/`
-
-✅ This creates the history entry the scripts need.
-
----
-
-## Step 3 — Open Claude Desktop (1 minute)
-
-1. Open Claude Desktop
-2. Start a new conversation
-3. Type: `List my connected MCP tools`
-
-You should see **blender** and **rhinoceros3d** listed. If not, see Troubleshooting in `docs/INSTALL_GUIDE.md`.
-
----
-
-## Step 4 — Render Your First Pass Set (5 minutes)
-
-In Claude Desktop, type:
-
-> **"Render a new pass"**
-
-Claude will:
-- Render a beauty pass (Cycles, 128 samples) from RenderCam
-- Render a depth pass (normalised camera depth)
-- Render a segmentation pass (material ID colours, EEVEE, transparent background)
-- Number the outputs automatically (e.g., `beauty_0001.png`)
-
-Files land in:
-```
-sample_project/renders/beauty/
-sample_project/renders/depth/
-sample_project/renders/seg/
+```bash
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/restart-portable-demo.sh
+./scripts/status-portable-demo.sh
 ```
 
----
+Continue only when the terminal reports:
 
-## Step 5 — Submit to ComfyUI (1 minute)
-
-In Blender's Python console (Scripting tab → Python Console):
-
-```python
-exec(open(r"C:/AEC_Demo_Portable/scripts/submit_comfyui.py").read())
-submit()
+```text
+FREECAD_MCP=healthy
+BLENDER_MCP=healthy
+COMFYUI=healthy
+FLUX_MODELS_MISSING=0
+WORKFLOW_NODES_MISSING=0
+PORTABLE_STACK_OK
 ```
 
-Or ask Claude:
-> **"Submit the current render to ComfyUI"**
+FreeCAD and Blender should be visible on the desktop. ComfyUI is available at
+`http://127.0.0.1:8188`.
 
-Watch the ComfyUI terminal — you'll see the model load and generate.
+## 2. Pick one demo mode
 
-Output images (~20 seconds):
-```
-<comfyui_path>/ComfyUI/output/Make_Real_XXXXX_.png
-<comfyui_path>/ComfyUI/output/Change_Environment_XXXXX_.png
-<comfyui_path>/ComfyUI/output/Time_Of_Day_XXXXX_.png
-```
+### Recommended presentation: automatic Hermes cycle
 
----
-
-## Step 6 — View Results
-
-In Blender, ask Claude:
-> **"Load the latest ComfyUI outputs into the Image Editor"**
-
-Or open the output folder directly in Windows Explorer.
-
----
-
-## Demo Flow at a Glance
-
-```
-Rhino 8          →  3D modeling via Claude MCP
-    ↓
-Blender 5.1      →  Materials, lighting, camera setup
-    ↓
-render_passes.py →  Beauty + Depth + Seg PNG files
-    ↓
-ComfyUI          →  Flux.2 Klein AI transformation
-    ↓
-Output           →  3× photorealistic variations
+```bash
+./scripts/start-portable-auto-hermes-demo.sh
 ```
 
----
+Hermes visibly introduces and supervises one authorized Phase 2–12 cycle. This
+is the easiest end-to-end demonstration because it highlights Hermes without
+requiring an approval after every phase.
 
-## Customising the Prompts
+### Manual approval walkthrough
 
-Edit `scripts/submit_comfyui.py` — find the `PROMPTS` dict:
-
-```python
-PROMPTS = {
-    "1124": "Your Make Real prompt here...",
-    "1128": "Your Environment prompt here...",
-    "1129": "Your Time of Day prompt here...",
-}
+```bash
+./scripts/start-portable-manual-demo.sh
 ```
 
-Then call `submit(render=False)` to reuse the last renders with new prompts.
+A Hermes chat opens in the terminal. Paste this exact opening instruction:
 
----
-
-## Useful Claude Commands
-
-Once Claude is connected via MCP, these work directly in the chat:
-
-| Say this... | Claude does... |
-|------------|----------------|
-| "Render a new pass" | Renders beauty + depth + seg with auto-numbering |
-| "Make the glass more reflective" | Updates glass material in Blender |
-| "Change the background to medium gray" | Updates world shader, keeps HDRI lighting |
-| "Save a snapshot of the scene" | Saves timestamped .blend to snapshots folder |
-| "Submit the current render to ComfyUI" | Renders and queues to Flux.2 |
-| "Start recording" | Starts OBS capture |
-| "Stop recording" | Stops OBS and saves MP4 |
-
----
-
-## File Structure Reference
-
-```
-AEC_Demo_Portable/
-├── README.md                    ← You are here
-├── QUICK_START_GUIDE.md         ← This file
-├── config/
-│   └── user_config.yaml         ← Your settings (edit this)
-├── setup/
-│   ├── system_check.py          ← Run first
-│   └── setup_windows.bat        ← Run once as Admin
-├── scripts/
-│   ├── config_loader.py         ← Shared config utility
-│   ├── render_passes.py         ← Render beauty/depth/seg
-│   └── submit_comfyui.py        ← Submit to ComfyUI
-├── blender/
-│   └── auto_comfy.py            ← Blender startup script
-├── comfyui/
-│   ├── workflows/               ← ComfyUI workflow JSON
-│   ├── custom_nodes/            ← aec_utility_nodes
-│   └── models/
-│       └── MODEL_MANIFEST.md    ← Download links
-├── claude/
-│   └── claude_desktop_config_template.json
-├── assets/
-│   └── hdri/                    ← HDRI lighting files
-├── sample_project/
-│   ├── blender_assets/          ← .blend sample file
-│   ├── rhino_assets/            ← .3dm sample file
-│   └── renders/                 ← Output renders
-└── docs/
-    ├── INSTALL_GUIDE.md         ← Full installation
-    └── MODEL_MANIFEST.md        ← Model downloads
+```text
+Load the delivered_cliff_house_demo prompt profile and obey AGENTS.md. Perform
+read-only source validation, preflight, and status checks. Summarize the
+accepted design intent in five bullets, identify the next phase, and explain
+what that phase will visibly do. Do not begin or execute the phase, do not
+launch Rhino or OBS, and do not generate an approval on my behalf. Stop with
+the WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
 ```
 
----
+Hermes should stop at:
 
-## Getting Help
+```text
+WAITING_FOR_HUMAN_APPROVAL phase=2 name=site_preparation
+```
 
-- Installation issues → `docs/INSTALL_GUIDE.md`
-- Model downloads → `comfyui/models/MODEL_MANIFEST.md`
-- System check → `python setup/system_check.py`
-- ComfyUI docs → https://github.com/comfyanonymous/ComfyUI/wiki
-- Blender MCP → https://github.com/ahujasid/blender-mcp
-- Anthropic Console → https://console.anthropic.com
+After reviewing each proposal or completed phase, type:
+
+```text
+Approved — proceed to the next phase.
+```
+
+Each approval advances one phase only. Do not paste multiple approvals at once.
+The sequence finishes with Phase 12 and three final ComfyUI images.
+
+### Unattended looping display
+
+```bash
+./scripts/start-portable-auto-terminal.sh
+```
+
+This opens a separate terminal that repeatedly runs the checked deterministic
+workflow. It is suitable for a kiosk or an unattended booth. It is not a
+Hermes chat; use the automatic Hermes mode when the audience should see Hermes.
+
+## 3. What you should see
+
+The workflow progresses through:
+
+| Phase | Visible result |
+|---:|---|
+| 1 | Source, profile, and service validation |
+| 2 | FreeCAD site reconstruction |
+| 3 | FreeCAD building massing |
+| 4 | FreeCAD architectural detailing |
+| 5 | Blender landscaping and site context |
+| 6 | Blender entourage and outdoor living |
+| 7 | Materials and segmentation tags |
+| 8 | Original 28 mm southwest hero camera |
+| 9 | HDRI lighting and compass previews |
+| 10 | Intentional animation skip for the still-image demo |
+| 11 | Beauty, depth, and segmentation test renders |
+| 12 | Three final ComfyUI transformations |
+
+The final images are:
+
+- Make Real
+- Change Environment
+- Time of Day
+
+They are saved under:
+
+```text
+/home/nvidia/AEC_Demo_Portable/projects/recorded_demo/final_outputs/
+```
+
+The final Blender file is:
+
+```text
+/home/nvidia/AEC_Demo_Portable/projects/recorded_demo/blender/portable_cliff_house_FINAL.blend
+```
+
+## 4. Stop or restart
+
+Stop an automatic loop with `Ctrl+C`.
+
+Stop Blender and ComfyUI services:
+
+```bash
+./scripts/stop-portable-demo.sh
+```
+
+For a clean rehearsal, restart the services and launch the chosen mode again.
+The checked adapters overwrite their own generated checkpoints; do not delete
+the delivered payload manually.
+
+```bash
+./scripts/restart-portable-demo.sh
+```
+
+## 5. After a reboot
+
+```bash
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/restart-portable-demo.sh
+```
+
+No reinstall is required.
+
+## 6. Common checks
+
+Run strict preflight:
+
+```bash
+./scripts/preflight-portable-demo.sh
+```
+
+Run one fast unattended rehearsal without phase delays:
+
+```bash
+python3 scripts/run-portable-demo-loop.py --cycles 1 --phase-delay 0
+```
+
+For complete phase markers, approval behavior, and troubleshooting, see
+[docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md).

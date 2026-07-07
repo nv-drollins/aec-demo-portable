@@ -2,12 +2,12 @@
 
 ## Bottom line
 
-The delivered bundle contains enough source material to reproduce the polished
-Blender-to-ComfyUI demonstration once the compatible runtime is installed and
-the remaining path/add-on integration is completed. It does not contain the
-finished architectural model as Rhino construction history; the bundled Rhino
-file is the 11-curve starting template. The finished model is authoritative in
-the delivered Blender scenes.
+The delivered bundle and this port now reproduce the complete checked
+Hermes-to-FreeCAD-to-Blender-to-ComfyUI demonstration on DGX Spark. It does not
+contain the finished architectural model as Rhino construction history; the
+bundled Rhino file is the 11-curve starting template. The delivered Blender
+scene and reconstructed FreeCAD checkpoints are the authoritative targets for
+this demonstration.
 
 ## Present in the bundle
 
@@ -76,3 +76,7 @@ The replication is demo-ready only after all of these pass:
 5. The bundled API graph queues without unknown nodes or missing models.
 6. Beauty, depth, and segmentation passes are nonblank and aligned.
 7. All three final branches produce valid images.
+
+The 2026-07-07 validation completed all seven gates and produced three 1280 x
+720 outputs using camera-v3, exact rendered depth at strength 0.98, and three
+required visible building levels.

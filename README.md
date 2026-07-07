@@ -1,232 +1,150 @@
 # AEC Demo Portable
 
-> Repository note: the heavyweight extracted scenes, textures, models, and renders stay local and are intentionally ignored by ordinary Git. Source scripts, prompts, skills, workflows, and sanitized configuration examples are versioned here.
+AEC Demo Portable is the NVIDIA DGX Spark version of the delivered cliff-house
+AEC demonstration. Hermes coordinates a checked, phase-gated workflow across
+FreeCAD, Blender, and ComfyUI using local models and local MCP services.
 
-## DGX Spark control layer
+The supported demonstration platform is:
 
-A complete no-interview demo profile is available at
-[profiles/delivered_cliff_house_demo/prompt_profile.md](profiles/delivered_cliff_house_demo/prompt_profile.md).
+- NVIDIA DGX Spark / GB10
+- Ubuntu 24.04 ARM64
+- Hermes Agent with local Ollama `qwen3.6:latest`
+- FreeCAD 1.1.1 with FreeCAD MCP
+- Blender 5.1 ARM64 with Blender MCP
+- ComfyUI with Flux.2 Klein
 
-### New Spark quick start
+Rhino, Claude Desktop, OBS, Windows, and Docker are not required for this port.
+The original Windows/Rhino material remains in selected reference documents for
+comparison with the delivered upstream workflow; it is not the installation
+path for this repository.
 
-Clone the control repository:
+## Start here
+
+For a new Spark, follow [docs/INSTALL_GUIDE.md](docs/INSTALL_GUIDE.md).
+
+For an already installed Spark, use [QUICK_START_GUIDE.md](QUICK_START_GUIDE.md).
+
+For the detailed phase-by-phase operator procedure, use
+[docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md).
+
+## Repository and payload
+
+Git contains the control layer: scripts, skills, prompts, workflow JSON,
+documentation, checks, and sanitized configuration examples. Large scenes,
+textures, model weights, generated renders, and local runtime files are
+intentionally excluded.
+
+A fresh machine therefore needs both:
+
+1. This public Git repository.
+2. The separately distributed payload archive described in
+   [docs/INSTALL_GUIDE.md](docs/INSTALL_GUIDE.md#3-download-and-extract-the-demo-payload).
+
+## Installed quick start
 
 ```bash
-git clone https://github.com/nv-drollins/aec-demo-portable.git \
-  /home/nvidia/AEC_Demo_Portable
 cd /home/nvidia/AEC_Demo_Portable
+./scripts/restart-portable-demo.sh
+./scripts/status-portable-demo.sh
 ```
 
-The ignored scene payload is transferred separately. On an existing configured
-Spark, create the minimal package:
+A healthy stack reports:
 
-```bash
-./scripts/package-portable-payload.sh
+```text
+FREECAD_MCP=healthy
+BLENDER_MCP=healthy
+COMFYUI=healthy
+FLUX_MODELS_MISSING=0
+WORKFLOW_NODES_MISSING=0
+PORTABLE_STACK_OK
 ```
 
-Copy the generated `.tar.gz` and `.sha256` files to the new Spark, or download
-the published payload from Google Drive. Verify the checksum and extract the
-archive into the clone. See
-[docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md#google-drive-download)
-for download links and exact commands.
+Then choose one mode:
 
-Then install and verify:
+| Mode | Command | Purpose |
+|---|---|---|
+| Manual Hermes | `./scripts/start-portable-manual-demo.sh` | Hermes pauses for human approval at every phase |
+| Automatic Hermes | `./scripts/start-portable-auto-hermes-demo.sh` | Hermes visibly supervises one authorized Phase 2–12 cycle |
+| Unattended loop | `./scripts/start-portable-auto-demo.sh` | Repeats the deterministic demo for kiosk playback |
+| Loop in a new terminal | `./scripts/start-portable-auto-terminal.sh` | Opens the unattended loop in a visible monitor terminal |
+
+The automatic Hermes mode is the best default when the presentation should
+highlight Hermes while completing the whole workflow without repeated typing.
+
+## Demonstrated workflow
+
+1. Hermes validates the delivered profile and source evidence.
+2. FreeCAD reconstructs site, massing, and architectural detailing in separate
+   checked documents.
+3. Blender builds landscaping, entourage, materials, camera, and lighting
+   checkpoints.
+4. Blender produces aligned beauty, depth, and segmentation passes.
+5. ComfyUI generates three final images: Make Real, Change Environment, and
+   Time of Day.
+
+The current Phase 12 contract uses the restored 28 mm southwest camera-v3,
+exact Blender camera-depth conditioning at 98%, and an explicit requirement to
+preserve all three visible building levels.
+
+## Outputs
+
+Generated checkpoints and images are written below `projects/recorded_demo/`:
+
+```text
+projects/recorded_demo/freecad/
+projects/recorded_demo/blender/
+projects/recorded_demo/test_renders/
+projects/recorded_demo/final_outputs/
+```
+
+The final Blender checkpoint is:
+
+```text
+projects/recorded_demo/blender/portable_cliff_house_FINAL.blend
+```
+
+## After a reboot
 
 ```bash
-./scripts/install-portable-runtime.sh
+cd /home/nvidia/AEC_Demo_Portable
 ./scripts/restart-portable-demo.sh
 ```
 
-Initial installation includes Hermes, Ollama, and the approximately 23 GB local
-Qwen model, in addition to the FreeCAD, Blender, and ComfyUI runtimes.
+The controller restores FreeCAD, Blender MCP, and ComfyUI. It also archives
+stale FreeCAD crash-recovery state so a recovery dialog cannot block the demo.
 
-Choose the human-gated, Hermes-driven automatic, or unattended presentation:
-
-```bash
-./scripts/start-portable-manual-demo.sh
-./scripts/start-portable-auto-hermes-demo.sh
-./scripts/start-portable-auto-demo.sh
-./scripts/start-portable-auto-terminal.sh
-```
-
-The Hermes-driven automatic mode visibly puts Hermes in charge of one complete
-checked Phase 2-12 cycle. The unattended modes run the same deterministic
-adapters directly, either in the current terminal or a separate monitor
-terminal.
-
-The complete tested operating procedure is
-[docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md).
-
-This delivered package targets Windows, Claude Desktop, Rhino 8, Blender 5.1, and Flux.2 Klein. On the DGX Spark, start with [docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md) and the guarded service controller:
+## Updating
 
 ```bash
-cp config/runtime.env.example config/runtime.env
-./scripts/status-portable-demo.sh
-./scripts/preflight-portable-demo.sh
-./scripts/start-portable-demo.sh
+cd /home/nvidia/AEC_Demo_Portable
+git pull --ff-only origin main
+./scripts/install-portable-runtime.sh
 ```
 
-The strict preflight prevents partial startup when Blender or ComfyUI is incompatible. The original Windows workflow below is preserved as supplied.
+The installer is idempotent and re-runs preflight after updating dependencies
+or configuration.
 
-**AI-assisted architectural visualization using Claude, Blender, Rhino, and ComfyUI**
+## Security
 
-This package contains everything needed to run the AEC (Architectural, Engineering, Construction) AI visualization demo on a new Windows system.
+All MCP and ComfyUI endpoints bind to `127.0.0.1`. Do not expose ports 9875,
+9876, or 8188 to an untrusted network. Blender Python auto-execution is enabled
+only by the trusted demo launcher; do not use that launcher for untrusted
+`.blend` files.
 
----
+## Historical upstream material
 
-## What It Does
+The following documents describe or inventory parts of the delivered
+Windows/Claude/Rhino workflow and are retained as source evidence:
 
-The demo shows how an AI agent (Claude) can:
-- Model and refine 3D architecture in Rhino via MCP
-- Set up lighting, materials, and cameras in Blender via MCP
-- Render photorealistic beauty, depth, and segmentation passes
-- Submit renders to ComfyUI (Flux.2 Klein) for AI material/environment transformation
-- Generate three simultaneous variations: Make Real, Change Environment, Time of Day
+- `docs/CLAUDE_ASSISTANT_GUIDE.md`
+- `docs/REBUILD_GUIDE.md`
+- `docs/PROMPT_INVENTORY.md`
+- original prompts and Rhino skills under `prompts/` and `skills/rhino/`
 
-All of this is driven by natural language commands in Claude Desktop — no scripts to type manually.
-
----
-
-## Quick Start
-
-**First time? Follow these steps in order:**
-
-```
-1. setup\setup_windows.bat     ← Run as Administrator (sets env vars, firewall)
-2. Copy config\user_config.example.yaml to config\user_config.yaml, then edit it ← Set your paths and API key
-3. python setup\system_check.py ← Verify everything is installed
-4. docs\INSTALL_GUIDE.md       ← Full installation walkthrough
-5. QUICK_START_GUIDE.md        ← Run the demo
-```
-
----
-
-## Requirements
-
-| Component | Version | Required |
-|-----------|---------|----------|
-| Windows | 10 or 11 | ✅ |
-| NVIDIA GPU | 16+ GB VRAM | ✅ |
-| Python | 3.10+ | ✅ |
-| Node.js | 18+ | ✅ |
-| Blender | 5.1 | ✅ |
-| ComfyUI | 0.16+ | ✅ |
-| Rhino | 8 | Optional |
-| OBS Studio | Any | Optional |
-| Claude Desktop | Latest | ✅ |
-
-**GPU VRAM:** The Flux.2 Klein model requires ~16 GB at 1024×1024.
-
----
-
-## Package Contents
-
-```
-AEC_Demo_Portable/
-├── README.md                    ← This file
-├── QUICK_START_GUIDE.md         ← Start here after install
-├── prompts/
-│   ├── comfyui/
-│   │   └── generation_prompts.yaml  ← AI prompts (Make Real / Env / Time of Day) + alternates
-│   ├── master_workflow/             ← 17 workflow phase prompts (site → final render)
-│   │   ├── 01_user_prompt.md
-│   │   ├── 02_demo_prompt.md
-│   │   ├── ... (17 files)
-│   │   └── aec_skills.md
-│   └── project_template/
-│       └── project_design_brief_template.md  ← Fill this in to start a new project
-├── config/
-│   └── user_config.yaml         ← ⚠️ EDIT THIS FIRST
-├── setup/
-│   ├── system_check.py          ← Verify installation
-│   └── setup_windows.bat        ← First-time Windows setup
-├── scripts/
-│   ├── config_loader.py         ← Path/config utilities
-│   ├── render_passes.py         ← Blender render pipeline
-│   └── submit_comfyui.py        ← ComfyUI submission
-├── blender/
-│   └── auto_comfy.py            ← Blender startup script
-├── comfyui/
-│   ├── workflows/
-│   │   ├── AEC_Transform_Pipeline.json       ← Load this ONCE in the ComfyUI
-│   │   │                                        browser to seed history (UI format)
-│   │   └── AEC_last_submitted_workflow.json  ← Verified full-link API-format
-│   │                                            graph (136 nodes). submit_comfyui.py
-│   │                                            falls back to this automatically if
-│   │                                            there's no ComfyUI history yet.
-│   ├── custom_nodes/
-│   │   └── aec_utility_nodes/   ← Custom ComfyUI nodes
-│   └── models/
-│       └── MODEL_MANIFEST.md    ← Model download links (~23 GB)
-├── claude/
-│   └── claude_desktop_config_template.json
-├── assets/
-│   └── hdri/
-│       └── qwantani_puresky_2k.hdr
-├── sample_project/
-│   ├── blender_assets/
-│   │   ├── cliff_house_act2_textured_v3.blend ← Scene A (default) — SoCal coastal
-│   │   │                                          cliff house, fully customized for
-│   │   │                                          the live video demo (per-material
-│   │   │                                          seg tags + hand-written prompts)
-│   │   └── cliff_house_v17.blend               ← Scene B (alternative) — the earlier,
-│   │                                              simpler house that was already
-│   │                                              working before the customization
-│   │                                              pass. Uses coarser wall/window/
-│   │                                              roof/glass_railing tags.
-│   ├── rhino_assets/            ← (optional — not included in this drop)
-│   └── renders/                 ← Sample render outputs
-└── docs/
-    └── INSTALL_GUIDE.md         ← Full installation guide
-```
-
----
-
-## Two Sample Scenes — Which One to Open
-
-This package ships **two versions of the same house**, both compatible with the
-same `scripts/submit_comfyui.py` and the same bundled ComfyUI workflow — pick
-whichever fits what you're doing:
-
-| | `cliff_house_act2_textured_v3.blend` (Scene A, default) | `cliff_house_v17.blend` (Scene B, alternative) |
-|---|---|---|
-| **What it is** | The current, fully customized version used for the live video demo | The earlier version that was already working *before* that customization pass |
-| **Materials** | 83 materials, fine-grained per-material seg tags (`travertine_white`, `wood_walnut`, `aluminum_dark`, ...) | 16 materials, coarser tags (`wall`, `window`, `roof`, `glass_railing`) |
-| **Prompts** | Hand-written, scene-specific (Santa Barbara cliff, infinity pool, tinted glass, etc.) | Generic — pairs naturally with the workflow's built-in "Design Guidance" auto-prompt system prompt (currently unused by Scene A's script path, but still present in the graph) |
-| **Use when** | You want the exact polished demo look | You want a simpler, faster starting point, or to verify the pipeline still works on a lighter scene before layering customization back on |
-
-Both scenes' object tags are recognized by the same `SEG_COLORS` dict in
-`submit_comfyui.py` (it keeps the coarse `wall`/`window`/`roof` tags specifically
-for backward compatibility with scenes like this one), so no script changes are
-needed to switch — just open the other `.blend` file in Step 1 of the Quick
-Start and run through the same steps.
-
----
-
-## Security Notes
-
-- `config/user_config.yaml` contains your API key — **do not share or commit this file**
-- All services run on localhost only — no external network exposure
-- The `claude_desktop_config_template.json` contains no real credentials
-
----
-
-## Download Links
-
-| Software | URL |
-|----------|-----|
-| Blender 5.1 | https://www.blender.org/download/ |
-| ComfyUI | https://github.com/comfyanonymous/ComfyUI/releases |
-| Rhino 8 | https://www.rhino3d.com/download/ |
-| Claude Desktop | https://claude.ai/download |
-| OBS Studio | https://obsproject.com/download |
-| Python 3.11 | https://www.python.org/downloads/ |
-| Node.js 18 LTS | https://nodejs.org/en/download |
-| NVIDIA CUDA 12 | https://developer.nvidia.com/cuda-downloads |
-
----
+They do not supersede the Spark installation guide or Spark runbook.
 
 ## License
 
-Sample project files are for demonstration purposes only.
-Flux.2 Klein and associated models are subject to their respective licenses.
+Sample project files and third-party runtimes remain subject to their original
+licenses. Flux.2 Klein and its associated models are subject to their respective
+model licenses.

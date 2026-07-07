@@ -386,6 +386,9 @@ checkpoint. Sample inputs are not used.
 
 ## Fast recorded integration proof
 
+This is an infrastructure diagnostic only; it is not a completed Phase 12 demo
+because it deliberately uses supplied sample inputs.
+
 This command stages the supplied 1024 x 1024 beauty and segmentation passes,
 asks Blender through Blender MCP to submit the workflow, waits for ComfyUI,
 and fails unless exactly three images are produced:
@@ -420,8 +423,11 @@ FreeCAD remains a shared service and is intentionally left running.
 
 ## Validated baseline
 
-On 2026-07-06 the Spark opened both delivered Blender scenes, served the full
-textured scene through Blender MCP, registered all 12 workflow node classes,
-loaded the checksum-verified 9B KV-FP8 model, and produced all three 1024 x
-1024 outputs. The community Spark build reports Blender 5.1.0; the supplied
-scenes report a newer 5.1 patch-level writer warning but opened successfully.
+On 2026-07-07 the Spark completed the full checked Phase 2–12 workflow. It
+opened the delivered scenes, served Blender through MCP, registered all
+required workflow nodes, loaded the checksum-verified 9B KV-FP8 model, and
+produced all three 1280 x 720 final outputs. The final contract used the
+restored 28 mm camera-v3, exact rendered camera depth at strength 0.98, and
+three required visible building levels. The community Spark build reports
+Blender 5.1.0; the supplied scenes report a newer 5.1 patch-level writer
+warning but opened successfully.

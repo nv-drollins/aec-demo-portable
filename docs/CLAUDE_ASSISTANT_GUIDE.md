@@ -2,6 +2,12 @@
 # aec_demo_master / claude_config
 # Last updated: May 2026
 
+> **HISTORICAL UPSTREAM REFERENCE — not part of the DGX Spark installation.**
+> This document describes the delivered Windows/Claude Blender addon. The
+> supported Spark port uses Hermes, checked Blender adapters, and
+> `scripts/submit_comfyui.py`. Start with
+> [INSTALL_GUIDE.md](INSTALL_GUIDE.md).
+
 ## WHAT IT DOES
 
 Adds a "Claude" tab to the Blender Text Editor sidebar. Type instructions or

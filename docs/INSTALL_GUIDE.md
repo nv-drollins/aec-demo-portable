@@ -1,309 +1,366 @@
-# AEC Demo — Full Installation Guide
+# AEC Demo Portable — DGX Spark Installation Guide
 
-## Overview
+This is the supported clean-install procedure for the public
+`nv-drollins/aec-demo-portable` repository. It installs the current
+Hermes/FreeCAD/Blender/ComfyUI workflow on NVIDIA DGX Spark.
 
-This guide installs everything needed to run the AEC Demo:
-1. Operating system prerequisites
-2. Python and Node.js
-3. Blender 5.1 with addons
-4. ComfyUI with models and custom nodes
-5. Rhino 8 with MCP plugin
-6. Claude Desktop with MCP configuration
-7. OBS Studio (for recording)
+This guide does not install the original Windows, Rhino, Claude Desktop, or OBS
+workflow. Those files are retained only as upstream reference material.
 
-Estimated time: **2–4 hours** (mostly model download time)
+Estimated time is 45 minutes to several hours, depending primarily on model
+download speed. The installer is idempotent and can be rerun safely.
 
----
+## 1. Requirements
 
-## Part 1 — Operating System Setup
+Use a DGX Spark with:
 
-### 1.1 Windows Requirements
-- Windows 10 or 11 (64-bit)
-- NVIDIA GPU with 16+ GB VRAM (RTX 3090 or better)
-- Latest NVIDIA drivers: https://www.nvidia.com/en-us/drivers/
-- CUDA Toolkit 12.x: https://developer.nvidia.com/cuda-downloads
+- Ubuntu 24.04 ARM64 and current NVIDIA/DGX OS updates
+- An attached desktop display for FreeCAD and Blender
+- Internet access for GitHub, model, and runtime downloads
+- A user with `sudo` access
+- At least 80 GB of free disk space under `/home/nvidia`
+- The separately distributed AEC payload archive
 
-### 1.2 Enable Hyper-V (required for npx/Docker)
-Open PowerShell as Administrator:
-```powershell
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-```
-Restart your computer.
+The workflow is local. It does not require an Anthropic key, OpenRouter key,
+Nous Portal account, Rhino license, or Docker.
 
-### 1.3 Run Environment Setup
-```
-Right-click setup\setup_windows.bat → Run as Administrator
-```
-This sets ANTHROPIC_API_KEY, opens firewall ports, and installs Python packages.
+The installer provides:
 
-### 1.4 Firewall Ports
-The following ports must be open on **localhost only** (no external access needed):
+- Hermes Agent
+- Ollama and local `qwen3.6:latest`
+- FreeCAD 1.1.1 ARM64 and FreeCAD MCP
+- Blender 5.1 ARM64 and Blender MCP
+- Isolated ComfyUI, required custom nodes, and Flux.2 Klein models
+- The `rhino3dm` helper used to read the delivered `.3dm` source without Rhino
 
-| Port | Service |
-|------|---------|
-| 8188 | ComfyUI |
-| 9876 | BlenderMCP |
-| 3001 | RhinoMCP |
-| 4455 | OBS WebSocket |
+## 2. Prepare the Spark
 
----
+Install current OS updates before starting:
 
-## Part 2 — Python and Node.js
-
-### 2.1 Python 3.11+
-Download: https://www.python.org/downloads/
-- ✅ Check "Add Python to PATH" during install
-- Verify: `python --version`
-
-Install required packages:
 ```bash
-pip install pyyaml requests Pillow numpy
+sudo apt update
+sudo apt full-upgrade -y
+sudo reboot
 ```
 
-### 2.2 Node.js 18+
-Download: https://nodejs.org/en/download
-- Use the LTS version
-- Verify: `node --version` and `npx --version`
+After reboot, open a terminal. The remaining commands assume the standard
+`nvidia` account and `/home/nvidia/AEC_Demo_Portable` install location.
 
----
+## 3. Clone the control repository
 
-## Part 3 — Blender 5.1
-
-### 3.1 Download and Install
-https://www.blender.org/download/
-
-Download **Blender 5.1** (or the version specified in user_config.yaml).
-Install to: `C:\Program Files\Blender Foundation\Blender 5.1\`
-
-### 3.2 BlenderMCP Addon
-1. Download: https://github.com/ahujasid/blender-mcp/releases
-2. In Blender: Edit → Preferences → Add-ons → Install
-3. Navigate to the downloaded `.zip`
-4. Enable the addon
-5. In the N panel (press N in viewport) → MCP tab → Start Server
-6. Verify port 9876 is shown
-
-### 3.3 ComfyUI Blender Addon
-1. Download: https://github.com/AIGODLIKE/ComfyUI-BlenderAI-node
-2. Install the same way as above
-3. Open the N panel → ComfyUI tab
-4. Set ComfyUI server URL to `http://127.0.0.1:8188`
-
-### 3.4 Install Startup Script
-Copy `blender/auto_comfy.py` to:
-```
-%APPDATA%\Blender Foundation\Blender\5.1\scripts\startup\auto_comfy.py
-```
-This script patches the ComfyUI addon's Execute button to render and submit automatically.
-
-### 3.5 Load the Sample Scene
-Open `sample_project/blender_assets/beach_house_02.blend`
-
----
-
-## Part 4 — ComfyUI
-
-### 4.1 Download ComfyUI
 ```bash
-git clone https://github.com/comfyanonymous/ComfyUI
-cd ComfyUI
+cd /home/nvidia
+git clone https://github.com/nv-drollins/aec-demo-portable.git \
+  AEC_Demo_Portable
+cd /home/nvidia/AEC_Demo_Portable
 ```
-Or download the Windows portable package:
-https://github.com/comfyanonymous/ComfyUI/releases
 
-### 4.2 Recommended Directory
-Install to: `D:\tools\comfy_for_blender\ComfyUI_ForDemo\`
-(Or change the path in `config/user_config.yaml`)
+Do not clone into `/home/nvidia/aec-demo`; that was an earlier development path.
+The portable installer migrates that old path when possible, but new installs
+should use `/home/nvidia/AEC_Demo_Portable`.
 
-### 4.3 Install Custom Nodes
-From `ComfyUI/custom_nodes/`, run:
+## 4. Download and extract the demo payload
+
+Large source scenes and assets are not stored in ordinary Git.
+
+Download these files through a browser into `/home/nvidia`:
+
+- [Payload archive](https://drive.google.com/file/d/1BmZM-zApyu2sGcPgJuk2EFLibAwjoWE-/view?usp=sharing)
+- [SHA-256 checksum](https://drive.google.com/file/d/1cSwuquJ5L4xXVeJEGEHgZ5Q6OinK3_wv/view?usp=sharing)
+- [Archive contents list](https://drive.google.com/file/d/1vCgAOfh6D2UKSt_hAJYPBEGDMI9hmZYV/view?usp=sharing) — optional
+
+The published archive name is:
+
+```text
+aec-demo-portable-payload-demo-20260707_130002.tar.gz
+```
+
+Its expected SHA-256 is:
+
+```text
+15f2dfc6227e3665845886e0d9f6fb224c4040aa7a12b269abe7e36d2dae2dbd
+```
+
+Verify and extract it:
+
 ```bash
-# Copy bundled AEC nodes
-xcopy /E /I "PATH_TO\AEC_Demo_Portable\comfyui\custom_nodes\aec_utility_nodes" ".\aec_utility_nodes"
-
-# Install community nodes via ComfyUI Manager
-# First install Manager:
-cd custom_nodes
-git clone https://github.com/ltdrdata/ComfyUI-Manager
-```
-Then launch ComfyUI and use Manager → Install Missing Custom Nodes.
-
-See `comfyui/models/MODEL_MANIFEST.md` for the full list.
-
-### 4.4 Download Models
-See `comfyui/models/MODEL_MANIFEST.md` for download links and locations.
-Total download: ~23 GB for the required models.
-
-### 4.5 Install the Workflow
-Copy `comfyui/workflows/AEC_Transform_Pipeline.json` to:
-```
-<comfyui_path>/ComfyUI/user_prompt/AEC_Transform_Pipeline.json
+cd /home/nvidia
+sha256sum -c aec-demo-portable-payload-demo-*.tar.gz.sha256
+tar -xzf aec-demo-portable-payload-demo-*.tar.gz \
+  -C /home/nvidia/AEC_Demo_Portable
 ```
 
-### 4.6 Start ComfyUI
+The checksum command must report `OK`. Do not continue with a failed checksum.
 
-> ⚠️ **CRITICAL — Windows encoding flags required.** ComfyUI will crash immediately
-> without these. This is not optional.
+If transferring from another Spark instead, create and copy a minimal payload:
 
-```batch
-cd D:\tools\comfy_for_blender\ComfyUI_ForDemo
-set PYTHONIOENCODING=utf-8
-python_embeded\python.exe -X utf8 -s ComfyUI\main.py --windows-standalone-build
-```
-
-Wait for: `To see the GUI go to: http://127.0.0.1:8188`
-Then open: http://127.0.0.1:8188
-
-### 4.6b Install packages in ComfyUI's embedded Python
-
-```batch
-cd D:\tools\comfy_for_blender\ComfyUI_ForDemo
-python_embeded\python.exe -m pip install requests pyyaml Pillow numpy
-```
-
-These are required by the AEC demo scripts.
-
-### 4.7 First Run — Load Workflow in Browser
-1. Open http://127.0.0.1:8188
-2. Click "Load" → select `AEC_Transform_Pipeline.json`
-3. Set the LoadImage nodes to use your input files
-4. Click "Queue" — this creates the first entry in history
-5. **This step is required before the scripts can work**
-
----
-
-## Part 5 — Rhino 8
-
-### 5.1 Download
-https://www.rhino3d.com/download/
-(Requires a paid license or 90-day trial)
-
-### 5.2 RhinoMCP Plugin
-1. Download: https://github.com/SerjoschDuering/rhino-mcp
-2. In Rhino: Tools → Options → Plug-ins → Install
-3. Or type `_PackageManager` in Rhino and search "mcp"
-4. After installing, type `mcp_server_start` in the Rhino command line
-5. Verify it starts on port 3001
-
-### 5.3 Load the Sample Model
-Open `sample_project/rhino_assets/beach_house_02.3dm`
-
----
-
-## Part 6 — Claude Desktop
-
-### 6.1 Download
-https://claude.ai/download
-
-Install Claude Desktop for Windows.
-
-### 6.2 Configure MCP Servers
-1. Copy `claude/claude_desktop_config_template.json` to:
-   `%APPDATA%\Claude\claude_desktop_config.json`
-2. Edit the file:
-   - Replace `REPLACE_WITH_YOUR_OBS_PASSWORD` with your OBS password
-   - Remove the `davinci-resolve` block if not using DaVinci
-3. Restart Claude Desktop completely (check Task Manager)
-
-### 6.3 Set API Key
-Claude Desktop uses your Anthropic account login — no API key needed in the app itself.
-However the **scripts** (render_passes.py, submit_comfyui.py) use the API key from:
-- `config/user_config.yaml` → `anthropic.api_key`
-- OR the `ANTHROPIC_API_KEY` environment variable
-
-Get your API key at: https://console.anthropic.com
-
-### 6.4 Verify MCP Connections
-In Claude Desktop, start a new chat. Type:
-```
-List all my connected MCP tools
-```
-You should see: blender, rhinoceros3d, obs (and optionally davinci-resolve).
-
----
-
-## Part 7 — OBS Studio (Recording)
-
-### 7.1 Download
-https://obsproject.com/download
-
-### 7.2 Configure WebSocket
-1. Tools → WebSocket Server Settings
-2. Enable WebSocket server
-3. Set port to 4455
-4. Set a password (note it in `user_config.yaml`)
-5. Click OK → restart OBS
-
-
----
-
-## Part 7 — OBS Studio (Recording)
-
-### 7.1 Download
-https://obsproject.com/download
-
-### 7.2 Configure WebSocket
-1. Tools → WebSocket Server Settings
-2. Enable WebSocket server
-3. Set port: **4455**
-4. Set a password and add it to `config/user_config.yaml` → `obs.websocket_password`
-5. Click OK and restart OBS
-
-### 7.3 Required OBS Scenes and Sources
-The demo uses these OBS scenes. Create them manually or import the profile:
-
-**Scene: `Claude-rhino_capture`**
-| Source Name | Type | Notes |
-|---|---|---|
-| `claude_window` | Window Capture | Capture Claude Desktop window |
-| `Rhino_window` | Window Capture | Capture Rhino 3D window |
-| `blender_window` | Window Capture | Capture Blender window |
-| `Display Capture` | Display Capture | Full screen fallback |
-
-**Scene: `CLAUDE`** (used during Claude-only phases)
-| Source Name | Type | Notes |
-|---|---|---|
-| `claude_window` | Window Capture | Claude Desktop only |
-
-### 7.4 Output Settings
-- Output → Recording → Output Path: set to your project's `demo_captures/` folder
-- Format: MP4
-- Encoder: NVIDIA NVENC H.264 (or x264 if no GPU)
-
-### 7.5 OBS Tools (in `tools/obs/`)
-- `obs_recorder.py` — Python script for programmatic recording control
-- `obs_recorder_config.json` — OBS connection settings
-- `launch_obs_recorder.bat` — Quick launcher
-
----
-
-## Part 8 — Verify Installation
-
-Run the system check:
 ```bash
-python setup/system_check.py
+# Source Spark
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/package-portable-payload.sh
+scp transfer/aec-demo-portable-payload-demo-*.tar.gz* \
+  nvidia@NEW_SPARK:/home/nvidia/
 ```
 
-All items should show [PASS] or at worst [WARN].
-Fix any [FAIL] items before proceeding.
+Then run the same verification and extraction commands on the destination.
 
----
+## 5. Install the portable runtime
+
+```bash
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/install-portable-runtime.sh
+```
+
+The installer downloads large files, including the local Hermes model and
+ComfyUI model weights. Long pauses after Python package installation or while a
+`.safetensors.part` file is downloading are normal. Leave the terminal open.
+Completed downloads report checksum lines ending in `OK`.
+
+A successful installation ends with:
+
+```text
+COMFY_CUDA_OK
+COMFY_PORTABLE_RUNTIME_OK=...
+BLENDER_VERSION=Blender 5.1.0
+PORTABLE_PREFLIGHT_OK
+```
+
+The installer creates `config/runtime.env` from the checked example when it is
+missing. Runtime files and model weights remain under `runtime/` and are not
+committed to Git.
+
+### Optional staged installation
+
+To test infrastructure before downloading the approximately 23 GB Ollama model:
+
+```bash
+AEC_SKIP_OLLAMA_MODEL_DOWNLOAD=1 \
+  ./scripts/install-portable-runtime.sh
+```
+
+The complete demo remains blocked until this finishes:
+
+```bash
+ollama pull qwen3.6:latest
+./scripts/preflight-portable-demo.sh
+```
+
+## 6. Start and verify the services
+
+```bash
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/restart-portable-demo.sh
+./scripts/status-portable-demo.sh
+```
+
+The controller starts:
+
+| Service | Local endpoint |
+|---|---|
+| FreeCAD MCP RPC | `127.0.0.1:9875` |
+| Blender MCP | `127.0.0.1:9876` |
+| ComfyUI | `127.0.0.1:8188` |
+
+The required healthy state is:
+
+```text
+FREECAD_MCP=healthy
+BLENDER_MCP=healthy ... version=5.1.0
+COMFYUI=healthy
+FLUX_MODELS_MISSING=0
+WORKFLOW_NODES_MISSING=0
+PORTABLE_STACK_OK
+```
+
+You may also run the strict check directly:
+
+```bash
+./scripts/preflight-portable-demo.sh
+```
+
+FreeCAD and Blender should appear on the desktop. ComfyUI is available at
+`http://127.0.0.1:8188`.
+
+### Blender Python warning
+
+The checked launcher enables automatic Python execution for the trusted
+delivered scene. If Blender was opened manually and displays an auto-execution
+warning, close it and use `restart-portable-demo.sh`. Only enable automatic
+execution manually for files you trust.
+
+## 7. Choose a demonstration mode
+
+### Manual Hermes walkthrough
+
+```bash
+./scripts/start-portable-manual-demo.sh
+```
+
+This opens an interactive Hermes terminal. Paste the opening instruction from
+[SPARK_RUNBOOK.md](SPARK_RUNBOOK.md#manual-mode-open-hermes-and-enter-the-prompt).
+Hermes prepares each phase and stops for a human approval before executing it.
+
+### One automatic Hermes-supervised cycle
+
+```bash
+./scripts/start-portable-auto-hermes-demo.sh
+```
+
+Use this mode when Hermes should be visibly involved but repeated manual
+approvals would slow the presentation. Launching it authorizes exactly one
+checked Phase 2–12 cycle. Hermes narrates progress and does not modify the
+manual workflow's approval policy.
+
+For denser terminal narration:
+
+```bash
+AEC_HERMES_AUTO_POLL_SECONDS=5 \
+  ./scripts/start-portable-auto-hermes-demo.sh
+```
+
+### Unattended looping presentation
+
+Run in the current terminal:
+
+```bash
+./scripts/start-portable-auto-demo.sh
+```
+
+Or open a dedicated visible terminal:
+
+```bash
+./scripts/start-portable-auto-terminal.sh
+```
+
+Stop the loop with `Ctrl+C`. To stop the demo services afterward:
+
+```bash
+./scripts/stop-portable-demo.sh
+```
+
+## 8. Confirm the final result
+
+The complete workflow produces FreeCAD and Blender checkpoints plus three final
+ComfyUI images:
+
+```text
+projects/recorded_demo/freecad/
+projects/recorded_demo/blender/
+projects/recorded_demo/test_renders/
+projects/recorded_demo/final_outputs/
+```
+
+Phase 12 must report:
+
+```text
+PORTABLE_FINAL_CAMERA_OK
+PORTABLE_FINAL_STRUCTURE_OK
+PORTABLE_FINAL_SUBMISSION_OK
+PORTABLE_FINAL_IMAGES_OK count=3
+PORTABLE_FINAL_PREPARATION_OK
+```
+
+The current structural contract reports camera-v3, exact rendered camera depth,
+strength `0.98`, and `required_visible_levels=3`.
+
+## 9. After a reboot or power loss
+
+No reinstall is required:
+
+```bash
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/restart-portable-demo.sh
+```
+
+The restart controller clears stale service state and archives FreeCAD recovery
+files that could otherwise open a modal recovery dialog.
+
+## 10. Updating an installed Spark
+
+```bash
+cd /home/nvidia/AEC_Demo_Portable
+git pull --ff-only origin main
+./scripts/install-portable-runtime.sh
+./scripts/restart-portable-demo.sh
+```
+
+Rerunning the installer applies new dependencies and configuration migrations
+without redownloading verified files unnecessarily.
 
 ## Troubleshooting
 
-**BlenderMCP won't start:**
-- Check Hyper-V is enabled
-- Try port 9876 manually: `netstat -ano | findstr 9876`
+### `libspnav.so.0` or other Blender libraries are missing
 
-**ComfyUI model not found:**
-- Check the exact path — `klein/` subfolder is required
-- Restart ComfyUI after adding models
+Update the repository and rerun the installer. The current installer resolves
+and verifies the ARM64 shared-library set:
 
-**"No successful prompt in history":**
-- You must run the workflow in the ComfyUI browser first (Step 4.7)
-- The pinned prompt ID in `submit_comfyui.py` must match a real run
+```bash
+git pull --ff-only origin main
+./scripts/install-portable-runtime.sh
+```
 
-**MCP server not connecting in Claude:**
-- Check `claude_desktop_config.json` was saved correctly
-- Restart Claude Desktop completely (not just the window)
-- Verify `npx` works: `npx --version` in a terminal
+### Preflight references `/home/nvidia/aec-demo`
+
+This is stale configuration from an early development checkout. Rerun the
+current installer; it migrates `config/runtime.env` to the current root:
+
+```bash
+./scripts/install-portable-runtime.sh
+```
+
+### FreeCAD MCP reports connection refused
+
+```bash
+./scripts/restart-portable-demo.sh
+./scripts/status-portable-demo.sh
+```
+
+Do not launch FreeCAD from an unrelated desktop shortcut; the checked launcher
+loads the MCP bootstrap and starts RPC on port 9875.
+
+### Blender MCP reports connection refused
+
+Close manually launched Blender instances and run:
+
+```bash
+./scripts/restart-portable-demo.sh
+```
+
+The controller rejects stale or incompatible Blender servers on port 9876.
+
+### ComfyUI appears stuck during installation
+
+Model files are large. Check the installer terminal for a growing `.part` file
+or wait for its checksum line. Do not interrupt while a model is downloading.
+
+### `PORTABLE_PREFLIGHT_BLOCKED`
+
+Run:
+
+```bash
+./scripts/status-portable-demo.sh
+./scripts/preflight-portable-demo.sh
+```
+
+Resolve the specific `ERROR=` or `MISSING_...` line. Do not bypass preflight for
+a recorded or public demonstration.
+
+### Hermes compacts repeatedly or is slow
+
+The default tested model is `ollama/qwen3.6:latest`. Confirm it is installed:
+
+```bash
+ollama list
+```
+
+Start a fresh Hermes session between long rehearsals. Within the manual demo,
+do not use `/new` between a phase proposal and its approval; use it only before
+restarting the walkthrough from Phase 1.
+
+## Historical Windows instructions
+
+Older revisions of this file described Windows, Rhino 8, Claude Desktop, OBS,
+and manually installed ComfyUI. Those instructions do not apply to the Spark
+port. The relevant upstream details remain available through Git history and in
+clearly historical reference documents such as `REBUILD_GUIDE.md` and
+`CLAUDE_ASSISTANT_GUIDE.md`.

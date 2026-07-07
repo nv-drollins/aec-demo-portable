@@ -12,7 +12,7 @@
 > ComfyUI's `/prompt` endpoint via `scripts/submit_comfyui.py`, bypassing the
 > addon's Execute button entirely, so none of the AttributeError/polling-thread
 > workarounds below apply to it. See `submit_comfyui.py` and
-> `QUICK_START_GUIDE.md` for the current, working instructions.
+> [Quick Start](../QUICK_START_GUIDE.md) for the current, working instructions.
 >
 > Kept here for historical reference only — do not follow these steps for the
 > current demo.

@@ -154,8 +154,10 @@ separate monitor terminal.
 
 ## Validated result
 
-The Spark opened both supplied Blender scenes, served the full scene through
-Blender MCP, registered every required Comfy node, loaded the public 9B
-KV-FP8 model and 8B encoder, and produced the three expected 1024 x 1024
-outputs: Make Real, Change Environment, and Time of Day. See
+The Spark completed the checked Phase 2–12 workflow, opened both supplied
+Blender scenes, served the full scene through Blender MCP, registered every
+required Comfy node, loaded the public 9B KV-FP8 model and 8B encoder, and
+produced the three expected 1280 x 720 outputs: Make Real, Change Environment,
+and Time of Day. The final transformation uses camera-v3, exact rendered depth
+at strength 0.98, and three required visible building levels. See
 [SPARK_RUNBOOK.md](SPARK_RUNBOOK.md) for the concise operating procedure.

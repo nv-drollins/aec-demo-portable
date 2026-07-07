@@ -2,6 +2,12 @@
 ### Complete reference for all prompts included in this package
 *Version 1.0 — May 2026*
 
+> **UPSTREAM INVENTORY AND PORTING EVIDENCE.** References to Claude, Rhino,
+> RhinoMCP, Windows paths, and OBS describe the delivered source workflow. The
+> supported DGX Spark demo uses Hermes, FreeCAD MCP, Blender MCP, and ComfyUI.
+> Follow [INSTALL_GUIDE.md](INSTALL_GUIDE.md) and
+> [SPARK_RUNBOOK.md](SPARK_RUNBOOK.md) for execution.
+
 ---
 
 ## Overview
