@@ -44,18 +44,48 @@ find "$PACKAGES" -type l \( -name 'libglog.so*' -o -name 'libgflags.so*' -o -nam
 
 chmod +x "$ROOT/scripts/blender-portable.sh"
 
-MISSING_LIBS="$(
+missing_libraries() {
     LD_LIBRARY_PATH="$RUNTIME/libExt${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
         ldd "$RUNTIME/bin/blender" |
         awk '/not found/ {print $1}' |
         sort -u
-)"
+}
+
+MISSING_LIBS="$(missing_libraries)"
+if [[ -n "$MISSING_LIBS" ]]; then
+    SYSTEM_PACKAGES=(
+        libavcodec60
+        libavdevice60
+        libavformat60
+        libavutil58
+        libswscale7
+        libblosc1
+        libfftw3-double3
+        libopenexr-3-1-30
+        libimath-3-1-29t64
+        libosdcpu3.5.0t64
+        libosdgpu3.5.0t64
+        libpotrace0
+        libpugixml1v5
+        libpystring0
+        libyaml-cpp0.8
+    )
+    if ! command -v sudo >/dev/null 2>&1; then
+        echo "BLENDER_SYSTEM_DEPENDENCIES_REQUIRE_SUDO" >&2
+        printf 'REQUIRED_PACKAGE=%s\n' "${SYSTEM_PACKAGES[@]}" >&2
+        exit 1
+    fi
+    echo "BLENDER_SYSTEM_DEPENDENCIES_INSTALLING packages=${SYSTEM_PACKAGES[*]}"
+    sudo apt-get install -y --no-install-recommends "${SYSTEM_PACKAGES[@]}"
+    MISSING_LIBS="$(missing_libraries)"
+fi
+
 if [[ -n "$MISSING_LIBS" ]]; then
     echo "BLENDER_PORTABLE_LIBRARIES_MISSING" >&2
     printf 'MISSING_LIBRARY=%s\n' $MISSING_LIBS >&2
     exit 1
 fi
-echo "BLENDER_PORTABLE_LIBRARIES_OK"
+echo "BLENDER_PORTABLE_LIBRARIES_OK system_packages_checked=15"
 
 "$ROOT/scripts/blender-portable.sh" --version
 echo "BLENDER_SPARK_RUNTIME_OK=$RUNTIME"
