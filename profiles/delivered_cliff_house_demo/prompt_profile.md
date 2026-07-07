@@ -169,7 +169,14 @@ After a separate human approval, Phase 11 must run only
 `scripts/run-portable-test-renders.py` through the
 `render-portable-blender-test-passes` skill. Require the input, beauty, depth,
 segmentation, restore, and preparation markers and stop at its test-render
-review gate. Phase 12 remains blocked until its checked adapter exists.
+review gate.
+
+Before Phase 12 approval, readiness validation must run only
+`scripts/check-portable-final-ready.py` and require `PORTABLE_FINAL_READY_OK`
+without mutating Blender or ComfyUI. After a separate human approval, Phase 12
+must run only `scripts/run-portable-final-transformation.py` through the
+`run-portable-blender-comfy-final` skill. Require the input, submission, images,
+and preparation markers, then stop at the final review gate.
 
 ## 7. Rendering and ComfyUI defaults
 

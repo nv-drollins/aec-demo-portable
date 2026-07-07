@@ -261,8 +261,22 @@ PHASE_REVIEW_REQUIRED phase=11 name=test_renders
 
 The still-image gate renders aligned 512x512 beauty, camera-distance depth, and
 segmentation passes, validates image variation and dimensions, restores every
-material and render setting, and saves a separate checkpoint. Do not approve
-Phase 12 until its checked adapter has been added.
+material and render setting, and saves a separate checkpoint. Proceed to Phase 12 only through the checked adapter described below.
+
+After inspecting Phase 11, one new approval authorizes the final transformation:
+
+```text
+PORTABLE_FINAL_INPUT_OK
+PORTABLE_FINAL_SUBMISSION_OK
+PORTABLE_FINAL_IMAGES_OK
+PORTABLE_FINAL_PREPARATION_OK
+FINAL_REVIEW_REQUIRED phase=12 name=final_blender_comfyui
+```
+
+The final gate renders fresh Blender beauty and segmentation inputs, submits the
+verified ComfyUI API graph, waits for exactly three 1280x720 outputs (Make Real,
+Change Environment, and Time of Day), validates them, and saves the final Blender
+checkpoint. Sample inputs are not used.
 
 ## Fast recorded integration proof
 

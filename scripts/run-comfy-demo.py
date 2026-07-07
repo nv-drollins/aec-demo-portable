@@ -108,6 +108,7 @@ def main() -> None:
         stage_sample_inputs(comfy_root)
     script = ROOT / "scripts/submit_comfyui.py"
     code = (
+        f"import os; os.environ['AEC_DEMO_ROOT']={str(ROOT)!r}; "
         f"path={str(script)!r}; ns={{'bpy': bpy}}; "
         "exec(compile(open(path, encoding='utf-8').read(), path, 'exec'), ns); "
         f"print('AEC_SUBMIT_RESULT=' + str(ns['submit'](render={args.render!r})))"

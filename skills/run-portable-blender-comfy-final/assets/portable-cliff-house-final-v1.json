@@ -1,0 +1,10 @@
+{
+  "format": "aec-portable-final-v1",
+  "id": "delivered-cliff-house-final-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_test_renders.blend",
+  "final_scene": "projects/recorded_demo/blender/portable_cliff_house_FINAL.blend",
+  "phase11_dir": "projects/recorded_demo/test_renders/phase11",
+  "final_output_dir": "projects/recorded_demo/final_outputs",
+  "expected_images": 3,
+  "timeout": 900
+}

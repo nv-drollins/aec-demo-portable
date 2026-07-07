@@ -467,8 +467,13 @@ def get_best_prompt():
     # portable across machines/usernames. A verified copy ships with the package
     # so the fallback works even before anyone has run submit() on a new machine.
     try:
-        _dump = str(AEC_ROOT / "comfyui" / "workflows" / "AEC_last_submitted_workflow.json")
-        if os.path.exists(_dump):
+        _dump_candidates = (
+            AEC_ROOT / "runtime" / "generated" / "AEC_last_submitted_workflow.json",
+            AEC_ROOT / "comfyui" / "workflows" / "AEC_last_submitted_workflow.json",
+        )
+        for _dump in _dump_candidates:
+            if not _dump.exists():
+                continue
             with open(_dump, "r", encoding="utf-8") as _f:
                 _d = json.load(_f)
             if isinstance(_d, dict) and set(PROMPTS.keys()).issubset(_d.keys()):
@@ -812,7 +817,8 @@ def submit(render=True):
     # resolution, swapped LoadImage inputs). This is the real graph ComfyUI
     # runs, in API/prompt format, so it can be inspected or loaded.
     try:
-        _dump = str(AEC_ROOT / "comfyui" / "workflows" / "AEC_last_submitted_workflow.json")
+        _dump = AEC_ROOT / "runtime" / "generated" / "AEC_last_submitted_workflow.json"
+        _dump.parent.mkdir(parents=True, exist_ok=True)
         with open(_dump, "w", encoding="utf-8") as _f:
             json.dump(prompt, _f, indent=2)
         print(f"[AEC] Dumped submitted workflow -> {_dump}")

@@ -190,6 +190,19 @@ For the recorded-demo opening instruction:
 - Stop with `PHASE_REVIEW_REQUIRED phase=11 name=test_renders`.
 - Do not submit ComfyUI or begin Phase 12.
 
+## Canonical Phase 12 adapter
+
+- Before Phase 12 approval, run only
+  `python3 scripts/check-portable-final-ready.py`. Require
+  `PORTABLE_FINAL_READY_OK`, then stop at the human approval marker.
+- After Phase 11 review and a new human approval, load
+  `run-portable-blender-comfy-final` and run only
+  `python3 scripts/run-portable-final-transformation.py` from this repository.
+- Require `PORTABLE_FINAL_INPUT_OK`, `PORTABLE_FINAL_SUBMISSION_OK`,
+  `PORTABLE_FINAL_IMAGES_OK`, and `PORTABLE_FINAL_PREPARATION_OK`.
+- Stop with `FINAL_REVIEW_REQUIRED phase=12 name=final_blender_comfyui`.
+- Never use sample inputs or claim success without three validated images.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

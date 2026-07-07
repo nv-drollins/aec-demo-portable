@@ -71,6 +71,12 @@ depth, and segmentation stills, validates them, and restores the scene. Before
 approval, use only `scripts/check-portable-test-renders-ready.py`; do not submit
 ComfyUI or begin Phase 12.
 
+Canonical Phase 12 uses `run-portable-blender-comfy-final` and only
+`scripts/run-portable-final-transformation.py`. It renders fresh Blender inputs,
+submits the verified API workflow, validates exactly three ComfyUI outputs, and
+saves the final checkpoint. Before approval, use only
+`scripts/check-portable-final-ready.py`; sample inputs are prohibited.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:
