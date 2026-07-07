@@ -4,16 +4,47 @@
 
 ## DGX Spark control layer
 
-A complete no-interview demo profile is available at [profiles/delivered_cliff_house_demo/prompt_profile.md](profiles/delivered_cliff_house_demo/prompt_profile.md). Use `python3 scripts/prompt_profile.py list` and `materialize` to create a checked project copy.
+A complete no-interview demo profile is available at
+[profiles/delivered_cliff_house_demo/prompt_profile.md](profiles/delivered_cliff_house_demo/prompt_profile.md).
 
-The tested Spark path is [docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md):
+### New Spark quick start
+
+Clone the control repository:
+
+```bash
+git clone https://github.com/nv-drollins/aec-demo-portable.git \
+  /home/nvidia/AEC_Demo_Portable
+cd /home/nvidia/AEC_Demo_Portable
+```
+
+The ignored scene payload is transferred separately. On an existing configured
+Spark, create the minimal package:
+
+```bash
+./scripts/package-portable-payload.sh
+```
+
+Copy the generated `.tar.gz` and `.sha256` files to the new Spark, verify the
+checksum, and extract the archive into the clone. See
+[docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md#transfer-the-non-git-payload)
+for exact commands.
+
+Then install and verify:
 
 ```bash
 ./scripts/install-portable-runtime.sh
 ./scripts/restart-portable-demo.sh
-./scripts/run-comfy-demo.py --sample-inputs
 ```
 
+Choose the human-gated or unattended looping presentation:
+
+```bash
+./scripts/start-portable-manual-demo.sh
+./scripts/start-portable-auto-demo.sh
+```
+
+The complete tested operating procedure is
+[docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md).
 
 This delivered package targets Windows, Claude Desktop, Rhino 8, Blender 5.1, and Flux.2 Klein. On the DGX Spark, start with [docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md) and the guarded service controller:
 

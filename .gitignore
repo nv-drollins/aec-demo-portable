@@ -9,6 +9,7 @@ tools/obs/obs_recorder_config.json
 # Runtime state
 runtime/
 logs/
+transfer/
 *.log
 *.pid
 __pycache__/

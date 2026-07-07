@@ -36,6 +36,51 @@ does not track sample scenes, textures, model weights, bundled add-on archives,
 renders, local credentials, logs, or PID files. If large assets eventually
 need remote versioning, choose an artifact store or Git LFS deliberately.
 
+## Transfer the non-Git payload
+
+The complete checked demo does not require all 19 GB under `sample_project/`.
+The canonical `cliff_house_act2_textured_v3.blend` has packed textures and no
+linked Blender libraries. The required minimum is:
+
+- `sample_project/blender_assets/cliff_house_act2_textured_v3.blend`
+- `sample_project/rhino_assets/beach_house_02.3dm`
+- `assets/hdri/qwantani_puresky_2k.hdr`
+- `setup/blender_addons/BlenderMCP_addon.py`
+
+Create the default minimal transfer package:
+
+```bash
+./scripts/package-portable-payload.sh
+```
+
+To preserve the complete delivered bundle instead:
+
+```bash
+./scripts/package-portable-payload.sh --mode full
+```
+
+Both modes create a `.tar.gz`, a portable SHA-256 file, and a contents listing
+under `transfer/`. On the source Spark:
+
+```bash
+scp transfer/aec-demo-portable-payload-demo-*.tar.gz* nvidia@NEW_SPARK:/home/nvidia/
+```
+
+On the destination Spark, after cloning this repository:
+
+```bash
+cd /home/nvidia
+sha256sum -c aec-demo-portable-payload-demo-*.tar.gz.sha256
+tar -xzf aec-demo-portable-payload-demo-*.tar.gz \
+  -C /home/nvidia/AEC_Demo_Portable
+cd /home/nvidia/AEC_Demo_Portable
+./scripts/install-portable-runtime.sh
+./scripts/preflight-portable-demo.sh
+```
+
+`runtime/` is intentionally not transferred. The installer rebuilds Blender,
+ComfyUI, custom nodes, and model files for the destination Spark.
+
 ## Prompt profile
 
 The delivered demo does not use a file literally named `prompt_profile.md` upstream. Its complete brief is `prompts/master_workflow/01_user_prompt.md`; this port exposes it as a pinned, approved preset at `profiles/delivered_cliff_house_demo/prompt_profile.md`.
