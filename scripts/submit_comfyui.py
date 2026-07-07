@@ -52,7 +52,8 @@ if _portable_comfy_url:
 RGB_FILE = "beauty_input.png"
 SEG_FILE = "seg_input.png"
 DEPTH_FILE = "depth_input.png"
-STRUCTURE_CONDITIONING_STRENGTH = 0.90
+STRUCTURE_CONDITIONING_STRENGTH = 0.98
+REQUIRED_VISIBLE_LEVELS = 3
 
 # ──────────────────────────────────────────────────────────────────────────
 # Render + Flux output dimensions.
@@ -154,6 +155,11 @@ PROMPTS = {
     "1124": (
         "Transform the image into a photoreal architectural photograph of a "
         "modern house. Sharp detail, high resolution. "
+        "This is an EXACTLY THREE-LEVEL house: Level 1 is fully above ground and "
+        "opens directly onto the pool terrace; Level 2 is the middle cantilevered "
+        "floor; Level 3 is the upper pavilion below the roof. Keep all three "
+        "levels clearly visible and separate. Never merge, remove, bury, or turn "
+        "any level into a basement. "
         "Keep the materials exactly as shown in the input - do not change surface "
         "materials and do not invent extra structures, decks, fences, or decorations. "
         "Outdoor decks, patios, and the ground around the pool are smooth pale "
@@ -187,6 +193,11 @@ PROMPTS = {
     # Time_Of_Day downstream just preserves whatever this pass produces.
     "1128": (
         "The building is the only structure in the scene. "
+        "Preserve the input building as EXACTLY THREE distinct above-ground levels. "
+        "The lowest glazed level remains aligned with and visible from the pool "
+        "terrace, with two complete levels above it. Never collapse the house to "
+        "two stories, merge floor slabs, bury the lowest level, or replace a level "
+        "with cliff, concrete, pool, deck, or landscaping. "
         "Remote uninhabited Southern California coastal cliff in the Santa Barbara area. "
         "No other buildings, no houses, no roads, no streets, no human construction anywhere. "
         "The building stays in the exact same position, scale, and framing as input. "
@@ -218,6 +229,9 @@ PROMPTS = {
     # The ONLY thing that changes is the lighting and sky to indicate dusk.
     "1129": (
         "Identical scene to the previous environment image. "
+        "The building remains EXACTLY THREE distinct above-ground levels, including "
+        "the lowest glazed level at the pool-terrace datum and two levels above it. "
+        "Never merge, remove, bury, or redesign a level. "
         "Same building, same interior furniture seen through the windows, "
         "same cliffs, the same rugged coastline and sea beyond the pool, "
         "same camera angle, same framing, and whatever deck/terrace/pool was "
@@ -874,12 +888,14 @@ def submit(render=True):
                 "file": DEPTH_FILE,
                 "loader": depth_loader,
                 "conditioning_strength": STRUCTURE_CONDITIONING_STRENGTH,
+                "required_visible_levels": REQUIRED_VISIBLE_LEVELS,
             }, separators=(",", ":"), sort_keys=True))
         else:
             prompt["1206"]["inputs"]["input"] = ["1184", 0]
             print("[AEC] STRUCTURAL_REFERENCE_DATA=" + json.dumps({
                 "type": "lineart",
                 "conditioning_strength": STRUCTURE_CONDITIONING_STRENGTH,
+                "required_visible_levels": REQUIRED_VISIBLE_LEVELS,
             }, separators=(",", ":"), sort_keys=True))
 
     # Update text prompts by node ID (interior set when INTERIOR_MODE is on)

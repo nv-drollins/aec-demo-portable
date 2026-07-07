@@ -100,10 +100,10 @@ PHASE_PRESENTATION = {
         ),
     ),
     8: (
-        "Reference-matching hero camera",
+        "Southwest exterior hero camera",
         (
-            "Build the northwest front-diagonal view of the original reference facade.",
-            "Verify the complete house and pool remain inside the 30 mm hero frame.",
+            "Restore the original southwest exterior three-quarter view.",
+            "Verify the complete house and pool remain inside the 28 mm hero frame.",
         ),
     ),
     9: (
@@ -130,8 +130,8 @@ PHASE_PRESENTATION = {
     12: (
         "Final ComfyUI transformation",
         (
-            "Verify camera-v5 and render exact camera-space geometry depth.",
-            "Submit beauty, segmentation, and exact depth at 90 percent structural weight.",
+            "Verify camera-v3 and render exact camera-space geometry depth.",
+            "Submit beauty, segmentation, and exact depth at 98 percent structural weight while preserving exactly three visible levels.",
             "Validate Make Real, Change Environment, and Time of Day outputs.",
         ),
     ),

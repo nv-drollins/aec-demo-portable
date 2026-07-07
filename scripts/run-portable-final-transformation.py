@@ -23,7 +23,7 @@ def main():
     if camera.get("name")!="ocean_view" or camera.get("camera_spec_id")!=cfg["camera_spec_id"] or camera.get("composition")!=cfg["camera_composition"] or not close(camera.get("location",[]),cfg["camera_location"]) or not close(camera.get("target",[]),cfg["camera_target"]) or abs(float(camera.get("lens",0))-float(cfg["camera_lens"]))>1e-7: raise RuntimeError("Phase 12 camera contract mismatch: "+repr(camera))
     depth_path=Path(depth.get("path",""))
     if not depth_path.is_file() or depth_path.name!="depth_input.png" or int(depth.get("bytes",0))<1000: raise RuntimeError("Exact depth render is missing or invalid: "+repr(depth))
-    if structure.get("type")!=cfg["structural_reference"] or abs(float(structure.get("conditioning_strength",0))-float(cfg["structural_conditioning_strength"]))>1e-7: raise RuntimeError("Structural reference contract mismatch: "+repr(structure))
+    if structure.get("type")!=cfg["structural_reference"] or abs(float(structure.get("conditioning_strength",0))-float(cfg["structural_conditioning_strength"]))>1e-7 or int(structure.get("required_visible_levels",0))!=int(cfg["required_visible_levels"]): raise RuntimeError("Structural reference contract mismatch: "+repr(structure))
     queued=re.search(r"AEC_COMFY_QUEUED=([0-9a-f-]+)",output); complete=re.search(r"AEC_COMFY_COMPLETE=([0-9a-f-]+).*images=(\d+)",output)
     paths=[Path(value) for value in re.findall(r"AEC_COMFY_IMAGE=(.+)",output)]
     if not queued or not complete or int(complete.group(2))!=cfg["expected_images"] or len(paths)!=cfg["expected_images"]: raise RuntimeError("Incomplete ComfyUI result:\n"+output)
@@ -37,7 +37,7 @@ def main():
     r=transport().blender_execute(code)
     if r.get("status")!="success" or "PORTABLE_FINAL_SCENE_OK=" not in r.get("result",{}).get("result",""): raise RuntimeError(r)
     print(f"PORTABLE_FINAL_CAMERA_OK name={camera['name']} spec={camera['camera_spec_id']} composition={camera['composition']} location={json.dumps(camera['location'],separators=(',',':'))} target={json.dumps(camera['target'],separators=(',',':'))} lens={camera['lens']}")
-    print(f"PORTABLE_FINAL_STRUCTURE_OK type={structure['type']} strength={structure['conditioning_strength']} depth={json.dumps(depth,separators=(',',':'))}")
+    print(f"PORTABLE_FINAL_STRUCTURE_OK type={structure['type']} strength={structure['conditioning_strength']} required_visible_levels={structure['required_visible_levels']} depth={json.dumps(depth,separators=(',',':'))}")
     print(f"PORTABLE_FINAL_SUBMISSION_OK prompt_id={queued.group(1)} status={complete.group(1)} images={complete.group(2)}")
     print(f"PORTABLE_FINAL_IMAGES_OK count={len(delivered)} outputs={json.dumps(delivered,separators=(',',':'))}")
     print(f"PORTABLE_FINAL_PREPARATION_OK final_scene={final} output_dir={outdir} spec={cfg['id']}")
