@@ -6,6 +6,10 @@ and isolated ComfyUI with the exact Flux.2 Klein graph.
 
 ## One-time installation
 
+For a fresh Git clone, first download, verify, and extract the non-Git payload
+using the Google Drive or SCP instructions in
+[DGX_SPARK_PORT.md](DGX_SPARK_PORT.md#google-drive-download).
+
 ```bash
 cd /home/nvidia/AEC_Demo_Portable
 ./scripts/install-portable-runtime.sh

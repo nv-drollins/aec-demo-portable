@@ -24,10 +24,11 @@ Spark, create the minimal package:
 ./scripts/package-portable-payload.sh
 ```
 
-Copy the generated `.tar.gz` and `.sha256` files to the new Spark, verify the
-checksum, and extract the archive into the clone. See
-[docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md#transfer-the-non-git-payload)
-for exact commands.
+Copy the generated `.tar.gz` and `.sha256` files to the new Spark, or download
+the published payload from Google Drive. Verify the checksum and extract the
+archive into the clone. See
+[docs/DGX_SPARK_PORT.md](docs/DGX_SPARK_PORT.md#google-drive-download)
+for download links and exact commands.
 
 Then install and verify:
 

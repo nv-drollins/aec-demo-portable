@@ -60,13 +60,39 @@ To preserve the complete delivered bundle instead:
 ```
 
 Both modes create a `.tar.gz`, a portable SHA-256 file, and a contents listing
-under `transfer/`. On the source Spark:
+under `transfer/`.
+
+### Google Drive download
+
+The verified minimal payload is published as three Google Drive files:
+
+- [Payload archive — required](https://drive.google.com/file/d/1BmZM-zApyu2sGcPgJuk2EFLibAwjoWE-/view?usp=sharing)
+- [SHA-256 checksum — required](https://drive.google.com/file/d/1cSwuquJ5L4xXVeJEGEHgZ5Q6OinK3_wv/view?usp=sharing)
+- [Archive contents text — optional](https://drive.google.com/file/d/1vCgAOfh6D2UKSt_hAJYPBEGDMI9hmZYV/view?usp=sharing)
+
+Download the files through a browser into `/home/nvidia`. Keep their original
+names:
+
+- `aec-demo-portable-payload-demo-20260707_130002.tar.gz`
+- `aec-demo-portable-payload-demo-20260707_130002.tar.gz.sha256`
+- `aec-demo-portable-payload-demo-20260707_130002.tar.gz.contents.txt`
+
+The archive is 1,494,177,676 bytes. Its expected SHA-256 is
+`15f2dfc6227e3665845886e0d9f6fb224c4040aa7a12b269abe7e36d2dae2dbd`.
+Only the archive and checksum are required for installation.
+
+### SCP from another Spark
+
+On the source Spark:
 
 ```bash
 scp transfer/aec-demo-portable-payload-demo-*.tar.gz* nvidia@NEW_SPARK:/home/nvidia/
 ```
 
-On the destination Spark, after cloning this repository:
+### Verify, extract, and install
+
+On the destination Spark, after cloning this repository and obtaining the
+payload through either method:
 
 ```bash
 cd /home/nvidia
