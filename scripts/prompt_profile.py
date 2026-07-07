@@ -52,6 +52,10 @@ REQUIRED_PROFILE_TEXT = (
     "scripts/check-portable-final-ready.py",
     "scripts/run-portable-final-transformation.py",
 )
+PATH_REFERENCE = re.compile(
+    r"`((?:sample_project|prompts|comfyui|scripts)/[^`]+)`"
+)
+LIST_ITEM = re.compile(r"^(?:[-*]|\d+\.)\s+")
 
 
 def unresolved(text: str) -> list[str]:
@@ -59,8 +63,32 @@ def unresolved(text: str) -> list[str]:
 
 
 def referenced_paths(text: str) -> list[Path]:
-    candidates = re.findall(r"`((?:sample_project|prompts|comfyui|scripts)/[^`]+)`", text)
+    candidates = PATH_REFERENCE.findall(text)
     return [ROOT / candidate.rstrip(".,") for candidate in candidates]
+
+
+def optional_referenced_paths(text: str) -> set[Path]:
+    """Return paths under list items explicitly labeled as optional.
+
+    A path may continue on the line following its list-item label. A blank line
+    ends that item's scope so an optional marker cannot leak into later prose.
+    """
+    optional = False
+    paths: set[Path] = set()
+    for raw in text.splitlines():
+        stripped = raw.strip()
+        if not stripped:
+            optional = False
+            continue
+        if LIST_ITEM.match(stripped):
+            label = LIST_ITEM.sub("", stripped, count=1).casefold()
+            optional = label.startswith("optional ")
+        if optional:
+            paths.update(
+                ROOT / candidate.rstrip(".,")
+                for candidate in PATH_REFERENCE.findall(raw)
+            )
+    return paths
 
 
 def validate(path: Path, allow_placeholders: bool = False) -> None:
@@ -73,12 +101,24 @@ def validate(path: Path, allow_placeholders: bool = False) -> None:
     found = unresolved(text)
     if found and not allow_placeholders:
         raise RuntimeError(f"Profile contains unresolved placeholders: {found}")
-    missing_paths = [item for item in referenced_paths(text) if not item.exists()]
+    references = referenced_paths(text)
+    optional_paths = optional_referenced_paths(text)
+    missing_paths = [
+        item for item in references
+        if item not in optional_paths and not item.exists()
+    ]
     if missing_paths:
         raise RuntimeError(f"Profile references missing project files: {missing_paths}")
+    missing_optional = [
+        item for item in references
+        if item in optional_paths and not item.exists()
+    ]
+    for item in missing_optional:
+        print(f"PROMPT_PROFILE_OPTIONAL_REFERENCE_MISSING={item}")
     print(
         f"PROMPT_PROFILE_OK={path.resolve()} "
-        f"placeholders={len(found)} references={len(referenced_paths(text))}"
+        f"placeholders={len(found)} references={len(references)} "
+        f"optional_missing={len(missing_optional)}"
     )
 
 

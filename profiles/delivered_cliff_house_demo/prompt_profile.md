@@ -50,11 +50,12 @@ acceptance is not permission to execute a workflow phase.
   (Rhino 8, metres, 10 layers, 11 source curves, no finished solids).
 - Canonical finished visual target:
   `sample_project/blender_assets/cliff_house_act2_textured_v3.blend`.
-- Lightweight validation target:
+- Optional full-payload lightweight validation target:
   `sample_project/blender_assets/cliff_house_v17.blend`.
-- Sun-study scene:
+- Optional full-payload sun-study scene:
   `sample_project/blender_assets/cliff_house_act3_sunstudy.blend`.
-- Reference passes: `sample_project/renders/beauty`, `depth`, and `seg`.
+- Optional full-payload reference passes: `sample_project/renders/beauty`,
+  `sample_project/renders/depth`, and `sample_project/renders/seg`.
 - ComfyUI execution graph:
   `comfyui/workflows/AEC_last_submitted_workflow.json`.
 - ComfyUI editable graph:
@@ -199,8 +200,9 @@ be used as evidence that CAD geometry is correct.
 
 - Preflight: `scripts/preflight-portable-demo.sh` returns
   `PORTABLE_PREFLIGHT_OK`.
-- Blender: compatible 5.1+ runtime opens the copied lightweight scene first,
-  then the canonical scene; Blender MCP confirms the active file and camera.
+- Blender: compatible 5.1+ runtime opens the canonical scene and Blender MCP
+  confirms the active file and camera. The lightweight scene may be used for
+  extra validation when the optional full payload is present.
 - ComfyUI: every required class is registered and every required model path
   exists before graph submission.
 - Render passes: beauty, depth, and segmentation have matching dimensions,
