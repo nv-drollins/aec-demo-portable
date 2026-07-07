@@ -13,6 +13,7 @@ FIRST-TIME SETUP:
   See QUICK_START_GUIDE.md Step 2.
 """
 import bpy, os, sys, json, requests, uuid, random, time
+from mathutils import Vector
 from pathlib import Path
 
 # ── Locate AEC_Demo_Portable root ─────────────────────────────
@@ -50,6 +51,8 @@ if _portable_comfy_url:
     COMFY_URL = _portable_comfy_url
 RGB_FILE = "beauty_input.png"
 SEG_FILE = "seg_input.png"
+DEPTH_FILE = "depth_input.png"
+STRUCTURE_CONDITIONING_STRENGTH = 0.90
 
 # ──────────────────────────────────────────────────────────────────────────
 # Render + Flux output dimensions.
@@ -348,6 +351,108 @@ def render_seg():
         scene.render.film_transparent = orig_film
 
 
+def render_depth():
+    """Render exact camera-space geometry depth for Flux structure control."""
+    scene = bpy.context.scene
+    view_layer = bpy.context.view_layer
+    meshes = [obj for obj in bpy.data.objects if obj.type == "MESH"]
+    points = []
+    for obj in meshes:
+        if obj.name in {"Plane", "Sphere"}:
+            continue
+        points.extend(obj.matrix_world @ Vector(corner) for corner in obj.bound_box)
+    camera = scene.camera
+    if camera is None or not points:
+        raise RuntimeError("Rendered depth requires an active camera and mesh bounds")
+    distances = [(point - camera.location).length for point in points]
+    near = max(min(distances), 1e-6)
+    far = max(distances)
+
+    material = bpy.data.materials.get("AEC_Comfy_Rendered_Depth") or bpy.data.materials.new("AEC_Comfy_Rendered_Depth")
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    nodes.clear()
+    links = material.node_tree.links
+    camera_data = nodes.new("ShaderNodeCameraData")
+    mapping = nodes.new("ShaderNodeMapRange")
+    emission = nodes.new("ShaderNodeEmission")
+    output = nodes.new("ShaderNodeOutputMaterial")
+    mapping.inputs["From Min"].default_value = near
+    mapping.inputs["From Max"].default_value = far
+    mapping.inputs["To Min"].default_value = 1.0
+    mapping.inputs["To Max"].default_value = 0.0
+    mapping.clamp = True
+    links.new(camera_data.outputs["View Distance"], mapping.inputs["Value"])
+    links.new(mapping.outputs["Result"], emission.inputs["Color"])
+    links.new(emission.outputs["Emission"], output.inputs["Surface"])
+
+    black_world = bpy.data.worlds.get("AEC_Comfy_Depth_World") or bpy.data.worlds.new("AEC_Comfy_Depth_World")
+    black_world.use_nodes = True
+    background = next((node for node in black_world.node_tree.nodes if node.type == "BACKGROUND"), None)
+    if background is None:
+        background = black_world.node_tree.nodes.new("ShaderNodeBackground")
+    background.inputs["Color"].default_value = (0.0, 0.0, 0.0, 1.0)
+    background.inputs["Strength"].default_value = 0.0
+
+    state = {
+        "engine": scene.render.engine,
+        "view": scene.view_settings.view_transform,
+        "look": scene.view_settings.look,
+        "exposure": scene.view_settings.exposure,
+        "gamma": scene.view_settings.gamma,
+        "world": scene.world,
+        "override": view_layer.material_override,
+        "filepath": scene.render.filepath,
+        "format": scene.render.image_settings.file_format,
+        "mode": scene.render.image_settings.color_mode,
+        "film": scene.render.film_transparent,
+        "pct": scene.render.resolution_percentage,
+    }
+    hidden = {obj.name: obj.hide_render for obj in meshes}
+    try:
+        for obj in meshes:
+            if obj.name in {"Plane", "Sphere"}:
+                obj.hide_render = True
+        scene.render.engine = "BLENDER_EEVEE"
+        scene.view_settings.view_transform = "Raw"
+        scene.view_settings.look = "None"
+        scene.view_settings.exposure = 0.0
+        scene.view_settings.gamma = 1.0
+        scene.world = black_world
+        view_layer.material_override = material
+        scene.render.resolution_percentage = 100
+        scene.render.filepath = str(COMFY_INPUT / DEPTH_FILE)
+        scene.render.image_settings.file_format = "PNG"
+        scene.render.image_settings.color_mode = "RGB"
+        scene.render.film_transparent = False
+        bpy.ops.render.render(write_still=True)
+    finally:
+        for obj in meshes:
+            obj.hide_render = hidden[obj.name]
+        scene.render.engine = state["engine"]
+        scene.view_settings.view_transform = state["view"]
+        scene.view_settings.look = state["look"]
+        scene.view_settings.exposure = state["exposure"]
+        scene.view_settings.gamma = state["gamma"]
+        scene.world = state["world"]
+        view_layer.material_override = state["override"]
+        scene.render.filepath = state["filepath"]
+        scene.render.image_settings.file_format = state["format"]
+        scene.render.image_settings.color_mode = state["mode"]
+        scene.render.film_transparent = state["film"]
+        scene.render.resolution_percentage = state["pct"]
+
+    path = COMFY_INPUT / DEPTH_FILE
+    print("[AEC] RENDERED_DEPTH_OK=" + json.dumps({
+        "path": str(path),
+        "width": scene.render.resolution_x,
+        "height": scene.render.resolution_y,
+        "bytes": path.stat().st_size,
+        "near": near,
+        "far": far,
+    }, separators=(",", ":"), sort_keys=True))
+
+
 def render_beauty():
     scene = bpy.context.scene
     orig_samples = scene.cycles.samples
@@ -497,9 +602,24 @@ def get_best_prompt():
 
 
 def submit(render=True):
+    scene = bpy.context.scene
+    camera = scene.camera
+    if camera is None:
+        raise RuntimeError("ComfyUI submission requires an active render camera")
+    target = bpy.data.objects.get("ocean_view_target")
+    print("[AEC] RENDER_CAMERA_DATA=" + json.dumps({
+        "name": camera.name,
+        "location": list(camera.location),
+        "lens": camera.data.lens,
+        "target": list(target.location) if target else None,
+        "camera_spec_id": scene.get("aec_camera_spec_id"),
+        "composition": scene.get("aec_camera_composition"),
+    }, separators=(",", ":"), sort_keys=True))
     if render:
         print("[AEC] Rendering seg pass...")
         render_seg()
+        print("[AEC] Rendering exact depth pass...")
+        render_depth()
         print("[AEC] Rendering beauty pass...")
         render_beauty()
 
@@ -574,10 +694,8 @@ def submit(render=True):
             inputs.setdefault("blur", False)
             patched["crop"] += 1
         if ct == "ConditioningAverage":
-            # Weight the lineart structure reference much harder so the output
-            # sticks to the building's geometry. Was 0.10 (10% structure, 90%
-            # text) which let walls drift; 0.75 = 75% lineart structure.
-            inputs["conditioning_to_strength"] = 0.75
+            # Keep the rendered building geometry dominant over text guidance.
+            inputs["conditioning_to_strength"] = STRUCTURE_CONDITIONING_STRENGTH
             patched["cond"] += 1
         elif ct == "ResizeImageMaskNode":
             # The widget format is the dropdown selection PLUS sidecar keys
@@ -603,7 +721,7 @@ def submit(render=True):
         print(f"[AEC] Patched: removed Ollama={patched['removed_ollama']}, "
               f"removed debug={patched['removed_debug']}, model paths={patched['paths']}, "
               f"SimpleInpaintCrop={patched['crop']}, ResizeImageMask={patched['resize']}, "
-              f"ConditioningAverage->0.75={patched['cond']}")
+              f"ConditioningAverage->{STRUCTURE_CONDITIONING_STRENGTH:.2f}={patched['cond']}")
 
     for node in prompt.values():
         if (
@@ -742,18 +860,27 @@ def submit(render=True):
     # lineart used, then point the resize/reference node (1206) at depth.
     use_depth = USE_DEPTH_STRUCTURE_INTERIOR if INTERIOR_MODE else USE_DEPTH_STRUCTURE_EXTERIOR
     if "1206" in prompt:
-        if use_depth and "1165" in prompt:
-            li_src = prompt.get("1184", {}).get("inputs", {}).get("image")
-            if li_src is not None:
-                prompt["1165"].setdefault("inputs", {})["image"] = li_src
-            prompt["1206"]["inputs"]["input"] = ["1165", 0]
-            print("[AEC] Structural reference: DEPTH (DepthAnything)")
+        if use_depth:
+            depth_loader = "1300"
+            while depth_loader in prompt:
+                depth_loader = str(int(depth_loader) + 1)
+            prompt[depth_loader] = {
+                "class_type": "LoadImage",
+                "inputs": {"image": DEPTH_FILE},
+            }
+            prompt["1206"]["inputs"]["input"] = [depth_loader, 0]
+            print("[AEC] STRUCTURAL_REFERENCE_DATA=" + json.dumps({
+                "type": "rendered_camera_depth",
+                "file": DEPTH_FILE,
+                "loader": depth_loader,
+                "conditioning_strength": STRUCTURE_CONDITIONING_STRENGTH,
+            }, separators=(",", ":"), sort_keys=True))
         else:
-            # Explicitly route the reference back to lineart (1184) so a base
-            # workflow wired to depth (e.g. a reused history/dump made in depth
-            # mode) does not stay stuck on depth.
             prompt["1206"]["inputs"]["input"] = ["1184", 0]
-            print("[AEC] Structural reference: lineart")
+            print("[AEC] STRUCTURAL_REFERENCE_DATA=" + json.dumps({
+                "type": "lineart",
+                "conditioning_strength": STRUCTURE_CONDITIONING_STRENGTH,
+            }, separators=(",", ":"), sort_keys=True))
 
     # Update text prompts by node ID (interior set when INTERIOR_MODE is on)
     active_prompts = PROMPTS_INTERIOR if INTERIOR_MODE else PROMPTS

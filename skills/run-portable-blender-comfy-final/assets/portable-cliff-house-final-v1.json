@@ -1,10 +1,25 @@
 {
-  "format": "aec-portable-final-v1",
-  "id": "delivered-cliff-house-final-v1",
-  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_test_renders.blend",
-  "final_scene": "projects/recorded_demo/blender/portable_cliff_house_FINAL.blend",
-  "phase11_dir": "projects/recorded_demo/test_renders/phase11",
-  "final_output_dir": "projects/recorded_demo/final_outputs",
-  "expected_images": 3,
-  "timeout": 900
+  "format":"aec-portable-final-v1",
+  "id":"delivered-cliff-house-final-v2",
+  "input_scene":"projects/recorded_demo/blender/portable_cliff_house_test_renders.blend",
+  "final_scene":"projects/recorded_demo/blender/portable_cliff_house_FINAL.blend",
+  "phase11_dir":"projects/recorded_demo/test_renders/phase11",
+  "final_output_dir":"projects/recorded_demo/final_outputs",
+  "expected_images":3,
+  "timeout":900,
+  "camera_spec_id":"delivered-cliff-house-camera-v4",
+  "camera_composition":"wide_southeast_exterior_three_quarter_reference_match",
+  "camera_location":[
+    0.036,
+    -0.041,
+    0.021
+  ],
+  "camera_target":[
+    0.004,
+    -0.002,
+    0.003
+  ],
+  "camera_lens":30.0,
+  "structural_reference":"rendered_camera_depth",
+  "structural_conditioning_strength":0.9
 }

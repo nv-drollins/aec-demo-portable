@@ -81,7 +81,8 @@ PHASE_PRESENTATION = {
         "Blender landscaping and site context",
         (
             "Transfer the approved site roles into a versioned Blender checkpoint.",
-            "Preserve the delivered target scene while adding terrain and hardscape context.",
+            "Reveal terrain and hardscape without changing any building-level elevation.",
+            "The lower hillside story may become partially occluded by the restored site grade.",
         ),
     ),
     6: (
@@ -129,7 +130,8 @@ PHASE_PRESENTATION = {
     12: (
         "Final ComfyUI transformation",
         (
-            "Submit the checked Blender passes to the Flux workflow.",
+            "Verify camera-v4 and render exact camera-space geometry depth.",
+            "Submit beauty, segmentation, and exact depth at 90 percent structural weight.",
             "Validate Make Real, Change Environment, and Time of Day outputs.",
         ),
     ),
