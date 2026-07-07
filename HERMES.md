@@ -60,6 +60,11 @@ Canonical Phase 9 uses `build-portable-blender-lighting` and only
 adds only the fire practical, and saves four compass previews. Before approval,
 use only `scripts/check-portable-lighting-ready.py`; do not begin Phase 10.
 
+Canonical Phase 10 uses `skip-portable-blender-animation` and only
+`scripts/run-portable-animation-skip.py` for the accepted still-image path.
+Before approval, use only `scripts/check-portable-animation-skip-ready.py`.
+The adapter must preserve zero camera keyframes and may not begin Phase 11.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

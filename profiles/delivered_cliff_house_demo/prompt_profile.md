@@ -152,8 +152,16 @@ Before Phase 9 approval, readiness validation must run only
 After a separate human approval, Phase 9 must run only
 `scripts/run-portable-lighting.py` through the `build-portable-blender-lighting`
 skill. Require the input, world, lights, previews, and preparation markers and
-stop at its lighting review gate. Phase 10 remains blocked until its checked
-portable adapter exists.
+stop at its lighting review gate.
+
+Before Phase 10 approval, readiness validation must run only
+`scripts/check-portable-animation-skip-ready.py` and require
+`PORTABLE_ANIMATION_SKIP_READY_OK` without mutating Blender.
+After a separate human approval, Phase 10 must run only
+`scripts/run-portable-animation-skip.py` through the
+`skip-portable-blender-animation` skill. Require the input, skip, and preparation
+markers and stop at its optional-skip review gate. Phase 11 remains blocked
+until its checked portable adapter exists.
 
 ## 7. Rendering and ComfyUI defaults
 

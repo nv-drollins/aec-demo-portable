@@ -1,0 +1,11 @@
+{
+  "format": "aec-portable-blender-animation-skip-v1",
+  "id": "delivered-cliff-house-animation-skip-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_lighting.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_animation_skipped.blend",
+  "reason": "still_image_blender_to_comfyui_demo",
+  "hero_camera": "ocean_view",
+  "animation_camera": "patio_sweep_cam",
+  "required_world": "AEC_Phase9_World",
+  "required_previews": ["lighting_NW.png","lighting_NE.png","lighting_SE.png","lighting_SW.png"]
+}

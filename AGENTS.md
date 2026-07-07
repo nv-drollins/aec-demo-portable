@@ -165,6 +165,19 @@ For the recorded-demo opening instruction:
 - Show the compass previews, then stop with
   `PHASE_REVIEW_REQUIRED phase=9 name=lighting`.
 
+## Canonical Phase 10 adapter (optional skip)
+
+- Before Phase 10 approval, run only
+  `python3 scripts/check-portable-animation-skip-ready.py`. Require
+  `PORTABLE_ANIMATION_SKIP_READY_OK`, then stop at the human approval marker.
+- After Phase 9 review and a new human approval, load
+  `skip-portable-blender-animation` and run only
+  `python3 scripts/run-portable-animation-skip.py` from this repository.
+- Require `PORTABLE_ANIMATION_INPUT_OK`, `PORTABLE_ANIMATION_SKIP_OK`, and
+  `PORTABLE_ANIMATION_PREPARATION_OK`.
+- Stop with `PHASE_REVIEW_REQUIRED phase=10 name=optional_animation_skipped`.
+- Do not add keyframes or begin Phase 11.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

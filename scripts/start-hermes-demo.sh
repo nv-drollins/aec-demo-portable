@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HERMES_BIN="${HERMES_BIN:-$HOME/.local/bin/hermes}"
 HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/qwen3.6:latest}"
 HERMES_MAX_TURNS="${AEC_HERMES_MAX_TURNS:-30}"
-HERMES_SKILLS="${AEC_HERMES_SKILLS:-prepare-portable-freecad-site,build-portable-freecad-massing,build-portable-freecad-detailing,build-portable-blender-landscaping,build-portable-blender-entourage,build-portable-blender-materials,build-portable-blender-camera,build-portable-blender-lighting}"
+HERMES_SKILLS="${AEC_HERMES_SKILLS:-prepare-portable-freecad-site,build-portable-freecad-massing,build-portable-freecad-detailing,build-portable-blender-landscaping,build-portable-blender-entourage,build-portable-blender-materials,build-portable-blender-camera,build-portable-blender-lighting,skip-portable-blender-animation}"
 
 if [[ ! -x "$HERMES_BIN" ]]; then
   echo "Hermes was not found at: $HERMES_BIN" >&2

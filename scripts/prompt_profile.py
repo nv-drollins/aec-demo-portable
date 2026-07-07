@@ -45,6 +45,8 @@ REQUIRED_PROFILE_TEXT = (
     "scripts/run-portable-camera.py",
     "scripts/check-portable-lighting-ready.py",
     "scripts/run-portable-lighting.py",
+    "scripts/check-portable-animation-skip-ready.py",
+    "scripts/run-portable-animation-skip.py",
 )
 
 

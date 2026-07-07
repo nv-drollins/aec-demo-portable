@@ -234,8 +234,19 @@ The lighting gate requires `qwantani_puresky_2k.hdr`, gamma 4.0, strength 1.2,
 a permanently hidden delivered Sun, one warm 700-energy FireLight, four valid
 compass screenshots, and a restored `ocean_view` active camera.
 
-Do not approve Phase 10 until its checked portable adapter has been added;
-Hermes must report `BLOCKED_MISSING_CHECKED_ADAPTER` instead of guessing.
+After inspecting Phase 9, one new approval records the intentional Phase 10 skip:
+
+```text
+PORTABLE_ANIMATION_INPUT_OK
+PORTABLE_ANIMATION_SKIP_OK
+PORTABLE_ANIMATION_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=10 name=optional_animation_skipped
+```
+
+The skip gate requires `ocean_view`, `patio_sweep_cam`, the Phase 9 world, hidden
+Sun, FireLight, and zero animation-camera keyframes. It saves a separate transition
+checkpoint for the still-image demo. Do not approve Phase 11 until its checked
+adapter has been added.
 
 ## Fast recorded integration proof
 
