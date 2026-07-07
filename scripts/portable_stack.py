@@ -358,6 +358,7 @@ def start() -> None:
             "blender",
             [
                 BLENDER_EXE,
+                "--enable-autoexec",
                 str(BLENDER_SCENE),
                 "--python",
                 str(BLENDER_MCP_BOOTSTRAP),

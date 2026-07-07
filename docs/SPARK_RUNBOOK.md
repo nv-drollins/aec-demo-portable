@@ -65,6 +65,9 @@ PORTABLE_STACK_OK
 
 The controller rejects an old Blender 4.x server already occupying port 9876.
 Blender MCP starts automatically; no sidebar click is required.
+The launcher explicitly enables Python auto-execution for the trusted delivered
+scene so embedded scripts and drivers do not trigger an interactive warning.
+Do not use this launcher for untrusted `.blend` files.
 
 After a reboot, `restart-portable-demo.sh` is sufficient to restore the whole
 stack. The mode launchers below also start any missing service idempotently, so
