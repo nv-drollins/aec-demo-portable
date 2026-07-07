@@ -98,6 +98,30 @@ This is an explicit alias for `start-hermes-demo.sh`. It opens Hermes and
 retains the one-human-approval-per-phase policy in `AGENTS.md`. Nothing is
 approved automatically.
 
+### Hermes-driven authorized cycle
+
+Use this when the audience should see Hermes introduce, supervise, and report
+one complete automatic Phase 2-12 run:
+
+```bash
+./scripts/start-portable-auto-hermes-demo.sh
+```
+
+Deliberately launching this command grants one-cycle authorization; Hermes does
+not fabricate phase approvals. It runs only the checked deterministic adapter
+wrapper, waits for completion, and presents the final result. This mode uses an
+isolated Hermes home under `runtime/hermes-auto-home`, a terminal-only toolset,
+and normal Hermes command-safety controls. It does not change the manual
+workflow's one-human-approval-per-phase policy.
+
+The default local model is `ollama/qwen3.6:latest`. Override it only when a
+compatible local model has already been installed:
+
+```bash
+AEC_HERMES_MODEL=ollama/my-model:latest \
+  ./scripts/start-portable-auto-hermes-demo.sh
+```
+
 ### Unattended continuous playback
 
 Use this for a kiosk or an all-day looping display:

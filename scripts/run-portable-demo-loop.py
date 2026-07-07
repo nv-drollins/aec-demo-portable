@@ -247,10 +247,12 @@ def main() -> None:
         parser.error("--cycles and --keep-final-sets cannot be negative")
 
     lock = acquire_lock()  # Keep the stream alive so the process owns the lock.
+    hermes_mode = os.environ.get("AEC_AUTOPLAY_HERMES_MODE", "not_launched")
+    operator_authorized = hermes_mode == "driver"
     emit(
         "AUTOPLAY_MODE",
-        approvals="not_used",
-        hermes="not_launched",
+        approvals="operator_launch_one_cycle" if operator_authorized else "not_used",
+        hermes=hermes_mode,
         checked_adapters=len(PHASES),
         cycles="infinite" if args.cycles == 0 else args.cycles,
     )

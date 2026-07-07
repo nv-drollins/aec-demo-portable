@@ -133,7 +133,9 @@ cp config/runtime.env.example config/runtime.env
 ./scripts/restart-portable-demo.sh
 ./scripts/stop-portable-demo.sh
 ./scripts/start-portable-manual-demo.sh
+./scripts/start-portable-auto-hermes-demo.sh
 ./scripts/start-portable-auto-demo.sh
+./scripts/start-portable-auto-terminal.sh
 ./scripts/run-comfy-demo.py --sample-inputs
 ./scripts/run-comfy-demo.py --render
 ```
@@ -144,8 +146,11 @@ configured Blender is too old or required Flux.2 models are absent. Set
 claimed end-to-end demonstration.
 
 `start-portable-manual-demo.sh` opens the human-gated Hermes walkthrough.
-`start-portable-auto-demo.sh` bypasses Hermes approvals without fabricating
-them and continuously runs the same checked phase adapters for kiosk playback.
+`start-portable-auto-hermes-demo.sh` visibly lets Hermes supervise one
+operator-authorized checked cycle without fabricating per-phase approvals.
+`start-portable-auto-demo.sh` continuously runs the same checked phase adapters
+for kiosk playback; `start-portable-auto-terminal.sh` opens that loop in a
+separate monitor terminal.
 
 ## Validated result
 

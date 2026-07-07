@@ -40,12 +40,19 @@ Then install and verify:
 Initial installation includes Hermes, Ollama, and the approximately 23 GB local
 Qwen model, in addition to the FreeCAD, Blender, and ComfyUI runtimes.
 
-Choose the human-gated or unattended looping presentation:
+Choose the human-gated, Hermes-driven automatic, or unattended presentation:
 
 ```bash
 ./scripts/start-portable-manual-demo.sh
+./scripts/start-portable-auto-hermes-demo.sh
 ./scripts/start-portable-auto-demo.sh
+./scripts/start-portable-auto-terminal.sh
 ```
+
+The Hermes-driven automatic mode visibly puts Hermes in charge of one complete
+checked Phase 2-12 cycle. The unattended modes run the same deterministic
+adapters directly, either in the current terminal or a separate monitor
+terminal.
 
 The complete tested operating procedure is
 [docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md).
