@@ -44,8 +44,16 @@ display:
   tool_progress: all
   long_running_notifications: true
   background_process_notifications: all
+  memory_notifications: off
 compression:
   enabled: false
+memory:
+  memory_enabled: false
+  user_profile_enabled: false
+  nudge_interval: 0
+  flush_min_turns: 999999
+skills:
+  creation_nudge_interval: 0
 platform_toolsets:
   cli:
     - terminal

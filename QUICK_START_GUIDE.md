@@ -44,6 +44,10 @@ requiring an approval after every phase.
 ./scripts/start-portable-manual-demo.sh
 ```
 
+The launcher uses an isolated manual-demo Hermes profile with autonomous
+memory and skill creation disabled. Only the checked repository skills are
+preloaded.
+
 A Hermes chat opens in the terminal. Paste this exact opening instruction:
 
 ```text

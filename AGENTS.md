@@ -41,6 +41,9 @@ Hermes loads this file automatically when launched from this repository. Read
   and continue with the already authorized canonical runner.
 - Never rerun the previous phase and never advance to the next phase unless the
   current phase's runner returned all required markers after this approval.
+- Do not create, update, or curate Hermes memories or skills during this demo.
+  Background self-improvement is outside the approved workflow; only the
+  source-controlled skills explicitly preloaded by the launcher are valid.
 - If conversation state is genuinely ambiguous, mutate nothing and return the
   pending marker for the last phase whose readiness marker was observed. Do
   not offer the operator a menu of phase numbers.

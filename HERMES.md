@@ -18,6 +18,10 @@ single checked runner immediately. Do not rerun the previous phase, advance to
 the following phase, or ask the operator to choose a phase unless the approved
 runner has returned all required completion markers.
 
+The demo launchers disable Hermes memory and skill self-improvement. Never
+create, patch, or curate a skill during a demo; use only the checked
+source-controlled skills preloaded by the launcher.
+
 ## Prompt profiles
 
 The recorded delivered demo uses

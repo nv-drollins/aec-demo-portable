@@ -96,7 +96,21 @@ Use this when presenting the reasoning and reviewing every phase:
 
 This is an explicit alias for `start-hermes-demo.sh`. It opens Hermes and
 retains the one-human-approval-per-phase policy in `AGENTS.md`. Nothing is
-approved automatically.
+approved automatically. Manual mode uses an isolated profile under
+`runtime/hermes-manual-home`; memory review and autonomous skill creation are
+disabled, while the checked repository skills and MCP servers remain enabled.
+
+Hermes versions used before this isolation change may have created
+`~/.hermes/skills/demo-review-gates` through background self-improvement. That
+directory is not part of this repository. Quarantine it before the next run:
+
+```bash
+mkdir -p ~/.hermes/skills-disabled
+if [[ -d ~/.hermes/skills/demo-review-gates ]]; then
+  mv ~/.hermes/skills/demo-review-gates \
+    ~/.hermes/skills-disabled/demo-review-gates
+fi
+```
 
 ### Hermes-driven authorized cycle
 
