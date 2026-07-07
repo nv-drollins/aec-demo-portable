@@ -245,8 +245,24 @@ PHASE_REVIEW_REQUIRED phase=10 name=optional_animation_skipped
 
 The skip gate requires `ocean_view`, `patio_sweep_cam`, the Phase 9 world, hidden
 Sun, FireLight, and zero animation-camera keyframes. It saves a separate transition
-checkpoint for the still-image demo. Do not approve Phase 11 until its checked
-adapter has been added.
+checkpoint for the still-image demo.
+
+After inspecting Phase 10, one new approval authorizes Phase 11 test renders:
+
+```text
+PORTABLE_TEST_RENDER_INPUT_OK
+PORTABLE_TEST_RENDER_BEAUTY_OK
+PORTABLE_TEST_RENDER_DEPTH_OK
+PORTABLE_TEST_RENDER_SEGMENTATION_OK
+PORTABLE_TEST_RENDER_RESTORE_OK
+PORTABLE_TEST_RENDER_PREPARATION_OK
+PHASE_REVIEW_REQUIRED phase=11 name=test_renders
+```
+
+The still-image gate renders aligned 512x512 beauty, camera-distance depth, and
+segmentation passes, validates image variation and dimensions, restores every
+material and render setting, and saves a separate checkpoint. Do not approve
+Phase 12 until its checked adapter has been added.
 
 ## Fast recorded integration proof
 

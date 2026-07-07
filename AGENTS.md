@@ -178,6 +178,18 @@ For the recorded-demo opening instruction:
 - Stop with `PHASE_REVIEW_REQUIRED phase=10 name=optional_animation_skipped`.
 - Do not add keyframes or begin Phase 11.
 
+## Canonical Phase 11 adapter
+
+- Before Phase 11 approval, run only
+  `python3 scripts/check-portable-test-renders-ready.py`. Require
+  `PORTABLE_TEST_RENDER_READY_OK`, then stop at the human approval marker.
+- After Phase 10 review and a new human approval, load
+  `render-portable-blender-test-passes` and run only
+  `python3 scripts/run-portable-test-renders.py` from this repository.
+- Require all beauty, depth, segmentation, restore, and preparation markers.
+- Stop with `PHASE_REVIEW_REQUIRED phase=11 name=test_renders`.
+- Do not submit ComfyUI or begin Phase 12.
+
 ## Unimplemented phases
 
 If a canonical phase has no explicit adapter section in this file, stop with

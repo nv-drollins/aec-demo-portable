@@ -65,6 +65,12 @@ Canonical Phase 10 uses `skip-portable-blender-animation` and only
 Before approval, use only `scripts/check-portable-animation-skip-ready.py`.
 The adapter must preserve zero camera keyframes and may not begin Phase 11.
 
+Canonical Phase 11 uses `render-portable-blender-test-passes` and only
+`scripts/run-portable-test-renders.py`. It renders aligned 512x512 beauty,
+depth, and segmentation stills, validates them, and restores the scene. Before
+approval, use only `scripts/check-portable-test-renders-ready.py`; do not submit
+ComfyUI or begin Phase 12.
+
 ## Authoritative bundle assets
 
 - Default Blender scene:

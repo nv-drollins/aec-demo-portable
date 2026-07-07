@@ -1,0 +1,12 @@
+{
+  "format": "aec-portable-blender-test-renders-v1",
+  "id": "delivered-cliff-house-test-renders-v1",
+  "input_scene": "projects/recorded_demo/blender/portable_cliff_house_animation_skipped.blend",
+  "output_scene": "projects/recorded_demo/blender/portable_cliff_house_test_renders.blend",
+  "output_dir": "projects/recorded_demo/test_renders/phase11",
+  "hero_camera": "ocean_view",
+  "resolution": [512,512],
+  "beauty_samples": 16,
+  "expected_meshes": 160,
+  "files": {"beauty":"beauty.png","depth":"depth.png","segmentation":"segmentation.png"}
+}

@@ -160,8 +160,16 @@ Before Phase 10 approval, readiness validation must run only
 After a separate human approval, Phase 10 must run only
 `scripts/run-portable-animation-skip.py` through the
 `skip-portable-blender-animation` skill. Require the input, skip, and preparation
-markers and stop at its optional-skip review gate. Phase 11 remains blocked
-until its checked portable adapter exists.
+markers and stop at its optional-skip review gate.
+
+Before Phase 11 approval, readiness validation must run only
+`scripts/check-portable-test-renders-ready.py` and require
+`PORTABLE_TEST_RENDER_READY_OK` without mutating Blender.
+After a separate human approval, Phase 11 must run only
+`scripts/run-portable-test-renders.py` through the
+`render-portable-blender-test-passes` skill. Require the input, beauty, depth,
+segmentation, restore, and preparation markers and stop at its test-render
+review gate. Phase 12 remains blocked until its checked adapter exists.
 
 ## 7. Rendering and ComfyUI defaults
 
