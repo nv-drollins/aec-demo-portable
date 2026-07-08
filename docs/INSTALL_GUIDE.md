@@ -183,6 +183,62 @@ ollama pull qwen3.6:latest
 ./scripts/preflight-portable-demo.sh
 ```
 
+### Optional: dedicate a second GPU to Ollama
+
+Skip this section on a standard DGX Spark or any system with only one NVIDIA
+GPU. Leave `CUDA_VISIBLE_DEVICES` unset in that case; Ollama will select the
+available GPU automatically.
+
+On a workstation that has both a GB300 and a second NVIDIA GPU, the recommended
+split is to reserve the GB300 for Ollama while Blender, ComfyUI, and the desktop
+continue using the discrete RTX GPU. First identify the physical devices and
+copy the complete GB300 UUID:
+
+```bash
+nvidia-smi -L
+```
+
+Edit the existing Ollama systemd override:
+
+```bash
+sudo systemctl edit ollama
+```
+
+Merge these settings into its `[Service]` section, replacing the example value
+with the GB300 UUID reported by `nvidia-smi -L`. Never copy a UUID from another
+machine.
+
+```ini
+[Service]
+Environment="CUDA_DEVICE_ORDER=PCI_BUS_ID"
+Environment="CUDA_VISIBLE_DEVICES=GPU-REPLACE-WITH-THIS-MACHINE-GB300-UUID"
+Environment="OLLAMA_CONTEXT_LENGTH=262144"
+Environment="OLLAMA_KEEP_ALIVE=-1"
+Environment="OLLAMA_VULKAN=0"
+```
+
+Apply the override:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+```
+
+Confirm that the selector reached the Ollama server:
+
+```bash
+sudo systemctl show ollama -p Environment --value \
+  | tr ' ' '\n' \
+  | grep -E 'CUDA_VISIBLE_DEVICES|CUDA_DEVICE_ORDER|OLLAMA_CONTEXT|OLLAMA_KEEP_ALIVE|OLLAMA_VULKAN'
+```
+
+After loading the selected model, use `nvidia-smi` to verify that the Ollama
+runner occupies the intended physical GPU. Ollama may call that device
+`CUDA0` internally because the selected physical GPU becomes its only visible
+logical device. With `OLLAMA_KEEP_ALIVE=-1`, `ollama ps` should report
+`Forever`; explicitly run `ollama stop MODEL_NAME` before switching to a
+different large model.
+
 ## 6. Start and verify the services
 
 ```bash

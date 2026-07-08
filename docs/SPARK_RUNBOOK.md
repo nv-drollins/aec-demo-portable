@@ -26,6 +26,33 @@ model is approximately 23 GB. For staged infrastructure testing only, set
 `AEC_SKIP_OLLAMA_MODEL_DOWNLOAD=1`; preflight remains blocked until
 `ollama pull qwen3.6:latest` completes.
 
+### Optional mixed-GPU Ollama placement
+
+This section applies only when the workstation has a second NVIDIA GPU. On a
+single-GPU Spark, leave `CUDA_VISIBLE_DEVICES` unset and use the normal
+installation path.
+
+For a GB300 plus RTX PRO workstation, reserve the GB300 for Ollama and leave
+Blender, ComfyUI, and the display on the RTX GPU. Follow the complete
+machine-specific procedure in
+[INSTALL_GUIDE.md](INSTALL_GUIDE.md#optional-dedicate-a-second-gpu-to-ollama):
+discover the GB300 UUID with `nvidia-smi -L`, set that UUID as
+`CUDA_VISIBLE_DEVICES` in the Ollama systemd service, and restart Ollama.
+Never reuse a UUID from another workstation.
+
+Before a presentation, verify placement and residency:
+
+```bash
+sudo systemctl show ollama -p Environment --value
+ollama ps
+nvidia-smi
+```
+
+The Ollama process must appear on the intended physical GPU. It may be labeled
+`CUDA0` inside Ollama after device filtering; `nvidia-smi` is authoritative
+for the physical GPU. When `OLLAMA_KEEP_ALIVE=-1` is enabled, stop the current
+model with `ollama stop MODEL_NAME` before loading a different one.
+
 ## Prompt profile
 
 There was no upstream file literally named `prompt_profile.md`. The complete,
@@ -471,3 +498,69 @@ restored 28 mm camera-v3, exact rendered camera depth at strength 0.98, and
 three required visible building levels. The community Spark build reports
 Blender 5.1.0; the supplied scenes report a newer 5.1 patch-level writer
 warning but opened successfully.
+
+## Twelve-phase demo talk track
+
+1. **Phase 1 — Source audit and design intent.** Hermes performs a read-only
+   audit of the delivered project, validates the source files and running
+   services, and summarizes the accepted architectural intent. Nothing is
+   changed until the presenter approves the first construction phase.
+
+2. **Phase 2 — Site preparation.** Hermes uses the checked conversion and
+   FreeCAD adapter to extract the Rhino reference curves and reconstruct the
+   terrain, lot boundary, and four site pads. This establishes a source-derived
+   site that the building can be reconstructed against.
+
+3. **Phase 3 — Building massing.** Hermes reconstructs the overall building
+   envelope in FreeCAD as 11 native massing solids while retaining links to the
+   approved site context. This is where the primary floors, balconies, and roof
+   volumes become visible as a coordinated three-dimensional composition.
+
+4. **Phase 4 — Architectural detailing.** The checked detailing adapter expands
+   the massing into 109 target-derived FreeCAD objects, including slabs, walls,
+   glazing, mullions, frames, doors, and railings. Automated overlap checks
+   verify that openings, glass, frames, and walls remain geometrically coherent.
+
+5. **Phase 5 — Landscaping and site context.** Hermes validates the FreeCAD
+   reconstruction and creates a separate Blender checkpoint containing 15
+   verified site elements. Drainage, site edges, hardscape, patio and pool deck,
+   pool basin, and pool water are organized without altering the delivered
+   reference scene.
+
+6. **Phase 6 — Entourage and outdoor living.** Hermes procedurally adds ten
+   presentation objects: pool loungers, tables, a firepit, dining chairs,
+   planters, and a driveway vehicle. Layout checks keep the objects inside the
+   intended composition and prevent collisions with one another or the pool.
+
+7. **Phase 7 — Materials and segmentation.** The workflow preserves the
+   delivered architectural shaders, assigns final materials to the new
+   entourage, and completes semantic tags across all 160 meshes. Those tags let
+   the same scene support both a convincing beauty render and controlled
+   downstream image transformation.
+
+8. **Phase 8 — Camera placement.** Hermes preserves the delivered camera and
+   creates a checked exterior hero camera plus utility review cameras. The gate
+   verifies that the building, entry, patio, and pool anchors are all framed
+   correctly and rejects accidental interior or courtyard viewpoints.
+
+9. **Phase 9 — Lighting.** A bundled HDRI establishes the coastal environment,
+   the delivered Sun is disabled to prevent conflicting light, and a warm fire
+   practical is added. Four compass previews allow the presenter to review the
+   lighting while the approved hero-camera composition remains unchanged.
+
+10. **Phase 10 — Optional animation decision.** Because this demonstration
+    follows a still-image Blender-to-ComfyUI workflow, Hermes deliberately
+    records animation as skipped and confirms that no camera keyframes were
+    introduced. This makes the omission an explicit design decision rather
+    than an unfinished task.
+
+11. **Phase 11 — Test renders.** Blender produces aligned 512 x 512 beauty,
+    camera-depth, and segmentation passes from the approved hero view. The gate
+    validates their dimensions and image variation, then restores the scene's
+    materials and render settings for the final run.
+
+12. **Phase 12 — Final Blender-to-ComfyUI transformation.** The final adapter
+    renders fresh Blender inputs and submits them to the verified ComfyUI API
+    workflow. It validates and delivers exactly three 1280 x 720 images—Make
+    Real, Change Environment, and Time of Day—and saves the final Blender
+    checkpoint for review.
