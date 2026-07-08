@@ -27,6 +27,9 @@ For an already installed Spark, use [QUICK_START_GUIDE.md](QUICK_START_GUIDE.md)
 For the detailed phase-by-phase operator procedure, use
 [docs/SPARK_RUNBOOK.md](docs/SPARK_RUNBOOK.md).
 
+For a self-contained USB deployment with no event internet, use
+[docs/OFFLINE_EVENT_DEPLOYMENT.md](docs/OFFLINE_EVENT_DEPLOYMENT.md).
+
 ## Repository and payload
 
 Git contains the control layer: scripts, skills, prompts, workflow JSON,

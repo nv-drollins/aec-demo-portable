@@ -5,6 +5,8 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 "$ROOT/scripts/install-cad-tools.sh"
 "$ROOT/scripts/install-freecad-spark.sh"
 "$ROOT/scripts/install-hermes-spark.sh"
+"$ROOT/scripts/prepare-freecad-mcp-runtime.sh"
+"$HOME/.hermes/hermes-agent/venv/bin/python" "$ROOT/scripts/register-hermes-skills.py"
 "$ROOT/scripts/install-blender-spark.sh"
 "$ROOT/scripts/install-comfy-portable.sh"
 cp -n "$ROOT/config/runtime.env.example" "$ROOT/config/runtime.env" 2>/dev/null || true

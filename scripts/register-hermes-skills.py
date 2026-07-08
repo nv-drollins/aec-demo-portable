@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-import shutil
 import stat
 import tempfile
 
@@ -70,27 +69,28 @@ def main():
             resolved.append(expanded)
     skills["external_dirs"] = resolved
 
-    # Register the repository-pinned FreeCAD MCP server with Hermes. Hermes
-    # bundles uv under ~/.hermes/bin; fall back to a system uv when present.
-    uv = HERMES_HOME / "bin" / "uv"
-    if not uv.is_file():
-        located = shutil.which("uv")
-        uv = Path(located) if located else uv
+    # Use the repository-pinned, already-resolved FreeCAD MCP environment.
+    # This avoids an implicit uv sync (and network access) when a demo starts.
     freecad_mcp = ROOT / "runtime" / "freecad-mcp"
-    if freecad_mcp.is_dir() and uv.is_file():
-        servers = config.setdefault("mcp_servers", {})
-        if not isinstance(servers, dict):
-            raise RuntimeError("Hermes config key 'mcp_servers' must be a mapping")
-        servers["freecad"] = {
-            "command": str(uv.resolve()),
-            "args": [
-                "--directory",
-                str(freecad_mcp.resolve()),
-                "run",
-                "freecad-mcp",
-            ],
-            "enabled": True,
-        }
+    freecad_runner = ROOT / "scripts" / "run-freecad-mcp.sh"
+    freecad_binary = freecad_mcp / ".venv" / "bin" / "freecad-mcp"
+    freecad_registered = False
+    if freecad_mcp.is_dir():
+        if freecad_runner.is_file() and freecad_binary.is_file():
+            servers = config.setdefault("mcp_servers", {})
+            if not isinstance(servers, dict):
+                raise RuntimeError("Hermes config key 'mcp_servers' must be a mapping")
+            servers["freecad"] = {
+                "command": str(freecad_runner.resolve()),
+                "args": [],
+                "enabled": True,
+            }
+            freecad_registered = True
+        else:
+            print(
+                "HERMES_FREECAD_MCP_SKIPPED=runtime_not_prepared "
+                "run=scripts/prepare-freecad-mcp-runtime.sh"
+            )
 
     mode = stat.S_IMODE(CONFIG_PATH.stat().st_mode) if CONFIG_PATH.exists() else 0o600
     descriptor, temporary_name = tempfile.mkstemp(
@@ -109,8 +109,8 @@ def main():
             temporary.unlink()
     print(f"HERMES_SKILLS_REGISTERED={SKILLS_DIR} config={CONFIG_PATH}")
     print(f"HERMES_MODEL_CONFIGURED={model['default']} base_url={model.get('base_url', '')}")
-    if freecad_mcp.is_dir() and uv.is_file():
-        print(f"HERMES_FREECAD_MCP_REGISTERED={freecad_mcp} command={uv}")
+    if freecad_registered:
+        print(f"HERMES_FREECAD_MCP_REGISTERED={freecad_mcp} command={freecad_runner}")
 
 
 if __name__ == "__main__":

@@ -10,6 +10,10 @@ workflow. Those files are retained only as upstream reference material.
 Estimated time is 45 minutes to several hours, depending primarily on model
 download speed. The installer is idempotent and can be rerun safely.
 
+For a destination that will not have reliable internet, do not use the ordinary
+payload-only process. Build and install the self-contained bundle described in
+[OFFLINE_EVENT_DEPLOYMENT.md](OFFLINE_EVENT_DEPLOYMENT.md).
+
 ## 1. Requirements
 
 Use a DGX Spark with:

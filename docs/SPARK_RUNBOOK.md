@@ -15,6 +15,10 @@ cd /home/nvidia/AEC_Demo_Portable
 ./scripts/install-portable-runtime.sh
 ```
 
+For an event machine that must be provisioned without internet, use
+[OFFLINE_EVENT_DEPLOYMENT.md](OFFLINE_EVENT_DEPLOYMENT.md) instead of the
+ordinary online installation.
+
 The installers are idempotent. Heavy runtimes and model files stay under
 `runtime/` and remain outside Git. The Comfy installer pins ComfyUI and all
 required custom-node commits, excludes only the unavailable optional ARM64
