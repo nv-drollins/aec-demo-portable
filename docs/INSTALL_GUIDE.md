@@ -138,6 +138,16 @@ cd /home/nvidia/AEC_Demo_Portable
 scp transfer/aec-demo-portable-payload-demo-*.tar.gz* \
   nvidia@NEW_SPARK:/home/nvidia/
 ```
+Or package, checksum, and copy the payload in one command:
+
+```bash
+./scripts/transfer-portable-payload.sh --host NEW_SPARK
+```
+
+Add `--mode full` to transfer the entire delivered asset bundle instead of
+the canonical demo subset. Use `--dry-run` to inspect the local package and
+`scp` commands without creating or transferring the archive. The destination
+repository must already be cloned at `/home/nvidia/AEC_Demo_Portable`.
 
 Then run the same verification and extraction commands on the destination.
 

@@ -88,6 +88,18 @@ On the source Spark:
 ```bash
 scp transfer/aec-demo-portable-payload-demo-*.tar.gz* nvidia@NEW_SPARK:/home/nvidia/
 ```
+The checked wrapper can create the archive and transfer all three verification
+files in one operation:
+
+```bash
+./scripts/transfer-portable-payload.sh --host NEW_SPARK
+```
+
+Use `--mode full` for all delivered `sample_project` and `assets` content,
+or `--dry-run` to print the planned package and `scp` commands. Optional
+`--user`, `--port`, `--identity`, and `--remote-dir` arguments support
+non-default SSH configurations. The destination repository must already be
+cloned at `/home/nvidia/AEC_Demo_Portable`.
 
 ### Verify, extract, and install
 
