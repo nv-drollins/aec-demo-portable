@@ -155,7 +155,6 @@ required_paths=(
   "$HOME/.hermes/hermes-agent/venv/bin/python"
   "$HOME/.local/share/uv/python"
   "/usr/local/lib/ollama"
-  "/usr/share/ollama/.ollama/models"
 )
 for path in "${required_paths[@]}"; do
   [[ -e "$path" ]] || {
@@ -163,6 +162,12 @@ for path in "${required_paths[@]}"; do
     exit 1
   }
 done
+
+ollama_models_dir="/usr/share/ollama/.ollama/models"
+sudo test -e "$ollama_models_dir" || {
+  echo "OFFLINE_INSTALLED_PATH_MISSING=$ollama_models_dir" >&2
+  exit 1
+}
 
 verify_manifest "$TARGET/offline-manifest.json"
 DEFAULT_MODEL="$(python3 - "$TARGET/offline-manifest.json" <<'PY'
