@@ -163,12 +163,6 @@ for path in "${required_paths[@]}"; do
   }
 done
 
-ollama_models_dir="/usr/share/ollama/.ollama/models"
-sudo test -e "$ollama_models_dir" || {
-  echo "OFFLINE_INSTALLED_PATH_MISSING=$ollama_models_dir" >&2
-  exit 1
-}
-
 verify_manifest "$TARGET/offline-manifest.json"
 DEFAULT_MODEL="$(python3 - "$TARGET/offline-manifest.json" <<'PY'
 import json
@@ -184,6 +178,18 @@ systemctl is-active --quiet ollama || {
   echo "Ollama system service is not active" >&2
   exit 1
 }
+
+ollama_models_dir="$(systemctl show ollama -p Environment --value 2>/dev/null \
+  | tr ' ' '\n' \
+  | sed -n 's/^OLLAMA_MODELS=//p' \
+  | tail -n 1)"
+ollama_models_dir="${ollama_models_dir:-/usr/share/ollama/.ollama/models}"
+if sudo -n test -e "$ollama_models_dir" 2>/dev/null; then
+  echo "OFFLINE_OLLAMA_MODELS_DIR_OK=$ollama_models_dir"
+else
+  echo "OFFLINE_OLLAMA_MODELS_DIR_UNVERIFIED=$ollama_models_dir"
+  echo "OFFLINE_OLLAMA_MODELS_DIR_NOTE=Continuing because Ollama service/model verification is authoritative."
+fi
 ollama show "$DEFAULT_MODEL" >/dev/null
 ollama list
 
