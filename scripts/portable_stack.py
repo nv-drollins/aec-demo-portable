@@ -420,10 +420,55 @@ def terminate_recorded(name: str) -> None:
     print(f"{name.upper()}_STOPPED pid={pid}")
 
 
-def stop() -> None:
+def terminate_freecad_for_restart() -> None:
+    """Terminate the FreeCAD instance started by this demo restart path.
+
+    Restart is an operator-requested reset for recording/rehearsal. Closing the
+    recorded FreeCAD process clears open GUI documents but does not delete saved
+    checkpoint files under projects/recorded_demo/.
+    """
+    pid_path = RUNTIME / "freecad.pid"
+    if not pid_path.is_file():
+        print("FREECAD_RESTART_STOP_SKIPPED=not_started_by_this_project")
+        return
+    try:
+        pid = int(pid_path.read_text(encoding="utf-8").strip())
+    except ValueError as exc:
+        pid_path.unlink(missing_ok=True)
+        raise RuntimeError("Recorded FreeCAD PID file is invalid") from exc
+    try:
+        os.kill(pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pid_path.unlink(missing_ok=True)
+        print(f"FREECAD_RESTART_STOPPED=already_exited pid={pid}")
+        return
+    except PermissionError as exc:
+        raise RuntimeError(f"Could not stop recorded FreeCAD process: {exc}") from exc
+    for _ in range(80):
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            break
+        time.sleep(0.25)
+    else:
+        os.kill(pid, signal.SIGKILL)
+        for _ in range(20):
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                break
+            time.sleep(0.25)
+    pid_path.unlink(missing_ok=True)
+    print(f"FREECAD_RESTART_STOPPED pid={pid} open_documents=closed saved_files=preserved")
+
+
+def stop(*, include_freecad: bool = False) -> None:
     terminate_recorded("blender")
     terminate_recorded("comfyui")
-    print("FREECAD_STOP_SKIPPED=shared_service")
+    if include_freecad:
+        terminate_freecad_for_restart()
+    else:
+        print("FREECAD_STOP_SKIPPED=shared_service")
     print("PORTABLE_STACK_STOPPED")
 
 
@@ -451,7 +496,7 @@ def main() -> None:
     elif args.command == "stop":
         stop()
     elif args.command == "restart":
-        stop()
+        stop(include_freecad=True)
         start()
     else:
         status()

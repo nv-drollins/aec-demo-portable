@@ -31,8 +31,11 @@ For each update, prefer this structure when the markers support it:
 
 This narration and the raw tool output are the scrolling presentation. Keep it
 fact-based and marker-bound: never infer files, health checks, initialized
-phases, or completed work that are not present in the wrapper output. When the
-process exits, report its exit code and final markers.
+phases, or completed work that are not present in the wrapper output. If three
+consecutive wait timeouts show no new markers, give one brief heartbeat such as
+"the checked runner is still active; waiting for the next phase marker" and
+then continue waiting. When the process exits, report its exit code and final
+markers.
 
 `HERMES_AUTO_DRY_RUN_OK` is a complete success marker during launcher testing
 and must not trigger further inspection; state explicitly that the launcher

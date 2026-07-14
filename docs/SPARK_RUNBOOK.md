@@ -115,6 +115,11 @@ If a power loss left FreeCAD crash-recovery state, the stack launcher moves it
 to `runtime/freecad-recovery-archive/` before starting FreeCAD. This prevents a
 modal Document Recovery window from blocking MCP; nothing is deleted.
 
+`restart-portable-demo.sh` is a full demo reset: it stops Blender, ComfyUI, and
+the recorded FreeCAD process, then starts a clean FreeCAD session. Open FreeCAD
+documents are closed by the restart; saved `.FCStd` checkpoints under
+`projects/recorded_demo/` are preserved.
+
 ## Choose the demo mode
 
 ### Human-gated Hermes walkthrough
