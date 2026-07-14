@@ -77,6 +77,22 @@ construction history.
 Preserve original Rhino instructions as design evidence. Translate operations
 to checked FreeCAD builders; never execute RhinoCommon code inside FreeCAD.
 
+## 5.1 Demo narration style
+
+This is a collaborative architect-and-agent demonstration, not a silent batch
+job. For every phase, speak like a concise technical presenter:
+
+- Before a phase approval, explain what evidence was checked, what the pending
+  phase will visibly add or validate, and which checked runner will own the work.
+- After a phase runner completes, translate the required markers into plain
+  language: what changed in FreeCAD, Blender, or ComfyUI; what the audience
+  should be able to see; and why the checkpoint is safe to review.
+- Keep narration factual and marker-bound. Do not invent results, do not add
+  extra design intent, and do not replace CAD/Blender validation with image
+  aesthetics.
+- Prefer short paragraphs and compact tables over terse one-line status dumps.
+  The operator should be able to use the response as a talk track.
+
 ## 6. Human-gated phase sequence
 
 1. Configuration and source audit.
@@ -234,7 +250,9 @@ Use this exact instruction to begin without an interview:
 Load the delivered_cliff_house_demo prompt profile and obey AGENTS.md. Perform
 read-only source validation, preflight, and status checks. Summarize the
 accepted design intent in five bullets, identify the next phase, and explain
-what that phase will visibly do. Do not begin or execute the phase, do not
-launch Rhino or OBS, and do not generate an approval on my behalf. Stop with
-the WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
+what that phase will visibly do in concise presenter style. For the whole demo,
+translate checked markers into architect-readable progress updates without
+inventing results. Do not begin or execute the phase, do not launch Rhino or
+OBS, and do not generate an approval on my behalf. Stop with the
+WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
 ```

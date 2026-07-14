@@ -16,11 +16,21 @@ After launch, repeatedly call the process tool with `action=wait` and
 normal presentation refresh, not a failure: never restart or duplicate the
 process. Do not use process poll/log or inspect the wrapper.
 
-After each timed-out wait, give a concise one-to-three sentence live update that
-explains only newly visible `HERMES_DEMO_*`, `AUTOPLAY_*`, and checked adapter
-markers in audience-friendly language, then immediately wait again. Do not
-repeat old markers. This narration and the raw tool output are the scrolling
-presentation. When the process exits, report its exit code and final markers.
+Narrate like a concise technical presenter. After each timed-out wait, give a
+one-to-three sentence live update that explains only newly visible
+`HERMES_DEMO_*`, `AUTOPLAY_*`, and checked adapter markers in audience-friendly
+language, then immediately wait again. Do not repeat old markers.
+
+For each update, prefer this structure when the markers support it:
+
+1. Name the current phase or transition.
+2. State what the checked script is doing or just completed.
+3. Say what the audience should expect to see in FreeCAD, Blender, or ComfyUI.
+
+This narration and the raw tool output are the scrolling presentation. Keep it
+fact-based and marker-bound: never infer files, health checks, initialized
+phases, or completed work that are not present in the wrapper output. When the
+process exits, report its exit code and final markers.
 
 `HERMES_AUTO_DRY_RUN_OK` is a complete success marker during launcher testing
 and must not trigger further inspection; state explicitly that the launcher

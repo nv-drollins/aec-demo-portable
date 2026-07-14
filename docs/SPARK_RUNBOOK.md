@@ -232,9 +232,11 @@ At the Hermes prompt, paste this exact opening instruction:
 Load the delivered_cliff_house_demo prompt profile and obey AGENTS.md. Perform
 read-only source validation, preflight, and status checks. Summarize the
 accepted design intent in five bullets, identify the next phase, and explain
-what that phase will visibly do. Do not begin or execute the phase, do not
-launch Rhino or OBS, and do not generate an approval on my behalf. Stop with
-the WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
+what that phase will visibly do in concise presenter style. For the whole demo,
+translate checked markers into architect-readable progress updates without
+inventing results. Do not begin or execute the phase, do not launch Rhino or
+OBS, and do not generate an approval on my behalf. Stop with the
+WAITING_FOR_HUMAN_APPROVAL marker. Do not restart the design interview.
 ```
 
 Hermes must now stop without changing FreeCAD, Blender, ComfyUI, or project
