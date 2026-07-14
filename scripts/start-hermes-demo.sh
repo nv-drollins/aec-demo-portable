@@ -9,6 +9,7 @@ HERMES_MAX_TURNS="${AEC_HERMES_MAX_TURNS:-30}"
 HERMES_SKILLS="${AEC_HERMES_SKILLS:-prepare-portable-freecad-site,build-portable-freecad-massing,build-portable-freecad-detailing,build-portable-blender-landscaping,build-portable-blender-entourage,build-portable-blender-materials,build-portable-blender-camera,build-portable-blender-lighting,skip-portable-blender-animation,render-portable-blender-test-passes,run-portable-blender-comfy-final}"
 MANUAL_HOME="$ROOT/runtime/hermes-manual-home"
 MANUAL_HOME_CONFIGURATOR="$ROOT/scripts/configure-hermes-manual-home.py"
+export HERMES_HOME="$MANUAL_HOME"
 
 if [[ ! -x "$HERMES_BIN" ]]; then
   echo "Hermes was not found at: $HERMES_BIN" >&2
@@ -32,12 +33,18 @@ python3 "$MANUAL_HOME_CONFIGURATOR" \
   --home "$MANUAL_HOME" \
   --root "$ROOT" \
   --model "$HERMES_MODEL"
-HERMES_HOME="$MANUAL_HOME" AEC_HERMES_MODEL="$HERMES_MODEL" \
+AEC_HERMES_MODEL="$HERMES_MODEL" \
   python3 "$ROOT/scripts/register-hermes-skills.py"
+if [[ ! -f "$HERMES_HOME/config.yaml" ]]; then
+  echo "Isolated Hermes config is missing: $HERMES_HOME/config.yaml" >&2
+  exit 1
+fi
 python3 "$ROOT/scripts/portable_stack.py" start
 
 echo
 echo "Opening the interactive Hermes chat in $ROOT"
+echo "Hermes home: $HERMES_HOME"
+echo "Hermes config: $HERMES_HOME/config.yaml"
 echo "Model: $HERMES_MODEL; maximum tool iterations per turn: $HERMES_MAX_TURNS"
 echo "Preloaded skills: $HERMES_SKILLS"
 echo "Paste the recorded-demo opening instruction from docs/SPARK_RUNBOOK.md."
