@@ -30,9 +30,13 @@ def main():
     delivered=[]
     for index,path in enumerate(paths,1):
         if not path.is_file(): raise RuntimeError(f"Missing ComfyUI image: {path}")
-        image=Image.open(path).convert("RGB"); std=max(ImageStat.Stat(image).stddev)
-        if image.width<512 or image.height<512 or std<2: raise RuntimeError(f"Invalid ComfyUI image: {path} size={image.size} std={std}")
-        destination=outdir/f"final_{index}_{path.name}"; shutil.copy2(path,destination); delivered.append({"path":str(destination),"width":image.width,"height":image.height,"stddev":round(std,2),"bytes":destination.stat().st_size})
+        with Image.open(path) as opened:
+            image=opened.convert("RGB"); std=max(ImageStat.Stat(image).stddev); width=image.width; height=image.height
+        if width<512 or height<512 or std<2: raise RuntimeError(f"Invalid ComfyUI image: {path} size={(width,height)} std={std}")
+        destination=outdir/f"final_{index}_{path.name}"
+        if destination.exists(): destination.unlink()
+        shutil.move(str(path),str(destination))
+        delivered.append({"path":str(destination),"width":width,"height":height,"stddev":round(std,2),"bytes":destination.stat().st_size,"source_moved":str(path)})
     code=f'''import bpy,os\nscene=bpy.context.scene; scene.camera=bpy.data.objects["ocean_view"]; scene["aec_phase"]=12; scene["aec_phase_name"]="final_blender_comfyui"; scene["aec_final_spec_id"]={cfg["id"]!r}\nos.makedirs(os.path.dirname({str(final)!r}),exist_ok=True); bpy.ops.wm.save_as_mainfile(filepath={str(final)!r},compress=True); print("PORTABLE_FINAL_SCENE_OK="+bpy.data.filepath)\n'''
     r=transport().blender_execute(code)
     if r.get("status")!="success" or "PORTABLE_FINAL_SCENE_OK=" not in r.get("result",{}).get("result",""): raise RuntimeError(r)

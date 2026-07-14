@@ -7,7 +7,9 @@ Briefly introduce yourself as Hermes and explain that you will supervise one
 checked, deterministic FreeCAD-to-Blender-to-ComfyUI cycle. The launcher has
 already verified the runner; do not inspect it, list it, or run any preflight
 command. Use the terminal tool exactly once to execute this exact command with
-`background=true` and `notify_on_complete=true`:
+`background=true` and `notify_on_complete=true`. Do not retype, shorten,
+correct, or alter the command path; the filename contains `portable`, not
+`portal`:
 
 __AUTHORIZED_RUNNER__
 

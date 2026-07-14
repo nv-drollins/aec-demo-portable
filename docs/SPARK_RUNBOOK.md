@@ -453,8 +453,9 @@ Change Environment, and Time of Day), validates them, and saves the final Blende
 checkpoint. Sample inputs are not used.
 
 ComfyUI first writes raw generated files under `runtime/comfyui/output/`. The
-checked Phase 12 runner then validates and copies exactly three delivered files
-to `projects/recorded_demo/final_outputs/`. If the second directory has no new
+checked Phase 12 runner then validates and moves exactly three delivered files
+to `projects/recorded_demo/final_outputs/`, clearing those raw files from the
+ComfyUI output folder. If the second directory has no new
 set, Phase 12 did not complete even when raw ComfyUI files exist.
 
 ## Fast recorded integration proof

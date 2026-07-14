@@ -238,8 +238,8 @@ For the recorded-demo opening instruction:
   not emit `FINAL_REVIEW_REQUIRED`, investigate with improvised shell/Python,
   or patch code during the demo.
 - Raw files in `runtime/comfyui/output/` are not final delivery. Only the three
-  validated copies in `projects/recorded_demo/final_outputs/` satisfy the final
-  image gate.
+  validated delivered files in `projects/recorded_demo/final_outputs/` satisfy
+  the final image gate.
 - Stop with `FINAL_REVIEW_REQUIRED phase=12 name=final_blender_comfyui`.
 - Never use sample inputs or claim success without three validated images.
 
