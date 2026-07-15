@@ -116,9 +116,10 @@ to `runtime/freecad-recovery-archive/` before starting FreeCAD. This prevents a
 modal Document Recovery window from blocking MCP; nothing is deleted.
 
 `restart-portable-demo.sh` is a full demo reset: it stops Blender, ComfyUI, and
-the recorded FreeCAD process, then starts a clean FreeCAD session. Open FreeCAD
-documents are closed by the restart; saved `.FCStd` checkpoints under
-`projects/recorded_demo/` are preserved.
+FreeCAD, closes any open FreeCAD documents through the MCP when available, then
+starts a clean FreeCAD session. The restarted FreeCAD window should show only
+the start screen until the demo phases build new documents. Saved `.FCStd`
+checkpoints under `projects/recorded_demo/` are preserved.
 
 ## Choose the demo mode
 

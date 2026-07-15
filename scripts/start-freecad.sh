@@ -27,6 +27,6 @@ if pgrep -x freecad >/dev/null; then
 fi
 
 mkdir -p "$ROOT/logs" "$ROOT/runtime"
-nohup "$FREECAD" >"$ROOT/logs/freecad.log" 2>&1 &
+setsid "$FREECAD" >"$ROOT/logs/freecad.log" 2>&1 &
 echo $! >"$ROOT/runtime/freecad.pid"
 echo "Started FreeCAD (PID $(cat "$ROOT/runtime/freecad.pid")) on $DISPLAY"

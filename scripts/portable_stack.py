@@ -420,46 +420,144 @@ def terminate_recorded(name: str) -> None:
     print(f"{name.upper()}_STOPPED pid={pid}")
 
 
-def terminate_freecad_for_restart() -> None:
-    """Terminate the FreeCAD instance started by this demo restart path.
+def close_freecad_documents_for_restart() -> None:
+    """Close open FreeCAD documents before terminating the GUI process."""
+    if not freecad_healthy():
+        print("FREECAD_DOCUMENT_CLOSE_SKIPPED=rpc_unavailable")
+        return
+    proxy = xmlrpc.client.ServerProxy(
+        f"http://{HOST}:{FREECAD_PORT}", allow_none=True
+    )
+    code = "\n".join(
+        (
+            "import FreeCAD as App",
+            "docs=list(App.listDocuments())",
+            "for name in docs:",
+            "    App.closeDocument(name)",
+            "print('FREECAD_DOCUMENTS_CLOSED=' + str(len(docs)))",
+        )
+    ) + "\n"
+    try:
+        result = proxy.execute_code(code)
+    except Exception as exc:
+        print(f"FREECAD_DOCUMENT_CLOSE_WARNING={exc!r}")
+        return
+    if not result.get("success"):
+        print(f"FREECAD_DOCUMENT_CLOSE_WARNING={result!r}")
+        return
+    message = str(result.get("message", ""))
+    marker = "FREECAD_DOCUMENTS_CLOSED="
+    if marker in message:
+        count = message.split(marker, 1)[1].splitlines()[0]
+        print(f"FREECAD_DOCUMENTS_CLOSED count={count}")
+    else:
+        print("FREECAD_DOCUMENTS_CLOSED count=unknown")
 
-    Restart is an operator-requested reset for recording/rehearsal. Closing the
-    recorded FreeCAD process clears open GUI documents but does not delete saved
-    checkpoint files under projects/recorded_demo/.
-    """
-    pid_path = RUNTIME / "freecad.pid"
-    if not pid_path.is_file():
-        print("FREECAD_RESTART_STOP_SKIPPED=not_started_by_this_project")
-        return
+
+def process_exists(pid: int) -> bool:
     try:
-        pid = int(pid_path.read_text(encoding="utf-8").strip())
-    except ValueError as exc:
-        pid_path.unlink(missing_ok=True)
-        raise RuntimeError("Recorded FreeCAD PID file is invalid") from exc
-    try:
-        os.kill(pid, signal.SIGTERM)
+        os.kill(pid, 0)
+        return True
     except ProcessLookupError:
-        pid_path.unlink(missing_ok=True)
-        print(f"FREECAD_RESTART_STOPPED=already_exited pid={pid}")
-        return
-    except PermissionError as exc:
-        raise RuntimeError(f"Could not stop recorded FreeCAD process: {exc}") from exc
-    for _ in range(80):
+        return False
+
+
+def command_line(pid: int) -> str:
+    try:
+        return Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").decode(
+            "utf-8", "replace"
+        ).strip()
+    except OSError:
+        return ""
+
+
+def freecad_candidate_pids(recorded_pid: int | None = None) -> list[int]:
+    pids: set[int] = set()
+    if recorded_pid is not None:
+        pids.add(recorded_pid)
+    uid = str(os.getuid())
+    patterns = [FREECAD_EXE.name, str(FREECAD_EXE), "/tmp/.mount_FreeCAD", "FreeCAD"]
+    for pattern in patterns:
         try:
-            os.kill(pid, 0)
+            completed = subprocess.run(
+                ["pgrep", "-u", uid, "-f", pattern],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+        except (OSError, subprocess.SubprocessError):
+            continue
+        for raw in completed.stdout.split():
+            try:
+                pid = int(raw)
+            except ValueError:
+                continue
+            if pid == os.getpid() or pid == os.getppid():
+                continue
+            cmd = command_line(pid)
+            if not cmd or "freecad-mcp" in cmd or "check-freecad-rpc" in cmd:
+                continue
+            if any(token in cmd for token in (FREECAD_EXE.name, str(FREECAD_EXE), "/tmp/.mount_FreeCAD", "FreeCAD")):
+                pids.add(pid)
+    return sorted(pids)
+
+
+def terminate_pids(pids: list[int], *, label: str) -> None:
+    if not pids:
+        print(f"{label}_STOP_SKIPPED=no_processes")
+        return
+    for pid in pids:
+        try:
+            os.kill(pid, signal.SIGTERM)
         except ProcessLookupError:
+            continue
+        except PermissionError as exc:
+            raise RuntimeError(f"Could not stop FreeCAD process {pid}: {exc}") from exc
+    deadline = time.monotonic() + 20
+    while time.monotonic() < deadline:
+        remaining = [pid for pid in pids if process_exists(pid)]
+        if not remaining:
             break
         time.sleep(0.25)
     else:
-        os.kill(pid, signal.SIGKILL)
-        for _ in range(20):
+        remaining = [pid for pid in pids if process_exists(pid)]
+        for pid in remaining:
             try:
-                os.kill(pid, 0)
+                os.kill(pid, signal.SIGKILL)
             except ProcessLookupError:
-                break
-            time.sleep(0.25)
+                pass
+    stopped = [pid for pid in pids if not process_exists(pid)]
+    still_running = [pid for pid in pids if process_exists(pid)]
+    print(
+        f"{label}_STOPPED pids={json.dumps(stopped, separators=(',', ':'))} "
+        f"still_running={json.dumps(still_running, separators=(',', ':'))}"
+    )
+    if still_running:
+        raise RuntimeError(f"FreeCAD processes did not stop: {still_running}")
+
+
+def terminate_freecad_for_restart() -> None:
+    """Close documents and terminate FreeCAD for a clean demo restart.
+
+    Restart is an operator-requested reset for recording/rehearsal. It closes
+    open GUI documents and the FreeCAD application, but does not delete saved
+    checkpoint files under projects/recorded_demo/.
+    """
+    close_freecad_documents_for_restart()
+    pid_path = RUNTIME / "freecad.pid"
+    recorded_pid: int | None = None
+    if pid_path.is_file():
+        try:
+            recorded_pid = int(pid_path.read_text(encoding="utf-8").strip())
+        except ValueError:
+            print("FREECAD_RESTART_PID_WARNING=invalid_pid_file")
+    else:
+        print("FREECAD_RESTART_PID_SKIPPED=missing_pid_file")
+    pids = freecad_candidate_pids(recorded_pid)
+    terminate_pids(pids, label="FREECAD_RESTART")
     pid_path.unlink(missing_ok=True)
-    print(f"FREECAD_RESTART_STOPPED pid={pid} open_documents=closed saved_files=preserved")
+    print("FREECAD_RESTART_CLEAN open_documents=closed application=stopped saved_files=preserved")
 
 
 def stop(*, include_freecad: bool = False) -> None:
