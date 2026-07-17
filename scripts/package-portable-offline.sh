@@ -493,10 +493,11 @@ echo "OFFLINE_ARCHIVE_BEGIN output=$OUTPUT"
 if [[ "$COMPRESSION" == "gzip" ]]; then
   if command -v pigz >/dev/null 2>&1; then
     tar -C "$STAGE_PARENT" -cf - "$BUNDLE_NAME" | pigz -1 >"$OUTPUT"
+    pigz -dc "$OUTPUT" | tar -tf - >"$OUTPUT.contents.txt"
   else
     tar -C "$STAGE_PARENT" -czf "$OUTPUT" "$BUNDLE_NAME"
+    tar -tzf "$OUTPUT" >"$OUTPUT.contents.txt"
   fi
-  tar -tzf "$OUTPUT" >"$OUTPUT.contents.txt"
 else
   tar -C "$STAGE_PARENT" -cf "$OUTPUT" "$BUNDLE_NAME"
   tar -tf "$OUTPUT" >"$OUTPUT.contents.txt"
