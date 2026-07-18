@@ -11,6 +11,11 @@ AUTO_WORKSPACE="$ROOT/profiles/hermes_auto"
 AUTO_HOME="$ROOT/runtime/hermes-auto-home"
 AUTO_HOME_CONFIGURATOR="$ROOT/scripts/configure-hermes-auto-home.py"
 POLL_SECONDS="${AEC_HERMES_AUTO_POLL_SECONDS:-10}"
+LOG_DIR="$ROOT/logs"
+mkdir -p "$LOG_DIR"
+AUTO_LOG="${AEC_HERMES_AUTO_LOG:-$LOG_DIR/auto-hermes-$(date -u +%Y%m%dT%H%M%SZ)-$$.log}"
+export AEC_HERMES_AUTO_LOG="$AUTO_LOG"
+exec > >(tee -a "$AUTO_LOG") 2>&1
 
 if ! [[ "$POLL_SECONDS" =~ ^[0-9]+$ ]] || (( POLL_SECONDS < 5 || POLL_SECONDS > 60 )); then
     echo "AEC_HERMES_AUTO_POLL_SECONDS must be an integer from 5 through 60." >&2
@@ -55,6 +60,7 @@ QUERY="${QUERY//__POLL_SECONDS__/$POLL_SECONDS}"
 echo "HERMES_AUTO_LAUNCH_AUTHORIZED id=$AUTHORIZATION_ID scope=one_cycle phases=2-12"
 echo "Hermes model: $HERMES_MODEL"
 echo "Verbose progress refresh: ${POLL_SECONDS}s"
+echo "Hermes auto transcript: $AUTO_LOG"
 echo "This isolated session retains normal Hermes command safety controls."
 
 cd "$AUTO_WORKSPACE"

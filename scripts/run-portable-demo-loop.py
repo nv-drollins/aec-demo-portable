@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 from dataclasses import dataclass
 import fcntl
 import json
@@ -14,6 +15,7 @@ import socket
 import subprocess
 import sys
 import time
+import traceback
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -25,6 +27,28 @@ PROFILE = ROOT / "profiles/delivered_cliff_house_demo/prompt_profile.md"
 FINAL_OUTPUTS = ROOT / "projects/recorded_demo/final_outputs"
 BLENDER_HOST = "127.0.0.1"
 BLENDER_PORT = 9876
+TRANSCRIPT_STREAM = None
+
+
+def utc_stamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def transcript_write(text: str) -> None:
+    if TRANSCRIPT_STREAM is None:
+        return
+    TRANSCRIPT_STREAM.write(text)
+    TRANSCRIPT_STREAM.flush()
+
+
+def print_out(text: str = "") -> None:
+    print(text, flush=True)
+    transcript_write(text + "\n")
+
+
+def print_stream(text: str) -> None:
+    print(text, end="", flush=True)
+    transcript_write(text)
 
 
 @dataclass(frozen=True)
@@ -142,13 +166,13 @@ HERMES_PRESENTATION = os.environ.get("AEC_AUTOPLAY_HERMES_MODE") == "driver"
 
 def emit(marker: str, **values: object) -> None:
     fields = " ".join(f"{key}={value}" for key, value in values.items())
-    print(f"{marker}{' ' if fields else ''}{fields}", flush=True)
+    print_out(f"{marker}{' ' if fields else ''}{fields}")
 
 def present_phase_begin(number: int) -> None:
     if not HERMES_PRESENTATION:
         return
     title, activities = PHASE_PRESENTATION[number]
-    print("", flush=True)
+    print_out("")
     emit(
         "HERMES_DEMO_PHASE",
         phase=number,
@@ -180,16 +204,22 @@ def run(command: list[str], *, label: str) -> None:
     emit("AUTOPLAY_COMMAND_BEGIN", label=label)
     environment = os.environ.copy()
     environment["PYTHONUNBUFFERED"] = "1"
-    completed = subprocess.run(
+    process = subprocess.Popen(
         command,
         cwd=ROOT,
         env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
         text=True,
+        errors="replace",
+        bufsize=1,
     )
-    if completed.returncode:
-        raise RuntimeError(
-            f"{label} failed with exit code {completed.returncode}"
-        )
+    assert process.stdout is not None
+    for line in process.stdout:
+        print_stream(line)
+    returncode = process.wait()
+    if returncode:
+        raise RuntimeError(f"{label} failed with exit code {returncode}")
     emit("AUTOPLAY_COMMAND_OK", label=label)
 
 
@@ -372,6 +402,19 @@ def main() -> None:
     if args.cycles < 0 or args.keep_final_sets < 0:
         parser.error("--cycles and --keep-final-sets cannot be negative")
 
+    global TRANSCRIPT_STREAM
+    log_dir = ROOT / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    transcript_path = Path(
+        os.environ.get(
+            "AEC_AUTOPLAY_LOG",
+            str(log_dir / f"autoplay-{utc_stamp()}-pid{os.getpid()}.log"),
+        )
+    )
+    transcript_path.parent.mkdir(parents=True, exist_ok=True)
+    TRANSCRIPT_STREAM = transcript_path.open("a", encoding="utf-8")
+    emit("AUTOPLAY_TRANSCRIPT", path=transcript_path)
+
     lock = acquire_lock()  # Keep the stream alive so the process owns the lock.
     hermes_mode = os.environ.get("AEC_AUTOPLAY_HERMES_MODE", "not_launched")
     operator_authorized = hermes_mode == "driver"
@@ -399,6 +442,7 @@ def main() -> None:
                     cycle=cycle,
                     error=json.dumps(str(exc)),
                 )
+                print_out(traceback.format_exc().rstrip())
                 if args.cycles:
                     raise
                 pause(args.retry_delay, reason="failure_retry")
