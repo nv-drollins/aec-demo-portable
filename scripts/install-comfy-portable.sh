@@ -55,5 +55,16 @@ download_model     https://huggingface.co/black-forest-labs/FLUX.2-klein-9b-kv-f
 download_model     https://huggingface.co/Comfy-Org/flux2-klein-9B/resolve/main/split_files/text_encoders/qwen_3_8b_fp8mixed.safetensors     "$COMFY/models/text_encoders/klein/qwen_3_8b_fp8mixed.safetensors"     abad16806e0cbabc54e0325d6565847443fe396d5f0be38bb3cd3fe75a1201d6
 download_model     https://huggingface.co/Comfy-Org/flux2-dev/resolve/main/split_files/vae/flux2-vae.safetensors     "$COMFY/models/vae/flux/flux2-vae.safetensors"     d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5
 
-"$PYTHON" -c "import torch; assert torch.cuda.is_available(); print('COMFY_CUDA_OK', torch.__version__, torch.cuda.get_device_name(0))"
+# Verify CUDA under the same GPU pinning the controller will apply, so this
+# check fails here rather than at demo time if the assigned GPU is unusable.
+if [[ -f "$ROOT/config/gpu-assignment.env" ]]; then
+    # shellcheck disable=SC1091
+    source "$ROOT/config/gpu-assignment.env"
+fi
+if [[ -n "${AEC_PORTABLE_RENDER_GPU:-}" && "${AEC_PORTABLE_RENDER_GPU:-}" != "${AEC_PORTABLE_LLM_GPU:-}" ]]; then
+    export CUDA_DEVICE_ORDER=PCI_BUS_ID
+    export CUDA_VISIBLE_DEVICES="$AEC_PORTABLE_RENDER_GPU"
+    echo "COMFY_CUDA_PINNED=$AEC_PORTABLE_RENDER_GPU"
+fi
+"$PYTHON" -c "import torch; assert torch.cuda.is_available(); print('COMFY_CUDA_OK', torch.__version__, torch.cuda.device_count(), torch.cuda.get_device_name(0))"
 echo "COMFY_PORTABLE_RUNTIME_OK=$COMFY"

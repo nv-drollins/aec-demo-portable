@@ -2,13 +2,15 @@
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/platform-lib.sh
+source "$ROOT/scripts/platform-lib.sh"
 RUNTIME="$ROOT/runtime/freecad"
 DOWNLOADS="$ROOT/runtime/downloads"
 MCP_ROOT="$ROOT/runtime/freecad-mcp"
-APPIMAGE="$RUNTIME/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage"
+APPIMAGE="$RUNTIME/$AEC_FREECAD_APPIMAGE"
 PART="$APPIMAGE.part"
-URL="https://github.com/FreeCAD/FreeCAD/releases/download/1.1.1/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage"
-SHA256="8004e166dc5c516cc8e8d85a5f58b5d56c3836cf8652301c2e6b9e4b1fd27827"
+URL="$AEC_FREECAD_URL"
+SHA256="$AEC_FREECAD_SHA256"
 MCP_URL="https://github.com/neka-nat/freecad-mcp.git"
 MCP_COMMIT="1697aff99156f7361f87dae1fe23e7737acacba1"
 

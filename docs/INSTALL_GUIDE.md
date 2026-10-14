@@ -16,9 +16,17 @@ payload-only process. Build and install the self-contained bundle described in
 
 ## 1. Requirements
 
-Use a DGX Spark with:
+Two platforms are supported. The installer detects which one it is running on
+with `dpkg --print-architecture` and selects the matching runtimes.
 
-- Ubuntu 24.04 ARM64 and current NVIDIA/DGX OS updates
+| Platform | Architecture | Reference machine |
+|---|---|---|
+| DGX Spark / GB10 | `arm64` | the delivered demonstration platform |
+| Workstation | `amd64` | Ubuntu 24.04 with one or more NVIDIA GPUs |
+
+Either way you need:
+
+- Ubuntu 24.04 and current NVIDIA driver updates
 - An attached desktop display for FreeCAD and Blender
 - Internet access for GitHub, model, and runtime downloads
 - A user with `sudo` access
@@ -26,18 +34,30 @@ Use a DGX Spark with:
 - The separately distributed AEC payload archive
 
 The workflow is local. It does not require an Anthropic key, OpenRouter key,
-Nous Portal account, Rhino license, or Docker.
+Nous Portal account, Rhino license, Hugging Face token, or Docker.
 
 The installer provides:
 
 - Hermes Agent
 - Ollama and local `qwen3.6:latest`
-- FreeCAD 1.1.1 ARM64 and FreeCAD MCP
-- Blender 5.1 ARM64 and Blender MCP
+- FreeCAD 1.1.1 and FreeCAD MCP
+- Blender 5.1 and Blender MCP
 - Isolated ComfyUI, required custom nodes, and Flux.2 Klein models
 - The `rhino3dm` helper used to read the delivered `.3dm` source without Rhino
 
-## 2. Prepare the Spark
+The per-architecture downloads are declared in one place,
+`scripts/platform-lib.sh`:
+
+| Component | `arm64` | `amd64` |
+|---|---|---|
+| FreeCAD | `FreeCAD_1.1.1-Linux-aarch64-py311.AppImage` | `FreeCAD_1.1.1-Linux-x86_64-py311.AppImage` |
+| Blender | community `blender-arm64` v10-5.1 build | official `blender-5.1.2-linux-x64` |
+
+Both are checksum-verified. There is no official ARM64 Linux Blender release,
+which is why only the Spark path uses a community build and stages private
+copies of four system libraries; the official x86_64 build bundles its own.
+
+## 2. Prepare the machine
 
 Install current OS updates before starting:
 
@@ -48,7 +68,8 @@ sudo reboot
 ```
 
 After reboot, open a terminal. The remaining commands assume the standard
-`nvidia` account and `/home/nvidia/AEC_Demo_Portable` install location.
+`nvidia` account and `/home/nvidia/AEC_Demo_Portable` install location, and are
+identical on both supported architectures.
 
 ## 3. Clone the control repository
 
@@ -197,61 +218,68 @@ ollama pull qwen3.6:latest
 ./scripts/preflight-portable-demo.sh
 ```
 
-### Optional: dedicate a second GPU to Ollama
+### Multi-GPU: automatic per-service GPU assignment
 
-Skip this section on a standard DGX Spark or any system with only one NVIDIA
-GPU. Leave `CUDA_VISIBLE_DEVICES` unset in that case; Ollama will select the
-available GPU automatically.
+Nothing to do here. The installer runs
+`scripts/resolve-gpu-assignment.py --write` and applies the result; this
+section explains what it did and how to check it.
 
-On a workstation that has both a GB300 and a second NVIDIA GPU, the recommended
-split is to reserve the GB300 for Ollama while Blender, ComfyUI, and the desktop
-continue using the discrete RTX GPU. First identify the physical devices and
-copy the complete GB300 UUID:
+On a single-GPU machine such as a standard DGX Spark, all services share the
+one device and no selector is set. On a machine with two or more NVIDIA GPUs
+the installer splits the workload:
 
-```bash
-nvidia-smi -L
-```
+| GPU role | Services | Why |
+|---|---|---|
+| `AEC_PORTABLE_LLM_GPU` | Ollama / the Hermes agent model | a ~23 GB resident model must not be evicted by a render |
+| `AEC_PORTABLE_RENDER_GPU` | Blender Cycles and ComfyUI | both feed the display GPU, avoiding a cross-device frame copy |
 
-Edit the existing Ollama systemd override:
+The display GPU is chosen as the render GPU; the headless GPU hosts the model.
+Devices are addressed by UUID rather than index, because index-based pinning
+silently retargets when a card is added or moved.
 
-```bash
-sudo systemctl edit ollama
-```
+The assignment is written to `config/gpu-assignment.env`, which is
+machine-specific and deliberately untracked. Never copy it to another host.
+Ollama is pinned by a generated systemd drop-in at
+`/etc/systemd/system/ollama.service.d/10-aec-portable-gpu.conf`; Blender and
+ComfyUI receive `CUDA_VISIBLE_DEVICES` from the controller when it spawns them.
 
-Merge these settings into its `[Service]` section, replacing the example value
-with the GB300 UUID reported by `nvidia-smi -L`. Never copy a UUID from another
-machine.
-
-```ini
-[Service]
-Environment="CUDA_DEVICE_ORDER=PCI_BUS_ID"
-Environment="CUDA_VISIBLE_DEVICES=GPU-REPLACE-WITH-THIS-MACHINE-GB300-UUID"
-Environment="OLLAMA_CONTEXT_LENGTH=262144"
-Environment="OLLAMA_KEEP_ALIVE=-1"
-Environment="OLLAMA_VULKAN=0"
-```
-
-Apply the override:
+To see the assignment, or to re-run it after changing hardware:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart ollama
+./scripts/resolve-gpu-assignment.py          # report only
+./scripts/configure-ollama-gpu.sh            # re-resolve and re-pin Ollama
 ```
 
-Confirm that the selector reached the Ollama server:
+`status-portable-demo.sh` and `preflight-portable-demo.sh` both report the
+active assignment:
+
+```text
+GPU_ASSIGNMENT=split llm=GPU-<uuid> render=GPU-<uuid>
+```
+
+To override the automatic choice, set `AEC_PORTABLE_LLM_GPU` and
+`AEC_PORTABLE_RENDER_GPU` in `config/runtime.env` using UUIDs from this
+machine's own `nvidia-smi -L`.
+
+Verify the split under real load. With the model resident and a render in
+flight, each process should appear on its assigned GPU:
 
 ```bash
-sudo systemctl show ollama -p Environment --value \
-  | tr ' ' '\n' \
-  | grep -E 'CUDA_VISIBLE_DEVICES|CUDA_DEVICE_ORDER|OLLAMA_CONTEXT|OLLAMA_KEEP_ALIVE|OLLAMA_VULKAN'
+ollama ps                                    # expect 100% GPU / Forever
+nvidia-smi --query-compute-apps=pid,used_memory,gpu_uuid --format=csv
 ```
 
-After loading the selected model, use `nvidia-smi` to verify that the Ollama
-runner occupies the intended physical GPU. Ollama may call that device
-`CUDA0` internally because the selected physical GPU becomes its only visible
-logical device. With `OLLAMA_KEEP_ALIVE=-1`, `ollama ps` should report
-`Forever`; explicitly run `ollama stop MODEL_NAME` before switching to a
-different large model.
+Blender also appears on the display GPU with a few hundred MB of *graphics*
+memory for its viewport (`C+G` in `nvidia-smi`). That is the OpenGL context,
+not Cycles; the CUDA/OptiX allocation is what lands on the render GPU.
+
+Blender's startup script enables an OptiX (or CUDA) compute device in the
+Cycles preferences. Without it `scene.cycles.device = "GPU"` is accepted but
+silently falls back to CPU rendering. Confirm it in `logs/blender.log`:
+
+```text
+AEC_CYCLES_GPU_READY backend=OPTIX devices=1 names=...
+```
 
 ## 6. Start and verify the services
 

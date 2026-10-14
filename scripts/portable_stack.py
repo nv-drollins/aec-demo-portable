@@ -60,6 +60,10 @@ def load_env_file(path: Path) -> None:
 
 
 load_env_file(LOCAL_ENV if LOCAL_ENV.is_file() else EXAMPLE_ENV)
+# Per-machine GPU pinning, written by scripts/resolve-gpu-assignment.py --write.
+# It is deliberately loaded after runtime.env so a manual override in
+# runtime.env still wins, and it is absent on single-GPU installs.
+load_env_file(ROOT / "config" / "gpu-assignment.env")
 
 
 def setting(name: str, default: str) -> str:
@@ -104,6 +108,24 @@ HERMES_BIN = Path(setting("AEC_PORTABLE_HERMES_BIN", str(Path.home() / ".local/b
 HERMES_MODEL = setting("AEC_HERMES_MODEL", "ollama/qwen3.6:latest")
 OLLAMA_MODEL = setting("AEC_PORTABLE_OLLAMA_MODEL", HERMES_MODEL.removeprefix("ollama/"))
 OLLAMA_URL = setting("AEC_PORTABLE_OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
+RENDER_GPU = setting("AEC_PORTABLE_RENDER_GPU", "")
+LLM_GPU = setting("AEC_PORTABLE_LLM_GPU", "")
+
+
+def render_gpu_environment(base: dict[str, str]) -> dict[str, str]:
+    """Pin a GPU-consuming service to the render GPU when one is assigned.
+
+    Blender and ComfyUI share the render GPU; Ollama is pinned separately by
+    its systemd drop-in. When the resolver reports a single shared device, or
+    no assignment exists, the environment is returned unchanged so the
+    single-GPU Spark path keeps its default behaviour.
+    """
+    if not RENDER_GPU or RENDER_GPU == LLM_GPU:
+        return base
+    environment = dict(base)
+    environment["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    environment["CUDA_VISIBLE_DEVICES"] = RENDER_GPU
+    return environment
 
 
 def tcp_open(port: int, timeout: float = 1.0) -> bool:
@@ -228,6 +250,7 @@ def missing_workflow_nodes() -> list[str] | None:
 
 def preflight() -> list[str]:
     errors: list[str] = []
+    gpu_assignment_status()
     if not BLENDER_SCENE.is_file():
         errors.append(f"Blender scene is missing: {BLENDER_SCENE}")
     version, description = blender_version()
@@ -312,7 +335,7 @@ def spawn(name: str, command: list[str]) -> None:
     LOGS.mkdir(parents=True, exist_ok=True)
     log_path = LOGS / f"{name}.log"
     stream = log_path.open("ab")
-    environment = os.environ.copy()
+    environment = render_gpu_environment(os.environ.copy())
     if name == "blender":
         display = setting("AEC_PORTABLE_DISPLAY", "")
         xauthority = setting("AEC_PORTABLE_XAUTHORITY", "")
@@ -570,8 +593,19 @@ def stop(*, include_freecad: bool = False) -> None:
     print("PORTABLE_STACK_STOPPED")
 
 
+def gpu_assignment_status() -> None:
+    if not RENDER_GPU and not LLM_GPU:
+        print("GPU_ASSIGNMENT=shared_all_services")
+        return
+    if RENDER_GPU == LLM_GPU:
+        print(f"GPU_ASSIGNMENT=shared_single_gpu gpu={RENDER_GPU}")
+        return
+    print(f"GPU_ASSIGNMENT=split llm={LLM_GPU} render={RENDER_GPU}")
+
+
 def status() -> None:
     print(f"ROOT={ROOT}")
+    gpu_assignment_status()
     print(f"FREECAD_MCP={'healthy' if freecad_healthy() else 'down'} endpoint={HOST}:{FREECAD_PORT}")
     blender_status = blender_healthy()
     remote = blender_remote_version() if blender_status else None
