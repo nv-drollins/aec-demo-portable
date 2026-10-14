@@ -6,6 +6,16 @@ export AEC_PORTABLE_ROOT="$ROOT"
 # shellcheck source=scripts/runtime-env-lib.sh
 source "$ROOT/scripts/runtime-env-lib.sh"
 aec_load_runtime_env "$ROOT"
+# Booth demos run unattended: a dangerous-command approval prompt stalls the
+# whole presentation behind a keypress nobody is watching for. Default to
+# bypassing approvals, and keep an opt-out for rehearsals.
+#
+#   AEC_HERMES_UNATTENDED=0 ./scripts/<launcher>.sh   # restore the prompts
+AEC_HERMES_UNATTENDED="${AEC_HERMES_UNATTENDED:-1}"
+HERMES_APPROVAL_FLAGS=()
+if [[ "$AEC_HERMES_UNATTENDED" == "1" ]]; then
+    HERMES_APPROVAL_FLAGS+=(--yolo --accept-hooks)
+fi
 HERMES_BIN="${HERMES_BIN:-$HOME/.local/bin/hermes}"
 HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/qwen3.6:latest}"
 HERMES_MAX_TURNS="${AEC_HERMES_MAX_TURNS:-30}"
@@ -57,6 +67,7 @@ echo
 
 cd "$ROOT"
 exec "$HERMES_BIN" chat \
+  "${HERMES_APPROVAL_FLAGS[@]}" \
   --model "$HERMES_MODEL" \
   --max-turns "$HERMES_MAX_TURNS" \
   --skills "$HERMES_SKILLS" \

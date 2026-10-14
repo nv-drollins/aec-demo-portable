@@ -6,6 +6,16 @@ export AEC_PORTABLE_ROOT="$ROOT"
 # shellcheck source=scripts/runtime-env-lib.sh
 source "$ROOT/scripts/runtime-env-lib.sh"
 aec_load_runtime_env "$ROOT"
+# Booth demos run unattended: a dangerous-command approval prompt stalls the
+# whole presentation behind a keypress nobody is watching for. Default to
+# bypassing approvals, and keep an opt-out for rehearsals.
+#
+#   AEC_HERMES_UNATTENDED=0 ./scripts/<launcher>.sh   # restore the prompts
+AEC_HERMES_UNATTENDED="${AEC_HERMES_UNATTENDED:-1}"
+HERMES_APPROVAL_FLAGS=()
+if [[ "$AEC_HERMES_UNATTENDED" == "1" ]]; then
+    HERMES_APPROVAL_FLAGS+=(--yolo --accept-hooks)
+fi
 HERMES_BIN="${HERMES_BIN:-$HOME/.local/bin/hermes}"
 HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/qwen3.6:latest}"
 PROMPT_PATH="$ROOT/prompts/auto/hermes_authorized_cycle.md"
@@ -64,7 +74,12 @@ echo "HERMES_AUTO_LAUNCH_AUTHORIZED id=$AUTHORIZATION_ID scope=one_cycle phases=
 echo "Hermes model: $HERMES_MODEL"
 echo "Verbose progress refresh: ${POLL_SECONDS}s"
 echo "Hermes auto transcript: $AUTO_LOG"
-echo "This isolated session retains normal Hermes command safety controls."
+if [[ "$AEC_HERMES_UNATTENDED" == "1" ]]; then
+    echo "Command approval prompts: BYPASSED (--yolo) for unattended playback."
+    echo "Set AEC_HERMES_UNATTENDED=0 to restore interactive approvals."
+else
+    echo "This isolated session retains normal Hermes command safety controls."
+fi
 
 cd "$AUTO_WORKSPACE"
 export AEC_HERMES_AUTO_AUTHORIZED=1
@@ -72,6 +87,7 @@ export AEC_HERMES_AUTO_AUTHORIZATION_ID="$AUTHORIZATION_ID"
 export HERMES_HOME="$AUTO_HOME"
 
 exec "$HERMES_BIN" chat \
+    "${HERMES_APPROVAL_FLAGS[@]}" \
     --query "$QUERY" \
     --model "$HERMES_MODEL" \
     --toolsets terminal \
