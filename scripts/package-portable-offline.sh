@@ -13,6 +13,10 @@ AUDIT_ONLY=false
 STAGING_PARENT="${AEC_OFFLINE_STAGING_PARENT:-$ROOT/transfer}"
 
 APT_PACKAGES=(
+  # curl is not part of a minimal Ubuntu desktop install, and the demo scripts
+  # use it to probe the local Ollama endpoint. Ship it so a venue machine does
+  # not need network access to obtain it.
+  curl
   libfuse2t64
   libxcb-cursor0
   libavcodec60

@@ -55,13 +55,29 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl restart ollama
 
+# Probe without curl: a minimal Ubuntu desktop install does not ship it, and
+# this script runs during offline installation where nothing can be fetched.
+# Python 3 is guaranteed present because the installers depend on it.
+ollama_responding() {
+    python3 - <<'PY' >/dev/null 2>&1
+import sys
+import urllib.request
+
+try:
+    with urllib.request.urlopen("http://127.0.0.1:11434/api/tags", timeout=3) as response:
+        sys.exit(0 if response.status == 200 else 1)
+except Exception:
+    sys.exit(1)
+PY
+}
+
 for _ in $(seq 1 60); do
-    if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+    if ollama_responding; then
         break
     fi
     sleep 1
 done
-if ! curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+if ! ollama_responding; then
     echo "OLLAMA_GPU_PIN_FAILED=service_did_not_return endpoint=http://127.0.0.1:11434" >&2
     exit 1
 fi

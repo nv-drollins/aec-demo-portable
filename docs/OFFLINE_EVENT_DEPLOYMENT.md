@@ -268,15 +268,25 @@ This checks Hermes, the bundled Ollama model, Blender, the Rhino reader,
 FreeCAD MCP, ComfyUI CUDA, all required model files, service startup, workflow
 nodes, and the normal portable preflight.
 
-Preload the event model:
+Preload the event model. This uses only the `ollama` client, which the bundle
+installs, so it works on a machine without `curl`:
+
+```bash
+ollama run MODEL_NAME "ready" --keepalive -1m
+ollama ps
+```
+
+The `UNTIL` column should report `Forever` and `PROCESSOR` should report
+`100% GPU`. A reasoning model prints its reasoning before the answer; that is
+normal and not a failure.
+
+The bundle ships `curl` for the demo scripts, so the HTTP form also works once
+installation has finished:
 
 ```bash
 curl http://127.0.0.1:11434/api/generate \
   -d '{"model":"MODEL_NAME","keep_alive":-1}'
-ollama ps
 ```
-
-The `UNTIL` column should report `Forever`.
 
 ## 9. Perform a disconnected rehearsal
 
