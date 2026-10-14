@@ -222,6 +222,17 @@ for key, value in replacements.items():
         result.append(f"{key}={value}")
 path.write_text("\n".join(result) + "\n", encoding="utf-8")
 PY
+# The checked example names the arm64 AppImage. Point the generated
+# configuration at the AppImage for this architecture, matching what
+# install-portable-runtime.sh does for an online install.
+if [[ "$BUNDLE_ARCH" == "amd64" ]]; then
+  FREECAD_APPIMAGE_NAME="FreeCAD_1.1.1-Linux-x86_64-py311.AppImage"
+else
+  FREECAD_APPIMAGE_NAME="FreeCAD_1.1.1-Linux-aarch64-py311.AppImage"
+fi
+sed -i "s|FreeCAD_1\\.1\\.1-Linux-[a-z0-9_]*-py311\\.AppImage|$FREECAD_APPIMAGE_NAME|g" \
+  "$TARGET/config/runtime.env"
+echo "OFFLINE_RUNTIME_FREECAD_ARCH_SET=$FREECAD_APPIMAGE_NAME"
 chmod 600 "$TARGET/config/runtime.env"
 echo "OFFLINE_REPOSITORY_INSTALL_OK=$TARGET"
 
