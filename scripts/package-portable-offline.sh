@@ -158,13 +158,21 @@ for command_name in "${required_commands[@]}"; do
   }
 done
 
-ARCH="$(dpkg --print-architecture)"
+# platform-lib.sh resolves the architecture and rejects anything that is
+# neither arm64 nor amd64.
+# shellcheck source=scripts/platform-lib.sh
+source "$ROOT/scripts/platform-lib.sh"
+ARCH="$AEC_ARCH"
 . /etc/os-release
-if [[ "$ARCH" != "arm64" || "${ID:-}" != "ubuntu" || "${VERSION_ID:-}" != "24.04" ]]; then
+if [[ "${ID:-}" != "ubuntu" || "${VERSION_ID:-}" != "24.04" ]]; then
   echo "Unsupported source platform: arch=$ARCH os=${ID:-unknown} version=${VERSION_ID:-unknown}" >&2
-  echo "The offline bundle currently targets Ubuntu 24.04 ARM64 only." >&2
+  echo "The offline bundle targets Ubuntu 24.04 on arm64 or amd64." >&2
   exit 1
 fi
+# The bundle ships compiled runtimes and wheels, so it only installs on the
+# architecture that built it. Record ARCH in the manifest so the installer can
+# refuse a mismatched host instead of failing confusingly at first launch.
+export BUNDLE_ARCH="$ARCH"
 if [[ "$HOME" != "/home/nvidia" ]]; then
   echo "Unsupported source home: $HOME" >&2
   echo "Relocatable Python environments require the standard /home/nvidia path." >&2
@@ -184,11 +192,11 @@ fi
 SOURCE_COMMIT="$(git -C "$ROOT" rev-parse HEAD)"
 
 required_paths=(
-  "$ROOT/runtime/blender/bin/blender"
+  "$ROOT/runtime/blender/$AEC_BLENDER_BIN_SUBPATH"
   "$ROOT/runtime/comfyui/.venv/bin/python"
   "$ROOT/runtime/comfyui/main.py"
   "$ROOT/runtime/cad-tools/bin/python"
-  "$ROOT/runtime/freecad/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage"
+  "$ROOT/runtime/freecad/$AEC_FREECAD_APPIMAGE"
   "$ROOT/runtime/freecad-mcp/.venv/bin/freecad-mcp"
   "$ROOT/sample_project/blender_assets/cliff_house_act2_textured_v3.blend"
   "$ROOT/sample_project/rhino_assets/beach_house_02.3dm"
@@ -240,7 +248,7 @@ done
 }
 
 echo "OFFLINE_BUNDLE_AUDIT_OK commit=$SOURCE_COMMIT"
-echo "SOURCE_PLATFORM=ubuntu-24.04-arm64"
+echo "SOURCE_PLATFORM=ubuntu-24.04-$ARCH"
 echo "DEFAULT_OLLAMA_MODEL=$DEFAULT_MODEL"
 printf 'INCLUDED_OLLAMA_MODEL=%s\n' "${OLLAMA_MODELS[@]}"
 echo "INCLUDE_RECORDED_PROJECTS=$INCLUDE_PROJECTS"
@@ -436,7 +444,7 @@ manifest = {
     "source_platform": {
         "os": "ubuntu",
         "version": "24.04",
-        "architecture": "arm64",
+        "architecture": os.environ["BUNDLE_ARCH"],
     },
     "target": {
         "user": "nvidia",

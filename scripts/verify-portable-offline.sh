@@ -81,7 +81,7 @@ if data.get("format") != "aec-portable-offline-v1":
 platform = data.get("source_platform", {})
 if platform.get("os") != "ubuntu" or platform.get("version") != "24.04":
     raise SystemExit(f"Unsupported source platform in manifest: {platform!r}")
-if platform.get("architecture") != "arm64":
+if platform.get("architecture") not in ("arm64", "amd64"):
     raise SystemExit(f"Unsupported source architecture in manifest: {platform!r}")
 target = data.get("target", {})
 if target.get("repository") != "/home/nvidia/AEC_Demo_Portable":
@@ -119,9 +119,32 @@ if [[ "$MODE" == "bundle" ]]; then
   exit 0
 fi
 
-if [[ "$(dpkg --print-architecture)" != "arm64" ]]; then
-  echo "Installed verification requires ARM64" >&2
+HOST_ARCH="$(dpkg --print-architecture)"
+if [[ "$HOST_ARCH" != "arm64" && "$HOST_ARCH" != "amd64" ]]; then
+  echo "Installed verification requires arm64 or amd64" >&2
   exit 1
+fi
+INSTALLED_ARCH="$(python3 - "$TARGET/offline-manifest.json" <<'PY'
+import json
+import sys
+
+data = json.load(open(sys.argv[1], encoding="utf-8"))
+print(data.get("source_platform", {}).get("architecture", ""))
+PY
+)"
+if [[ -n "$INSTALLED_ARCH" && "$INSTALLED_ARCH" != "$HOST_ARCH" ]]; then
+  echo "Installed bundle architecture $INSTALLED_ARCH does not match host $HOST_ARCH" >&2
+  exit 1
+fi
+
+# The community arm64 Blender build nests its binary under bin/; the official
+# amd64 build keeps it at the root. FreeCAD ships one AppImage per arch.
+if [[ "$HOST_ARCH" == "arm64" ]]; then
+  BLENDER_BIN_SUBPATH="bin/blender"
+  FREECAD_APPIMAGE_NAME="FreeCAD_1.1.1-Linux-aarch64-py311.AppImage"
+else
+  BLENDER_BIN_SUBPATH="blender"
+  FREECAD_APPIMAGE_NAME="FreeCAD_1.1.1-Linux-x86_64-py311.AppImage"
 fi
 . /etc/os-release
 if [[ "${ID:-}" != "ubuntu" || "${VERSION_ID:-}" != "24.04" ]]; then
@@ -140,11 +163,11 @@ required_paths=(
   "$TARGET/scripts/run-freecad-mcp.sh"
   "$TARGET/scripts/restart-portable-demo.sh"
   "$TARGET/scripts/preflight-portable-demo.sh"
-  "$TARGET/runtime/blender/bin/blender"
+  "$TARGET/runtime/blender/$BLENDER_BIN_SUBPATH"
   "$TARGET/runtime/comfyui/.venv/bin/python"
   "$TARGET/runtime/comfyui/main.py"
   "$TARGET/runtime/cad-tools/bin/python"
-  "$TARGET/runtime/freecad/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage"
+  "$TARGET/runtime/freecad/$FREECAD_APPIMAGE_NAME"
   "$TARGET/runtime/freecad-mcp/.venv/bin/freecad-mcp"
   "$TARGET/sample_project/blender_assets/cliff_house_act2_textured_v3.blend"
   "$TARGET/sample_project/rhino_assets/beach_house_02.3dm"

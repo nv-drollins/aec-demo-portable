@@ -64,8 +64,23 @@ if [[ "$USER" != "nvidia" || "$HOME" != "/home/nvidia" ]]; then
   echo "Offline installation currently requires user nvidia and /home/nvidia." >&2
   exit 1
 fi
-if [[ "$(dpkg --print-architecture)" != "arm64" ]]; then
-  echo "Offline installation currently requires ARM64." >&2
+HOST_ARCH="$(dpkg --print-architecture)"
+BUNDLE_ARCH="$(python3 - "$BUNDLE_ROOT/offline-manifest.json" <<'PY'
+import json
+import sys
+
+data = json.load(open(sys.argv[1], encoding="utf-8"))
+print(data.get("source_platform", {}).get("architecture", ""))
+PY
+)"
+if [[ -z "$BUNDLE_ARCH" ]]; then
+  echo "Offline manifest does not record a source architecture." >&2
+  exit 1
+fi
+if [[ "$HOST_ARCH" != "$BUNDLE_ARCH" ]]; then
+  echo "Bundle/host architecture mismatch: bundle=$BUNDLE_ARCH host=$HOST_ARCH" >&2
+  echo "An offline bundle contains compiled runtimes and wheels, so it must be" >&2
+  echo "built on the same architecture it is installed on." >&2
   exit 1
 fi
 . /etc/os-release
@@ -320,6 +335,15 @@ AEC_FORCE_HERMES_MODEL_CONFIG=1 \
   "$HOME/.hermes/hermes-agent/venv/bin/python" \
   "$TARGET/scripts/register-hermes-skills.py"
 
+# Assign GPUs and pin Ollama. No-ops on a single-GPU machine; on a
+# multi-GPU workstation this generates config/gpu-assignment.env, which
+# is host-specific and therefore cannot ship inside the bundle.
+if [[ -x "$TARGET/scripts/configure-ollama-gpu.sh" ]]; then
+  "$TARGET/scripts/configure-ollama-gpu.sh"
+else
+  echo "OFFLINE_GPU_ASSIGNMENT_SKIPPED=configure-ollama-gpu.sh_missing"
+fi
+
 "$TARGET/scripts/verify-portable-offline.sh" --installed
 
 cat <<EOF
@@ -327,9 +351,10 @@ cat <<EOF
 OFFLINE_INSTALL_OK=$TARGET
 DEFAULT_OLLAMA_MODEL=$DEFAULT_MODEL
 
-The bundle did not copy a source-machine GPU UUID. If this destination has a
-second NVIDIA GPU, apply the optional UUID-based Ollama override from:
-  $TARGET/docs/INSTALL_GUIDE.md
+GPU assignment was resolved for THIS machine; no source-machine UUID was
+copied from the bundle. On a multi-GPU host the agent model and the renderers
+were split across devices. Review it with:
+  $TARGET/scripts/resolve-gpu-assignment.py
 
 With the desktop session active, complete the service test:
 
