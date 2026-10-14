@@ -214,10 +214,38 @@ if [[ "$INCLUDE_PROJECTS" == true ]]; then
   required_paths+=("$ROOT/projects/recorded_demo")
 fi
 for path in "${required_paths[@]}"; do
-  [[ -e "$path" ]] || {
+  [[ -e "$path" ]] && continue
+  # A false -e means "absent" or "parent not traversable". Separate them, because
+  # the Ollama model store sits under /usr/share/ollama (mode 750, ollama:ollama)
+  # and an unreadable parent otherwise reports a healthy directory as missing.
+  unreadable_parent=""
+  probe="$(dirname "$path")"
+  while [[ "$probe" != "/" && -n "$probe" ]]; do
+    if [[ -e "$probe" && ! -x "$probe" ]]; then
+      unreadable_parent="$probe"
+      break
+    fi
+    probe="$(dirname "$probe")"
+  done
+  if [[ -n "$unreadable_parent" ]]; then
+    echo "Required offline component is not readable: $path" >&2
+    echo "Permission denied traversing: $unreadable_parent" >&2
+    owner_group="$(stat -c '%U:%G mode=%a' "$unreadable_parent" 2>/dev/null || true)"
+    [[ -n "$owner_group" ]] && echo "  $unreadable_parent is $owner_group" >&2
+    required_group="$(stat -c '%G' "$unreadable_parent" 2>/dev/null || true)"
+    if [[ -n "$required_group" ]] && id -nG | tr ' ' '\n' | grep -qx "$required_group"; then
+      echo "Your account is in '$required_group', but THIS SHELL predates that change." >&2
+      echo "Group membership is fixed at login. Start a shell that carries it:" >&2
+      echo "  newgrp $required_group" >&2
+      echo "or log out and back in to fix every terminal." >&2
+    elif [[ -n "$required_group" ]]; then
+      echo "Add this account to the '$required_group' group, then log in again:" >&2
+      echo "  sudo usermod -aG $required_group $USER" >&2
+    fi
+  else
     echo "Required offline component is missing: $path" >&2
-    exit 1
-  }
+  fi
+  exit 1
 done
 
 mapfile -t OLLAMA_MODELS < <(ollama list 2>/dev/null | awk 'NR > 1 && NF {print $1}')
