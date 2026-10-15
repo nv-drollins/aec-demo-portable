@@ -12,11 +12,13 @@ KEEP_STAGING=false
 AUDIT_ONLY=false
 STAGING_PARENT="${AEC_OFFLINE_STAGING_PARENT:-$ROOT/transfer}"
 
+# Do not add packages that pin an exact version of a library the base OS also
+# ships and updates (curl pins libcurl4t64 (= <version>), for example). The
+# destination may carry a newer security update of that library than the build
+# machine, and apt then refuses the whole transaction with "held broken
+# packages". Nothing in the install path requires curl; the scripts probe the
+# Ollama endpoint with python3.
 APT_PACKAGES=(
-  # curl is not part of a minimal Ubuntu desktop install, and the demo scripts
-  # use it to probe the local Ollama endpoint. Ship it so a venue machine does
-  # not need network access to obtain it.
-  curl
   # Triton compiles a CUDA shim on first use inside ComfyUI, which needs
   # Python.h and a C toolchain. Without these the Flux sampling node fails at
   # runtime with "fatal error: Python.h: No such file or directory" and the

@@ -175,13 +175,49 @@ APT_OPTIONS=(
   -o "Acquire::AllowInsecureRepositories=true"
 )
 sudo apt-get "${APT_OPTIONS[@]}" update
-sudo apt-get \
+if sudo apt-get \
   "${APT_OPTIONS[@]}" \
   --no-install-recommends \
   -y \
-  install "${APT_REQUESTED[@]}"
+  install "${APT_REQUESTED[@]}"; then
+  echo "OFFLINE_APT_INSTALL_OK requested=${#APT_REQUESTED[@]}"
+else
+  # apt aborts the whole transaction for a single unsatisfiable package. That
+  # happens when a bundled package pins an exact version of a library the
+  # destination has already updated past. Retry individually so the required
+  # libraries still install, and report precisely what could not be satisfied.
+  echo "OFFLINE_APT_INSTALL_RETRY=per_package" >&2
+  APT_FAILED=()
+  for package in "${APT_REQUESTED[@]}"; do
+    if ! sudo apt-get \
+      "${APT_OPTIONS[@]}" \
+      --no-install-recommends \
+      -y \
+      install "$package" >/dev/null 2>&1; then
+      APT_FAILED+=("$package")
+    fi
+  done
+  if ((${#APT_FAILED[@]} > 0)); then
+    printf 'OFFLINE_APT_PACKAGE_UNSATISFIED=%s\n' "${APT_FAILED[@]}" >&2
+  fi
+  # Only the libraries the demo actually loads are fatal. Tools that merely
+  # make an operator's life easier must not block an installation.
+  APT_FATAL=()
+  for package in "${APT_FAILED[@]}"; do
+    case "$package" in
+      curl) ;;
+      *) APT_FATAL+=("$package") ;;
+    esac
+  done
+  if ((${#APT_FATAL[@]} > 0)); then
+    echo "OFFLINE_APT_INSTALL_FAILED required=${#APT_FATAL[@]}" >&2
+    printf 'OFFLINE_APT_REQUIRED_MISSING=%s\n' "${APT_FATAL[@]}" >&2
+    rm -f "$APT_SOURCE"
+    exit 1
+  fi
+  echo "OFFLINE_APT_INSTALL_OK requested=${#APT_REQUESTED[@]} skipped_optional=${#APT_FAILED[@]}"
+fi
 rm -f "$APT_SOURCE"
-echo "OFFLINE_APT_INSTALL_OK requested=${#APT_REQUESTED[@]}"
 
 echo "OFFLINE_REPOSITORY_INSTALL_BEGIN target=$TARGET"
 if [[ -x "$TARGET/scripts/stop-portable-demo.sh" ]]; then
