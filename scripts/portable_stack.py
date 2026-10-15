@@ -30,6 +30,15 @@ REQUIRED_MODELS = (
     "models/vae/flux/flux2-vae.safetensors",
 )
 
+# Triton compiles a CUDA shim at runtime inside ComfyUI the first time a Flux
+# sampling node runs. That compile needs Python.h and a C compiler. When they
+# are absent the node fails deep inside the graph and the final transformation
+# phase appears to hang, so check for the header up front instead.
+TRITON_BUILD_HEADERS = (
+    f"/usr/include/python{sys.version_info.major}.{sys.version_info.minor}/Python.h",
+    "/usr/include/python3.12/Python.h",
+)
+
 REQUIRED_NODE_TYPES = (
     "AnyLineArtPreprocessor_aux",
     "BatchImagesNode",
@@ -225,6 +234,21 @@ def blender_version() -> tuple[tuple[int, int], str]:
     return version, first
 
 
+def triton_build_ready() -> str | None:
+    """Return a reason string when ComfyUI cannot build Triton's CUDA shim."""
+    if not any(Path(header).is_file() for header in TRITON_BUILD_HEADERS):
+        return (
+            "Python development headers are missing (Python.h); ComfyUI's Triton "
+            "backend cannot compile its CUDA shim. Install python3-dev."
+        )
+    if shutil.which("gcc") is None:
+        return (
+            "gcc is missing; ComfyUI's Triton backend cannot compile its CUDA "
+            "shim. Install build-essential."
+        )
+    return None
+
+
 def missing_models() -> list[Path]:
     return [COMFY_ROOT / relative for relative in REQUIRED_MODELS if not (COMFY_ROOT / relative).is_file()]
 
@@ -278,6 +302,11 @@ def preflight() -> list[str]:
         errors.append(f"Portable CAD Python is missing: {CAD_PYTHON}")
     if not (COMFY_ROOT / "main.py").is_file():
         errors.append(f"ComfyUI main.py is missing under: {COMFY_ROOT}")
+    triton_reason = triton_build_ready()
+    if triton_reason:
+        errors.append(triton_reason)
+    else:
+        print("COMFY_TRITON_BUILD_OK")
     missing = missing_models()
     for path in missing:
         print(f"MODEL_MISSING={path}")

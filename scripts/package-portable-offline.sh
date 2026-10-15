@@ -17,6 +17,13 @@ APT_PACKAGES=(
   # use it to probe the local Ollama endpoint. Ship it so a venue machine does
   # not need network access to obtain it.
   curl
+  # Triton compiles a CUDA shim on first use inside ComfyUI, which needs
+  # Python.h and a C toolchain. Without these the Flux sampling node fails at
+  # runtime with "fatal error: Python.h: No such file or directory" and the
+  # final transformation phase hangs instead of rendering.
+  python3-dev
+  libpython3-dev
+  build-essential
   libfuse2t64
   libxcb-cursor0
   libavcodec60
