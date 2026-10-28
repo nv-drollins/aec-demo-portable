@@ -36,7 +36,7 @@ Never recreate its FreeCAD code in chat and never substitute guessed geometry.
 4. Verify the reported reference count is 11 curves with zero unsupported
    objects. Verify the site count is six objects, four slabs, 5,913 terrain
    vertices, and 11,520 terrain faces.
-5. Present the active FreeCAD isometric view for human review.
+5. The runner already sets and fits the active FreeCAD view on the desktop. If you optionally call `mcp_freecad_get_view`, never restart FreeCAD or rerun the script if screenshot capture returns a view-type message.
 6. Stop. Report
    `PHASE_REVIEW_REQUIRED phase=2 name=site_preparation` and wait for a new
    human approval.

@@ -15,8 +15,10 @@ root's human-gated manual policy.
   `notify_on_complete=true`.
 - Repeatedly use blocking process `wait` calls at the presentation interval
   supplied in the user message until the process exits. A wait timeout means
-  report newly visible markers briefly and wait again; it is not a failure.
-  Never restart the process, use process poll/log, or inspect the wrapper.
+  report newly visible markers briefly and call `process` (`action=wait`) again
+  in that same turn; it is not a failure. Never emit a text-only turn while the
+  background process is still running. Never restart the process, use process
+  poll/log, or inspect the wrapper.
 - Report only new wrapper-produced facts. Never infer checks, phases, files, or
   work that its output does not contain. `HERMES_AUTO_DRY_RUN_OK` is a
   successful launcher test in which zero demonstration phases ran.

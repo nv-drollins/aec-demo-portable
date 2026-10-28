@@ -42,13 +42,19 @@ def transcript_write(text: str) -> None:
 
 
 def print_out(text: str = "") -> None:
-    print(text, flush=True)
     transcript_write(text + "\n")
+    try:
+        print(text, flush=True)
+    except OSError:
+        pass
 
 
 def print_stream(text: str) -> None:
-    print(text, end="", flush=True)
     transcript_write(text)
+    try:
+        print(text, end="", flush=True)
+    except OSError:
+        pass
 
 
 @dataclass(frozen=True)

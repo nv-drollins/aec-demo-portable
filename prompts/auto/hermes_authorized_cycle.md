@@ -21,7 +21,13 @@ process. Do not use process poll/log or inspect the wrapper.
 Narrate like a concise technical presenter. After each timed-out wait, give a
 one-to-three sentence live update that explains only newly visible
 `HERMES_DEMO_*`, `AUTOPLAY_*`, and checked adapter markers in audience-friendly
-language, then immediately wait again. Do not repeat old markers.
+language, and in that SAME turn immediately call the `process` tool with
+`action=wait` and `timeout=__POLL_SECONDS__` again. CRITICAL: Never emit a
+text-only turn while the process is still running — ending a turn without a
+`process` (`action=wait`) tool call terminates the CLI session early before the
+cycle finishes. Only stop calling `process` (`action=wait`) after a wait result
+explicitly reports `status=exited` (or `HERMES_AUTO_DRY_RUN_OK`). Do not repeat
+old markers.
 
 For each update, prefer this structure when the markers support it:
 

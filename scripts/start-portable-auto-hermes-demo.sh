@@ -86,6 +86,52 @@ export AEC_HERMES_AUTO_AUTHORIZED=1
 export AEC_HERMES_AUTO_AUTHORIZATION_ID="$AUTHORIZATION_ID"
 export HERMES_HOME="$AUTO_HOME"
 
+HERMES_PYTHON="${HERMES_PYTHON:-$HOME/.hermes/hermes-agent/venv/bin/python}"
+if [[ "$HERMES_BIN" == "$HOME/.local/bin/hermes" && -x "$HERMES_PYTHON" ]]; then
+    exec "$HERMES_PYTHON" -c '
+import os, sys
+import cli
+from tools.process_registry import process_registry
+from hermes_cli.main import main
+
+_orig_chat = cli.HermesCLI.chat
+poll_seconds = int(os.environ.get("AEC_HERMES_AUTO_POLL_SECONDS", "10"))
+
+def _auto_chat(self, message, images=None):
+    response = _orig_chat(self, message, images=images)
+    continuations = 0
+    while (
+        not getattr(self, "_last_turn_interrupted", False)
+        and continuations < 24
+        and process_registry.has_any_active()
+    ):
+        continuations += 1
+        active = [s for s in process_registry._running.values() if not s.exited]
+        if not active:
+            break
+        sid = active[0].id
+        nudge = (
+            f"The authorized background runner ({sid}) is still running. "
+            f"Immediately call the process tool with action=\"wait\", "
+            f"session_id=\"{sid}\", and timeout={poll_seconds}, then continue "
+            f"presenting new markers until status=exited."
+        )
+        response = _orig_chat(self, nudge)
+    return response
+
+cli.HermesCLI.chat = _auto_chat
+sys.argv = [os.environ.get("HERMES_BIN", "hermes")] + sys.argv[1:]
+main()
+' chat \
+        "${HERMES_APPROVAL_FLAGS[@]}" \
+        --query "$QUERY" \
+        --model "$HERMES_MODEL" \
+        --toolsets terminal \
+        --max-turns "${AEC_HERMES_AUTO_MAX_TURNS:-48}" \
+        --source aec-auto \
+        --cli
+fi
+
 exec "$HERMES_BIN" chat \
     "${HERMES_APPROVAL_FLAGS[@]}" \
     --query "$QUERY" \

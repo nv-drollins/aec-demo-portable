@@ -528,8 +528,14 @@ def freecad_candidate_pids(recorded_pid: int | None = None) -> list[int]:
     if recorded_pid is not None:
         pids.add(recorded_pid)
     uid = str(os.getuid())
-    patterns = [FREECAD_EXE.name, str(FREECAD_EXE), "/tmp/.mount_FreeCAD", "FreeCAD"]
-    for pattern in patterns:
+    match_tokens = (
+        FREECAD_EXE.name,
+        str(FREECAD_EXE),
+        "/tmp/.mount_FreeCA",
+        "/usr/bin/freecad",
+        "FreeCAD",
+    )
+    for pattern in match_tokens:
         try:
             completed = subprocess.run(
                 ["pgrep", "-u", uid, "-f", pattern],
@@ -548,9 +554,9 @@ def freecad_candidate_pids(recorded_pid: int | None = None) -> list[int]:
             if pid == os.getpid() or pid == os.getppid():
                 continue
             cmd = command_line(pid)
-            if not cmd or "freecad-mcp" in cmd or "check-freecad-rpc" in cmd:
+            if not cmd or "freecad-mcp" in cmd or "check-freecad-rpc" in cmd or "portable_stack" in cmd:
                 continue
-            if any(token in cmd for token in (FREECAD_EXE.name, str(FREECAD_EXE), "/tmp/.mount_FreeCAD", "FreeCAD")):
+            if any(token in cmd for token in match_tokens):
                 pids.add(pid)
     return sorted(pids)
 
