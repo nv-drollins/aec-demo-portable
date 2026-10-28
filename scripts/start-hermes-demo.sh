@@ -17,7 +17,7 @@ if [[ "$AEC_HERMES_UNATTENDED" == "1" ]]; then
     HERMES_APPROVAL_FLAGS+=(--yolo --accept-hooks)
 fi
 HERMES_BIN="${HERMES_BIN:-$HOME/.local/bin/hermes}"
-HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/qwen3.6:latest}"
+HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/nemotron-3.5-lightning:30b}"
 HERMES_MAX_TURNS="${AEC_HERMES_MAX_TURNS:-30}"
 HERMES_SKILLS="${AEC_HERMES_SKILLS:-prepare-portable-freecad-site,build-portable-freecad-massing,build-portable-freecad-detailing,build-portable-blender-landscaping,build-portable-blender-entourage,build-portable-blender-materials,build-portable-blender-camera,build-portable-blender-lighting,skip-portable-blender-animation,render-portable-blender-test-passes,run-portable-blender-comfy-final}"
 MANUAL_HOME="$ROOT/runtime/hermes-manual-home"

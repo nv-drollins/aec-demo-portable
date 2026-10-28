@@ -114,7 +114,7 @@ FREECAD_EXE = Path(setting(
     "AEC_PORTABLE_FREECAD_EXE", str(ROOT / "runtime/freecad/FreeCAD_1.1.1-Linux-aarch64-py311.AppImage")
 ))
 HERMES_BIN = Path(setting("AEC_PORTABLE_HERMES_BIN", str(Path.home() / ".local/bin/hermes")))
-HERMES_MODEL = setting("AEC_HERMES_MODEL", "ollama/qwen3.6:latest")
+HERMES_MODEL = setting("AEC_HERMES_MODEL", "ollama/nemotron-3.5-lightning:30b")
 OLLAMA_MODEL = setting("AEC_PORTABLE_OLLAMA_MODEL", HERMES_MODEL.removeprefix("ollama/"))
 OLLAMA_URL = setting("AEC_PORTABLE_OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
 RENDER_GPU = setting("AEC_PORTABLE_RENDER_GPU", "")

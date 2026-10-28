@@ -46,7 +46,7 @@ def main():
     model = config.setdefault("model", {})
     if not isinstance(model, dict):
         raise RuntimeError("Hermes config key 'model' must be a mapping")
-    selected_model = os.environ.get("AEC_HERMES_MODEL", "ollama/qwen3.6:latest")
+    selected_model = os.environ.get("AEC_HERMES_MODEL", "ollama/nemotron-3.5-lightning:30b")
     force_model = os.environ.get("AEC_FORCE_HERMES_MODEL_CONFIG", "0") == "1"
     if force_model:
         model.update(default=selected_model, provider="custom", base_url="http://127.0.0.1:11434/v1")

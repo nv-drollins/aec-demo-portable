@@ -17,7 +17,7 @@ if [[ "$AEC_HERMES_UNATTENDED" == "1" ]]; then
     HERMES_APPROVAL_FLAGS+=(--yolo --accept-hooks)
 fi
 HERMES_BIN="${HERMES_BIN:-$HOME/.local/bin/hermes}"
-HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/qwen3.6:latest}"
+HERMES_MODEL="${AEC_HERMES_MODEL:-ollama/nemotron-3.5-lightning:30b}"
 PROMPT_PATH="$ROOT/prompts/auto/hermes_authorized_cycle.md"
 RUNNER="$ROOT/scripts/run-portable-hermes-authorized-cycle.py"
 AUTO_WORKSPACE="$ROOT/profiles/hermes_auto"
