@@ -53,14 +53,18 @@ tar -xzf aec-demo-portable-payload-demo-*.tar.gz -C /home/nvidia/AEC_Demo_Portab
 
 ```bash
 cd /home/nvidia/AEC_Demo_Portable
-./scripts/install-portable-runtime.sh
+AEC_HERMES_MODEL=ollama/nemotron-3.5-lightning:30b \
+AEC_PORTABLE_OLLAMA_MODEL=nemotron-3.5-lightning:30b \
+  ./scripts/install-portable-runtime.sh
 ```
 
 This installs CAD tools, FreeCAD 1.1.1 (`x86_64` AppImage), Hermes Agent,
-FreeCAD MCP, Blender 5.1.2 (`linux-x64`), ComfyUI + Flux.2 Klein models, and
-resolves the per-service GPU split (`config/gpu-assignment.env`).
+Ollama `0.40.4`, pulls `nemotron-3.5-lightning:30b` directly (skipping the
+22 GB `qwen3.6:latest` download), installs FreeCAD MCP, Blender 5.1.2
+(`linux-x64`), ComfyUI + Flux.2 Klein models, and resolves the per-service GPU
+split (`config/gpu-assignment.env`).
 
-### 4. Switch to `nemotron-3.5-lightning:30b` and run one full cycle
+### 4. Run one full cycle to populate fallback checkpoints
 
 Running one full cycle before packaging validates the stack and populates
 `projects/recorded_demo/` so the offline bundle includes fresh fallback
@@ -68,13 +72,6 @@ checkpoints:
 
 ```bash
 cd /home/nvidia/AEC_Demo_Portable
-ollama pull nemotron-3.5-lightning:30b
-ollama stop qwen3.6:latest 2>/dev/null || true
-ollama rm qwen3.6:latest 2>/dev/null || true
-
-sed -i 's|^AEC_HERMES_MODEL=.*|AEC_HERMES_MODEL=ollama/nemotron-3.5-lightning:30b|; \
-        s|^AEC_PORTABLE_OLLAMA_MODEL=.*|AEC_PORTABLE_OLLAMA_MODEL=nemotron-3.5-lightning:30b|' config/runtime.env
-
 ./scripts/restart-portable-demo.sh
 ./scripts/start-portable-auto-hermes-demo.sh
 ```

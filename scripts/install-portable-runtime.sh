@@ -29,4 +29,10 @@ if ! grep -q "$AEC_FREECAD_APPIMAGE" "$ROOT/config/runtime.env"; then
 fi
 # Assign GPUs and pin Ollama. Both are no-ops on a single-GPU Spark.
 "$ROOT/scripts/configure-ollama-gpu.sh"
+if [[ -n "${AEC_HERMES_MODEL:-}" ]]; then
+    sed -i "s|^AEC_HERMES_MODEL=.*|AEC_HERMES_MODEL=$AEC_HERMES_MODEL|" "$ROOT/config/runtime.env"
+fi
+if [[ -n "${AEC_PORTABLE_OLLAMA_MODEL:-}" ]]; then
+    sed -i "s|^AEC_PORTABLE_OLLAMA_MODEL=.*|AEC_PORTABLE_OLLAMA_MODEL=$AEC_PORTABLE_OLLAMA_MODEL|" "$ROOT/config/runtime.env"
+fi
 "$ROOT/scripts/preflight-portable-demo.sh"
