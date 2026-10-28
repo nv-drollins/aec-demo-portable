@@ -30,6 +30,9 @@ For the detailed phase-by-phase operator procedure, use
 For a self-contained USB deployment with no event internet, use
 [docs/OFFLINE_EVENT_DEPLOYMENT.md](docs/OFFLINE_EVENT_DEPLOYMENT.md).
 
+For the single-page x86 (`amd64`) workstation build + offline USB runbook, use
+[docs/X86_OFFLINE_QUICKSTART.md](docs/X86_OFFLINE_QUICKSTART.md).
+
 ## Repository and payload
 
 Git contains the control layer: scripts, skills, prompts, workflow JSON,

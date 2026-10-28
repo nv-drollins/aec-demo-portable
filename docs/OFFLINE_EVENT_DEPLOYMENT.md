@@ -280,14 +280,6 @@ The `UNTIL` column should report `Forever` and `PROCESSOR` should report
 `100% GPU`. A reasoning model prints its reasoning before the answer; that is
 normal and not a failure.
 
-The bundle ships `curl` for the demo scripts, so the HTTP form also works once
-installation has finished:
-
-```bash
-curl http://127.0.0.1:11434/api/generate \
-  -d '{"model":"MODEL_NAME","keep_alive":-1}'
-```
-
 ## 9. Perform a disconnected rehearsal
 
 Disable networking or physically disconnect the network, reboot the
