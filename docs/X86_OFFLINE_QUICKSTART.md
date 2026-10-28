@@ -81,14 +81,14 @@ Wait for `AUTOPLAY_COMPLETE cycles=1` and the final Hermes summary.
 
 The Ollama installer adds `nvidia` to the `ollama` group so the packager can
 read `/usr/share/ollama/.ollama/models`, but shells opened before the install do
-not carry that group yet. Use `newgrp ollama` (or open a fresh login session)
+not carry that group yet. Activate the group in your terminal with `newgrp ollama`
 and stop the resident model before packaging:
 
 ```bash
 cd /home/nvidia/AEC_Demo_Portable
 ollama stop nemotron-3.5-lightning:30b
+newgrp ollama
 
-newgrp ollama <<'EOF'
 ./scripts/package-portable-offline.sh \
   --audit-only \
   --default-model nemotron-3.5-lightning:30b
@@ -96,7 +96,6 @@ newgrp ollama <<'EOF'
 ./scripts/package-portable-offline.sh \
   --default-model nemotron-3.5-lightning:30b \
   --compression none
-EOF
 ```
 
 *(Omit `--compression none` if you prefer a `.tar.gz` over a faster uncompressed `.tar`.)*
